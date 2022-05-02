@@ -75,7 +75,12 @@ class LessonService {
             if (!isExistClassroom) {
                 return FormateData({
                     status: HTTP_STATUS_CODES.NOT_FOUND,
-                    message: 'Classroom not found',
+                    error: [
+                        {
+                            "msg": "Classroom not found! or Not Ready!",
+                            "location": "server"
+                        }
+                    ]
                 });
             }
 
@@ -461,7 +466,6 @@ class LessonService {
     }
 
     async LikeCommentLesson({ commentId, lessonId, classroomId, userId }) {
-
         try{
             const isExistClassroom = this.checkClassroomIsExist({ classroomId });
             if (!isExistClassroom) {
@@ -487,7 +491,7 @@ class LessonService {
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,
                 });
-            }
+            };
 
             const Comment = await this.LessonEntity.findCommentLessonById({ lessonId, commentId });
             if (!Comment) {
@@ -500,7 +504,7 @@ class LessonService {
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,
                 });
-            }
+            };
 
             const LikedComment = await this.LessonEntity.pushLikeCommentLesson({ lessonId, commentId, userId });
 
@@ -511,9 +515,9 @@ class LessonService {
         }
         catch (error) {
             throw error;
-        }
-    }
+        };
+    };
 
-}
+};
 
 module.exports = LessonService;

@@ -1,4 +1,3 @@
-const e = require('express');
 const LessonModel = require('../models/Lesson');
 
 class LessonEntity {
@@ -159,6 +158,34 @@ class LessonEntity {
             const UpdatedLessonComment = await Lesson.save();
             return UpdatedLessonComment;
         }catch (error) {
+            throw error;
+        }
+    }
+
+    async calculateQuizCountLesson({ LessonId, operation }) {
+        try {
+            const Lesson = await LessonModel.findById(LessonId);
+
+            // if(operation === true){
+            //     Lesson.quizCount = Lesson.quizCount + 1;
+            // }else{
+            //     Lesson.quizCount = Lesson.quizCount - 1;
+            // }
+
+            // if (Lesson.quizCount > 0) {
+            //     Lesson.quizIsReday = true;
+            // } else {
+            //     Lesson.quizIsReday = false;
+            // }
+
+            operation === true ? Lesson.quizCount = Lesson.quizCount + 1 : Lesson.quizCount = Lesson.quizCount - 1;
+            Lesson.quizCount > 0 ? Lesson.quizIsReday = true : Lesson.quizIsReday = false;
+
+            const UpdatedLesson = await Lesson.save();
+            return UpdatedLesson;
+
+        }
+        catch (error) {
             throw error;
         }
     }

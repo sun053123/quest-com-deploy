@@ -1,6 +1,5 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const mongoose = require('mongoose');
 
 const { ValidatorErrorHelper, ValidateMongooseID } = require('../middlewares/validateHelper');
 const { ValidateToken, ValidateTokenAndTeacher } = require('../middlewares/Auth');
@@ -129,6 +128,9 @@ router.put('/:classroomId/lesson/:lessonId/like', [ValidateToken, ValidateMongoo
     };
 });
 
+//@ ROUTE POST api/classroom/:classroomId/lesson/:lessonId/comment
+//@ DESC   Comment on a lesson
+//@ ACCESS Private (Basic)
 router.post('/:classroomId/lesson/:lessonId/comment', [
     [check('comment').not().isEmpty().withMessage('Please enter a valid comment'),
     check('comment').isLength({ min: 1 }).withMessage('Comment must be at least 5 characters long')]
@@ -149,6 +151,9 @@ router.post('/:classroomId/lesson/:lessonId/comment', [
     };
 });
 
+//@ ROUTE DELETE api/classroom/:classroomId/lesson/:lessonId/comment/:commentId
+//@ DESC   Delete a comment
+//@ ACCESS Private (Basic)
 router.delete('/:classroomId/lesson/:lessonId/comment/:commentId', [ValidateToken, ValidateMongooseID], async (req, res, next) => {
 
     const { lessonId, classroomId, commentId } = req.params;
@@ -166,6 +171,8 @@ router.delete('/:classroomId/lesson/:lessonId/comment/:commentId', [ValidateToke
 });
 
 //@ ROUTE  GET api/classroom/:classroomId/lesson/:lessonId/comment/:commentId/like
+//@ DESC   Like a comment
+//@ ACCESS Private (Basic)
 router.put('/:classroomId/lesson/:lessonId/comment/:commentId/like', [ValidateToken, ValidateMongooseID], async (req, res, next) => {
 
     const { lessonId, classroomId, commentId } = req.params;

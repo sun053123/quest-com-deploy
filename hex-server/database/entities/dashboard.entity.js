@@ -51,7 +51,7 @@ class DashboardEntity {
             return Student;
         } catch (error) {
             throw error;
-        }c
+        }
     }
 
     
