@@ -28,6 +28,15 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
+},{
+    // this will make sure that the __v, password is not included in the json response
+    toJSON: {
+        transform(doc, ret){
+            delete ret.__v;
+            delete ret.password;
+        }
+    },
+    timestamps: true
 });
 
 const User = mongoose.model('User', UserSchema);

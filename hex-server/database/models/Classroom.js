@@ -57,6 +57,13 @@ const ClassroomSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     }
+}, {
+    toJSON: {
+        transform(doc, ret){
+            delete ret.__v;
+        }
+    },
+    timestamps: true
 });
 
 const Classroom = mongoose.model('Classroom', ClassroomSchema);

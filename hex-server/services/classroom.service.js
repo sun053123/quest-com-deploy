@@ -120,7 +120,7 @@ class ClassroomService {
                 const isStudent = await this.DashboardEntity.findStudentClassroomDashboard({ classroomId, userId });
 
                 //isStudent not found (user is first join classroom)
-                if (!isStudent) {
+                if (isStudent === null || isStudent === undefined) {
                     //if there is no student then do classroom studentcount + 1 
                     const ClassroomStudentCount = await this.ClassroomEntity.plusStudentCountClassroom({ classroomId });
 

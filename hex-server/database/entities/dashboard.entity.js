@@ -17,7 +17,9 @@ class DashboardEntity {
 
     async getDashboard({ classroomId }) {
         try {
-            const Dashboard = await DashboardModel.findOne({ classroom: classroomId }).populate('classroom');
+            const Dashboard = await DashboardModel.findOne({ classroom: classroomId })
+            .populate('classroom',['title','lessonCount','studentCount','level','category'])
+            .populate('user',['username','email']);
             return Dashboard;
         } catch (error) {
             throw error;
@@ -46,7 +48,7 @@ class DashboardEntity {
             //find student in studentsCheckin
             const Student = Dashboard.studentsCheckin.find(student => student.user.toString() === userId);
             // console.log("found",Student);
-            return Dashboard;
+            return Student;
         } catch (error) {
             throw error;
         }c

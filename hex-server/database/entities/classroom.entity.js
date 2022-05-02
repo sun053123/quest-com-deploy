@@ -121,7 +121,9 @@ class ClassroomEntity {
     async plusStudentCountClassroom({ classroomId }) {
         try {
             const Classroom = await ClassroomModel.findById(classroomId);
-            Classroom.countStudent++;
+            // console.log("do + student count")
+
+            Classroom.studentCount++;
             const UpdatedClassroom = await Classroom.save();
 
             return UpdatedClassroom;
@@ -134,7 +136,7 @@ class ClassroomEntity {
     async plusLessonCountClassroom({ classroomId }) {
         try {
             const Classroom = await ClassroomModel.findById(classroomId);
-            Classroom.lessonCount++;
+            Classroom.lessonCount = Classroom.lessonCount + 1;
 
             if (Classroom.lessonCount > 0) {
                 Classroom.isComplete = true;
@@ -153,8 +155,7 @@ class ClassroomEntity {
     async minusLessonCountClassroom({ classroomId }) {
         try {
             const Classroom = await ClassroomModel.findById(classroomId);
-            Classroom.lessonCount--;
-
+            Classroom.lessonCount = Classroom.lessonCount - 1;
             if (Classroom.lessonCount === 0) {
                 Classroom.isComplete = false;
             }

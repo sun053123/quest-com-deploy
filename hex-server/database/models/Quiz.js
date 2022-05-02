@@ -45,6 +45,13 @@ const QuizSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
+},{
+    toJSON: {
+        transform(doc, ret){
+            delete ret.__v;
+        }
+    },
+    timestamps: true
 });
 
 const Quiz = mongoose.model('Quiz', QuizSchema);

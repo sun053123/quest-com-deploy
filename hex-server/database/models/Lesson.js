@@ -71,7 +71,12 @@ const LessonSchema = new mongoose.Schema({
                         required: true
                     }
                 }
-            ]
+            ],
+            likeCount: {
+                type: Number,
+                required: true,
+                default: 0
+            }
         }
     ],
     likes: [
@@ -84,8 +89,19 @@ const LessonSchema = new mongoose.Schema({
             }
 
         }
-    ]    
-        
+    ],
+    likeCount: {
+        type: Number,
+        default: 0,
+        required: true
+    }   
+},{
+    toJSON: {
+        transform(doc, ret){
+            delete ret.__v;
+        }
+    },
+    timestamps: true
 });
 
 const Lesson = mongoose.model('Lesson', LessonSchema);

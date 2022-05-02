@@ -79,6 +79,13 @@ const DashboardSchema = new mongoose.Schema({
             }
         }
     ]
+},{
+    toJSON: {
+        transform(doc, ret){
+            delete ret.__v;
+        }
+    },
+    timestamps: true
 });
 
 const Dashboard = mongoose.model('Dashboard', DashboardSchema);
