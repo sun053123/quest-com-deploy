@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const { check, validationResult } = require('express-validator');
 
+const { ValidatorErrorHelper } = require('../middlewares/validateHelper');
 const { ValidateToken } = require('../middlewares/Auth');
 const AuthService = require('../../services/auth.service');
 
@@ -10,19 +11,12 @@ const service = new AuthService();
 //@ ROUTE  POST api/auth/register
 //@ DESC   Register user
 //@ ACCESS Public
-router.post ('/register' , [
+router.post('/register', [[
     check('email').isEmail().withMessage('Please enter a valid email address'),
     check('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
     check('username').not().isEmpty().withMessage('Please enter a valid username'),
     check('role').isIn(['teacher', 'student']).withMessage('Please enter a valid role')
-], async (req, res, next) => {
-    const errors = validationResult(req);
-    if(!errors.isEmpty()){
-        return res.status(400).json({
-            error: errors.array(),
-            status: 400
-        });
-    };
+], ValidatorErrorHelper], async (req, res, next) => {
 
     const { username, email, password, role } = req.body;
 
@@ -38,18 +32,13 @@ router.post ('/register' , [
     };
 });
 
-router.post('/', [
+//@ ROUTE  POST api/auth/login
+//@ DESC   Login user
+//@ ACCESS Public
+router.post('/', [[
     check('email').isEmail().withMessage('Please enter a valid email address'),
     check('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long')
-], async (req, res, next) => {
-    
-    const errors = validationResult(req);
-    if(!errors.isEmpty()){
-        return res.status(400).json({
-            error: errors.array(),
-            status: 400
-        });
-    };
+], ValidatorErrorHelper], async (req, res, next) => {
 
     const { email, password } = req.body;
 
