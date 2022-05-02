@@ -37,6 +37,26 @@ const LessonSchema = new mongoose.Schema({
         required: true,
         default: false
     },
+    quizIsRandom: {
+        type: Boolean,
+        default: false,
+        required: true
+    },
+    quizLimit: {
+        type: Number,
+        default: 20,
+        required: true
+    },
+    quizType: {
+        type: String,
+        default: 'multiple',
+        required: true
+    },
+    quizCount: {
+        type: Number,
+        required: true,
+        default: 0
+    },
     createdAt: {
         type: Date,
         default: Date.now

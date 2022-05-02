@@ -6,7 +6,7 @@ class QuizEntity {
         try {
             const Quizes = await QuizModel.find({ lesson: lessonId })
                 .populate('creator', ['username', 'email'])
-                .populate('lesson', ['title'])
+                .populate('lesson', ['title','quizCount','quizIsReady','quizIsRandom','quizLimit'])
                 .sort({ createdAt: -1 });
             return Quizes;
         }

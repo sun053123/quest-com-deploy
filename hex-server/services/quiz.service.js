@@ -11,7 +11,8 @@ class QuizService {
     }
 
     //internal function
-    async checkClassroomandLessonIsExist({ classroomId, lessonId }) {
+    async checkClassroomandLessonIsExistAndCreator({ classroomId, lessonId, userId }) {
+
         try {
             const classroom = await this.ClassroomEntity.getClassroomById({ classroomId });
             if (!classroom) {
@@ -21,16 +22,21 @@ class QuizService {
             if (!lesson) {
                 return false
             }
+            if(userId !== lesson.creator.toString()) {
+                return false
+            }
+
             return true
         } catch (error) {
             throw error;
         }
     }
 
-    async getQuizes({ classroomId, lessonId, userId }) {
+    async GetAllQuizzes({ classroomId, lessonId, userId }) {
+
         try {
             //check classroom and lesson is exist
-            const isExist = await checkClassroomandLessonIsExist({ classroomId, lessonId });
+            const isExist = await this.checkClassroomandLessonIsExistAndCreator({ classroomId, lessonId, userId });
             if (!isExist) {
                 return FormateData({
                     error: [
@@ -43,18 +49,18 @@ class QuizService {
                 });
             }
             
-            const Lesson = await this.LessonEntity.getLessonById({ lessonId });
-            if (userId !== Lesson.creator.user.toString()) {
-                return FormateData({
-                    status: HTTP_STATUS_CODES.FORBIDDEN,
-                    error: [
-                        {
-                            "msg": "You are not creator of this lesson!",
-                            "location": "server"
-                        }
-                    ]
-                });
-            }
+            // const Lesson = await this.LessonEntity.getLessonById({ lessonId });
+            // if (userId !== Lesson.creator.user.toString()) {
+            //     return FormateData({
+            //         status: HTTP_STATUS_CODES.FORBIDDEN,
+            //         error: [
+            //             {
+            //                 "msg": "You are not creator of this lesson!",
+            //                 "location": "server"
+            //             }
+            //         ]
+            //     });
+            // }
 
             const Quizes = await this.QuizEntity.getQuizes({ lessonId });
             return FormateData({
@@ -68,21 +74,21 @@ class QuizService {
     }
 
     async GetSingleQuiz({ classroomId, lessonId, quizId, userId }) {
-        
+
         try {
             //check classroom and lesson is exist
-            const isExist = await checkClassroomandLessonIsExist({ classroomId, lessonId });
+            const isExist = await checkClassroomandLessonIsExistAndCreator({ classroomId, lessonId, userId });
             if (!isExist) {
                 return FormateData({
                     error: [
                         {
-                            "msg": "Classroom or Lesson not found!",
+                            "msg": "Quiz control not found!",
                             "location": "server"
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND
                 });
-            }
+            };
             
             const Lesson = await this.LessonEntity.getLessonById({ lessonId });
             if (userId !== Lesson.creator.user.toString()) {
@@ -95,7 +101,7 @@ class QuizService {
                         }
                     ]
                 });
-            }
+            };
 
             const Quiz = await this.QuizEntity.getQuizById({ quizId });
             return FormateData({
@@ -112,7 +118,7 @@ class QuizService {
         
         try {
             //check classroom and lesson is exist
-            const isExist = await checkClassroomandLessonIsExist({ classroomId, lessonId });
+            const isExist = await checkClassroomandLessonIsExistAndCreator({ classroomId, lessonId, userId });
             if (!isExist) {
                 return FormateData({
                     error: [
@@ -123,7 +129,7 @@ class QuizService {
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND
                 });
-            }
+            };
             
             const Lesson = await this.LessonEntity.getLessonById({ lessonId });
             if (userId !== Lesson.creator.user.toString()) {
@@ -136,7 +142,7 @@ class QuizService {
                         }
                     ]
                 });
-            }
+            };
 
             const NewQuiz = await this.QuizEntity.createQuiz({
                 lessonId,
@@ -155,11 +161,11 @@ class QuizService {
                     ],
                     status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE
                 });
-            }
+            };
 
             // update quizcount on lesson model // and check if is quiz ready?
             const operation = true
-            const UpdatedLessonCount = await this.LessonEntity.calculateQuizCountLesson({ lessonId, operation });
+            const UpdatedLessonCount = await this.LessonEntity.calculateQuizCountLesson({ lessonId, operation, userId });
             if (!UpdatedLessonCount) {
                 return FormateData({
                     error: [
@@ -170,7 +176,7 @@ class QuizService {
                     ],
                     status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE
                 });
-            }
+            };
 
             return FormateData({
                 quiz: NewQuiz,
@@ -179,14 +185,14 @@ class QuizService {
 
         } catch (error) {
             throw error;
-        }
-    }
+        };
+    };
 
     async updateQuiz({ classroomId, lessonId, quizId, userId, title, description, quizImg, quizFile }) {
 
         try {
             //check classroom and lesson is exist
-            const isExist = await checkClassroomandLessonIsExist({ classroomId, lessonId });
+            const isExist = await checkClassroomandLessonIsExistAndCreator({ classroomId, lessonId, userId });
             if (!isExist) {
                 return FormateData({
                     error: [
@@ -220,6 +226,7 @@ class QuizService {
                 quizImg,
                 quizFile,
             });
+
             if(!Quiz) {
                 return FormateData({
                     error: [
@@ -230,7 +237,8 @@ class QuizService {
                     ],
                     status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE
                 });
-            }
+            };
+
             return FormateData({
                 quiz: Quiz,
                 status: HTTP_STATUS_CODES.OK
@@ -238,14 +246,14 @@ class QuizService {
 
         } catch (error) {
             throw error;
-        }
-    }
+        };
+    };
 
     async DeleteQuiz({ classroomId, lessonId, quizId, userId }) {
 
         try {
             //check classroom and lesson is exist
-            const isExist = await checkClassroomandLessonIsExist({ classroomId, lessonId });
+            const isExist = await checkClassroomandLessonIsExistAndCreator({ classroomId, lessonId, userId });
             if (!isExist) {
                 return FormateData({
                     error: [
@@ -305,9 +313,9 @@ class QuizService {
 
         } catch (error) {
             throw error;
-        }
-    }
+        };
+    };
 
-}
+};
 
 module.exports = QuizService;

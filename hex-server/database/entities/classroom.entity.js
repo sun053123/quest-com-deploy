@@ -168,8 +168,6 @@ class ClassroomEntity {
             throw error;
         }
     }
-
-
 }
 
 module.exports = ClassroomEntity

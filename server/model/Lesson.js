@@ -23,11 +23,6 @@ const LessonSchema = new mongoose.Schema({
         ref: 'Classroom',
         required: true
     },
-    quizCount: {
-        type: Number,
-        required: true,
-        default: 0
-    },
     createdAt: {
         type: Date,
         default: Date.now
@@ -78,7 +73,6 @@ const LessonSchema = new mongoose.Schema({
                 ref: 'User',
                 required: true
             }
-
         }
     ],
     likeCount: {
@@ -86,7 +80,21 @@ const LessonSchema = new mongoose.Schema({
         default: 0,
         required: true
     },
-        
+    randomQuiz: {
+        type: boolean,
+        default: false,
+        required: true
+    },
+    limitQuiz: {
+        type: Number,
+        default: 20,
+        required: true
+    },
+    quizCount: {
+        type: Number,
+        required: true,
+        default: 0
+    }
 });
 
 const Lesson = mongoose.model('Lesson', LessonSchema);

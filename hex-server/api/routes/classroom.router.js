@@ -1,6 +1,5 @@
 const { Router } = require('express');
-const { check, validationResult } = require('express-validator');
-const mongoose = require('mongoose');
+const { check } = require('express-validator');
 
 const { ValidateMongooseID, ValidatorErrorHelper } = require('../middlewares/validateHelper');
 const { ValidateToken, ValidateTokenAndTeacher } = require('../middlewares/Auth');
