@@ -1,4 +1,5 @@
 const { ValidateSignature } = require('../../utils');
+const HTTP_STATUS_CODES = require('../../utils/HTTPConstant');
 
 module.exports.ValidateToken = async (req, res, next) => {
 
@@ -8,9 +9,15 @@ module.exports.ValidateToken = async (req, res, next) => {
         return next();
     }
     else{
-        res.status(401).json({
-            message: 'Unauthorized'
-        })
+        res.status(HTTP_STATUS_CODES.UNAUTHORIZED).json({
+            error: [
+                {
+                    "msg": "Unauthorized, Token is require!",
+                    "location": "Auth"
+                }
+            ],
+            status: HTTP_STATUS_CODES.UNAUTHORIZED
+        });
     }
 };
 
@@ -22,12 +29,24 @@ module.exports.ValidateTokenAndTeacher = async (req, res, next) => {
         if(req.user.role == true){
             return next();
         }
-        res.status(401).json({
-            message: 'Cannot Access ( Teacher only )'
+        res.status(HTTP_STATUS_CODES.UNAUTHORIZED).json({
+            error: [
+                {
+                    "msg": "Unauthorized, Teacher Only!",
+                    "location": "Role"
+                }
+            ],
+            status: HTTP_STATUS_CODES.UNAUTHORIZED
         })
     }else{
-        res.status(401).json({
-            message: 'Unauthorized'
+        res.status(HTTP_STATUS_CODES.UNAUTHORIZED).json({
+            error: [
+                {
+                    "msg": "Unauthorized, Token is require!",
+                    "location": "Auth"
+                }
+            ],
+            status: HTTP_STATUS_CODES.UNAUTHORIZED
         })
     }
 }

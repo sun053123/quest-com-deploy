@@ -1,18 +1,6 @@
 const mongoose = require('mongoose');
 
 const LessonSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: true
-    },
-    description: {
-        type: String,
-        required: true
-    },
-    Image: {
-        type: String,
-        required: false
-    },
     creator : {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -22,6 +10,22 @@ const LessonSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Classroom',
         required: true
+    },
+    title: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    lessonImg: {
+        type: String,
+        required: false
+    },
+    lessonFile: {
+        type: String,
+        required: false
     },
     quizCount: {
         type: Number,

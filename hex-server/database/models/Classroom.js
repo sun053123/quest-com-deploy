@@ -9,6 +9,10 @@ const ClassroomSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    classroomImg: {
+        type: String,
+        required: false
+    },
     creator : {
         user: {
             type: mongoose.Schema.Types.ObjectId,
@@ -24,7 +28,19 @@ const ClassroomSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    level: {
+        type: String,
+        required: true
+    },
+    tags: {
+        type: Array,
+    },
     lessonCount: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    studentCount: {
         type: Number,
         required: true,
         default: 0

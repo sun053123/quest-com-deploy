@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const ProfilleSchema = new mongoose.Schema({
-    user:{
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
@@ -14,18 +14,38 @@ const ProfilleSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    favoriteClassroom: {
-        type: Array,
+    dob: {
+        type: Date,
         required: true
     },
-    quizHistory: {
-        type: Array,
+    school: {
+        type: String,
         required: true
     },
-    recentClassroom: {
-        type: Array,
-        required: true
-    },
+    favoriteClassroom: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Classroom'
+        }
+    ],
+    quizHistory: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Quiz',
+        }
+    ],
+    recentClassroom: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Classroom'
+        }
+    ],
+    ownClassroom: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Classroom'
+        }
+    ],
     createdAt: {
         type: Date,
         default: Date.now
@@ -54,7 +74,6 @@ const ProfilleSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-
 });
 
 const Profille = mongoose.model('Profille', ProfilleSchema);

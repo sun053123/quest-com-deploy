@@ -8,13 +8,14 @@ class AuthService {
 
     Packpayload(user) {
         return {
-            id: user.id,
-            email: user.email,
-            username: user.username,
-            role: user.role
+            user: {
+                id: user.id,
+                email: user.email,
+                username: user.username,
+                role: user.role
+            }
         }
     }
-
 
     constructor() {
         this.AuthEntity = new AuthEntity();
@@ -60,7 +61,7 @@ class AuthService {
             //if created Failed
             if (!createdUser){
                 return FormateData({
-                    errors: [
+                    error: [
                         {
                             "msg": "Failed to create user!",
                             "location": "server"
@@ -130,6 +131,32 @@ class AuthService {
             throw error;
         }
     }
+
+    async GetUser({ email }) {
+        try {
+            const user = await this.AuthEntity.getMe({ email });
+
+            //user not found
+            if (!user) {
+                return FormateData({
+                    error: [
+                        {
+                            "msg": "User not found!",
+                            "location": "server"
+                        }
+                    ],
+                    status: HTTP_STATUS_CODES.NOT_FOUND,
+                })
+            }
+
+            return FormateData({user, status: HTTP_STATUS_CODES.OK});
+        }
+        catch (error) {
+            console.error(error); 
+            throw error;
+        }
+    }
+
 
 }
 
