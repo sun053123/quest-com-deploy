@@ -162,10 +162,9 @@ class LessonEntity {
         }
     }
 
-    async calculateQuizCountLesson({ LessonId, operation }) {
+    async calculateQuizCountLesson({ lessonId, operation }) {
         try {
-            const Lesson = await LessonModel.findById(LessonId);
-
+            const Lesson = await LessonModel.findById(lessonId);
             // if(operation === true){
             //     Lesson.quizCount = Lesson.quizCount + 1;
             // }else{
@@ -184,6 +183,23 @@ class LessonEntity {
             const UpdatedLesson = await Lesson.save();
             return UpdatedLesson;
 
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+
+    async updateLessonQuizCtroller({ LessonId, quizIsReday, quizIsRandom, quizLimit }) {
+        try {
+
+            const Lesson = await LessonModel.findById(LessonId);
+            if(quizIsReday) Lesson.quizIsReday = quizIsReday;
+            if(quizIsRandom) Lesson.quizIsRandom = quizIsRandom;
+            if(quizLimit) Lesson.quizLimit = quizLimit;
+
+            const UpdatedLesson = await Lesson.save();
+            return UpdatedLesson;
+            
         }
         catch (error) {
             throw error;

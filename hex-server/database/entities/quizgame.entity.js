@@ -2,49 +2,31 @@ const QuizModel = require('../models/Quiz');
 
 class QuizGameEntity {
 
-    async getAllQuizGame(lessonId, limit) {
+    async getAllQuizGame({lessonId, limit, RANDOM}) {
         try {
             //if limit is not undefined or null, get limit
-            if (limit !== undefined || limit !== null || !limit) {
+            if (limit <= 0) {
+                return null;
+            }
+
+            
+            if (!RANDOM || RANDOM === false) {
+                // if no Random get all quiz by sort createdAt
+
                 const QuizGames = await QuizModel.find({ lesson: lessonId })
                     .select('-answer')
                     .limit(limit)
                     .sort({ createdAt: -1 });
-
                 return QuizGames;
             }
             else {
-                // if !limit , get all quiz
-                const QuizGames = await QuizModel.find({ lesson: lessonId })
-                    .select('-answer')
-                    .sort({ createdAt: -1 });
+                // if Random get all quiz by Random then sort createdAt
 
-                return QuizGames;
-            }
-        }
-        catch (error) {
-            throw error;
-        }
-    }
-
-    async getQuizGameByType(lessonId, type, limit) {
-        try {
-            //if limit is not undefined or null, get limit
-            if (limit !== undefined || limit !== null || limit) {
                 const QuizGames = await QuizModel.find({ lesson: lessonId })
-                    .where('type').equals(type)
                     .select('-answer')
                     .limit(limit)
+                    .random()
                     .sort({ createdAt: -1 });
-
-                return QuizGames;
-            } else {
-                // if !limit , get all quiz by type
-                const QuizGames = await QuizModel.find({ lesson: lessonId, type })
-                    .where('type').equals(type)
-                    .select('-answer')
-                    .sort({ createdAt: -1 });
-
                 return QuizGames;
             }
         }
@@ -53,39 +35,11 @@ class QuizGameEntity {
         }
     }
 
-    // query random quiz
-    async getRandomQuizGame(lessonId, limit) {
+    async getQuizAnswer({lessonId, quizContext}) {
         try {
-            //if limit is not undefined or null, get limit
-            if (limit !== undefined || limit !== null || limit) {
-                const QuizGames = await QuizModel.find({ lesson: lessonId })
-                    .limit(limit)
-                    .sort({ createdAt: -1 })
-                    .random();
-
-                return QuizGames;
-            }
-            else {
-                // if !limit , get all random quiz
-                const QuizGames = await QuizModel.find({ lesson: lessonId })
-                    .select('-answer')
-                    .sort({ createdAt: -1 })
-                    .random();
-                
-                return QuizGames;
-
-            }
-        }
-        catch (error) {
-            throw error;
-        }
-    }
-
-
-    async getQuizAnswer(lessonId) {
-        try {
-            const QuizGamesAnswer = await QuizModel.find({ lesson: lessonId })
-                .select('answer', 'question', '_id')
+            // select only answer id and question            
+            const QuizGamesAnswer = await QuizModel.find({ lesson: lessonId, _id: { $in: quizContext } })
+                .select('answer question _id')
                 .sort({ createdAt: -1 });
 
             return QuizGamesAnswer;

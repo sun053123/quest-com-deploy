@@ -21,11 +21,11 @@ router.post('/:classroomId/lesson/:lessonId/quizcontrol', [
     ValidateTokenAndTeacher,ValidateMongooseID, ValidatorErrorHelper], async (req, res, next) => {
 
     const { classroomId, lessonId } = req.params;
-    const { id, username } = req.user;
-    const { question, type, explanation, options } = req.body;
+    const { id } = req.user;
+    const { question, questionImg, options, answer, explanation, type } = req.body;
 
     try {
-        const { data } = await service.CreateNewQuiz({ classroomId, lessonId, question, type, explanation, options, userId: id, username });
+        const { data } = await service.CreateNewQuiz({ classroomId, lessonId, userId:id, question, questionImg, options, answer, explanation, type });
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);

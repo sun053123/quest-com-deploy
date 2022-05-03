@@ -90,6 +90,26 @@ router.put('/:classroomId/lesson/:lessonId', [
         };
 });
 
+//@ ROUTE  PUT api/classroom/:classroomId/lesson/:lessonId/quizcontroller/panel
+//@ DESC   Update a lesson
+//@ ACCESS Private (Teacher)
+router.put('/:classroomId/lesson/:lessonId/quizcontroller/panel', [
+    ValidateTokenAndTeacher, ValidateMongooseID], async (req, res, next) => {
+    const { classroomId, lessonId } = req.params;
+    const { quizIsReday, quizIsRandom, quizLimit } = req.body;
+    const { id } = req.user;
+
+    try {
+        const { data } = await service.EditQuizController({ userId: id, classroomId, lessonId, quizIsReday, quizIsRandom, quizLimit });
+        return res.status(data.status).json(data);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            error: 'Server error'
+        });
+    };
+});
+
 //@ ROUTE  DELETE api/classroom/:classroomId/lesson/:lessonId
 //@ DESC   Delete a lesson
 //@ ACCESS Private (Teacher)
@@ -188,7 +208,6 @@ router.put('/:classroomId/lesson/:lessonId/comment/:commentId/like', [ValidateTo
         });
     };
 });
-
 
 module.exports = router;
 

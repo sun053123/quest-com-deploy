@@ -59,9 +59,26 @@ class ClassroomService {
         }
     }
 
-    async GetClassrooms() {
+    async GetClassrooms({page, category}) {
         try {
-            const Classrooms = await this.ClassroomEntity.getClassrooms();
+            // calcurate pagination by page
+            const LIMIT = 10;
+            const SKIP = (page - 1) * LIMIT;
+
+            const Classrooms = await this.ClassroomEntity.getClassrooms({ SKIP, LIMIT, category });
+            // const Classrooms = await this.ClassroomEntity.getClassrooms();
+            if(Classrooms.length === 0){
+                return FormateData({
+                    error: [
+                        {
+                            "msg": "Out of index pagination!",
+                            "location": "server"
+                        }
+                    ],
+                    status: HTTP_STATUS_CODES.NOT_FOUND,
+                })
+            }
+
             return FormateData({
                 classrooms: Classrooms,
                 status: HTTP_STATUS_CODES.OK

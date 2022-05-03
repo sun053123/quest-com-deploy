@@ -11,18 +11,22 @@ class QuizService {
     }
 
     //internal function
+    
     async checkClassroomandLessonIsExistAndCreator({ classroomId, lessonId, userId }) {
 
         try {
             const classroom = await this.ClassroomEntity.getClassroomById({ classroomId });
             if (!classroom) {
+                console.log("classroom not found");
                 return false
             }
             const lesson = await this.LessonEntity.getLessonById({ lessonId });
             if (!lesson) {
+                console.log("lesson not found");
                 return false
             }
-            if(userId !== lesson.creator.toString()) {
+            if(userId !== lesson.creator.id.toString()) {
+                console.log("user not creator");
                 return false
             }
 
@@ -77,7 +81,7 @@ class QuizService {
 
         try {
             //check classroom and lesson is exist
-            const isExist = await checkClassroomandLessonIsExistAndCreator({ classroomId, lessonId, userId });
+            const isExist = await this.checkClassroomandLessonIsExistAndCreator({ classroomId, lessonId, userId });
             if (!isExist) {
                 return FormateData({
                     error: [
@@ -114,11 +118,11 @@ class QuizService {
         }
     }
 
-    async CreateNewQuiz({ classroomId, lessonId, userId, title, description, quizImg, quizFile }) {
+    async CreateNewQuiz({ classroomId, lessonId, userId, question, questionImg, options, answer, explanation, type }) {
         
         try {
             //check classroom and lesson is exist
-            const isExist = await checkClassroomandLessonIsExistAndCreator({ classroomId, lessonId, userId });
+            const isExist = await this.checkClassroomandLessonIsExistAndCreator({ classroomId, lessonId, userId });
             if (!isExist) {
                 return FormateData({
                     error: [
@@ -130,26 +134,9 @@ class QuizService {
                     status: HTTP_STATUS_CODES.NOT_FOUND
                 });
             };
-            
-            const Lesson = await this.LessonEntity.getLessonById({ lessonId });
-            if (userId !== Lesson.creator.user.toString()) {
-                return FormateData({
-                    status: HTTP_STATUS_CODES.FORBIDDEN,
-                    error: [
-                        {
-                            "msg": "You are not creator of this lesson!",
-                            "location": "server"
-                        }
-                    ]
-                });
-            };
 
             const NewQuiz = await this.QuizEntity.createQuiz({
-                lessonId,
-                title,
-                description,
-                quizImg,
-                quizFile,
+                lessonId, userId, question, questionImg, options, answer, explanation, type
             });
             if(!NewQuiz) {
                 return FormateData({
@@ -165,7 +152,7 @@ class QuizService {
 
             // update quizcount on lesson model // and check if is quiz ready?
             const operation = true
-            const UpdatedLessonCount = await this.LessonEntity.calculateQuizCountLesson({ lessonId, operation, userId });
+            const UpdatedLessonCount = await this.LessonEntity.calculateQuizCountLesson({ lessonId, operation });
             if (!UpdatedLessonCount) {
                 return FormateData({
                     error: [
@@ -192,7 +179,7 @@ class QuizService {
 
         try {
             //check classroom and lesson is exist
-            const isExist = await checkClassroomandLessonIsExistAndCreator({ classroomId, lessonId, userId });
+            const isExist = await this.checkClassroomandLessonIsExistAndCreator({ classroomId, lessonId, userId });
             if (!isExist) {
                 return FormateData({
                     error: [
@@ -253,7 +240,7 @@ class QuizService {
 
         try {
             //check classroom and lesson is exist
-            const isExist = await checkClassroomandLessonIsExistAndCreator({ classroomId, lessonId, userId });
+            const isExist = await this.checkClassroomandLessonIsExistAndCreator({ classroomId, lessonId, userId });
             if (!isExist) {
                 return FormateData({
                     error: [
@@ -263,19 +250,6 @@ class QuizService {
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND
-                });
-            }
-            
-            const Lesson = await this.LessonEntity.getLessonById({ lessonId });
-            if (userId !== Lesson.creator.user.toString()) {
-                return FormateData({
-                    status: HTTP_STATUS_CODES.FORBIDDEN,
-                    error: [
-                        {
-                            "msg": "You are not creator of this lesson!",
-                            "location": "server"
-                        }
-                    ]
                 });
             }
 

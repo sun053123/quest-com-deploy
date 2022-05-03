@@ -48,10 +48,18 @@ class ClassroomEntity {
         }
     }
 
-    async getClassrooms() {
+    async getClassrooms({ SKIP, LIMIT, category}) {
         try {
-            const Classrooms = await ClassroomModel.find({isComplete : true}).sort({ createdAt: -1 });
-            return Classrooms;
+
+            //get all classrooms paginated any category sort by timecreated
+            if(category === "all" || category === undefined || category === null) {
+                const Classrooms = await ClassroomModel.find({ isComplete : true}).sort({ createdAt: -1 }).skip(SKIP).limit(LIMIT);
+                return Classrooms;
+            } else {
+            //get all classrooms paginated by category sort by timecreated
+                const Classrooms = await ClassroomModel.find({ isComplete : true, category  }).sort({ createdAt: -1 }).skip(SKIP).limit(LIMIT);
+                return Classrooms;
+            }
         }
         catch (error) {
             throw error;

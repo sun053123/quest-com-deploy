@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 
 const { ValidateToken } = require('../middlewares/Auth');
-const { ValidateMongooseID } = require('../middlewares/validateHelper');
+const { ValidateMongooseID, ValidatorErrorHelper } = require('../middlewares/validateHelper');
 const QuizGameService = require('../../services/quizgame.service');
 
 const router = Router();
@@ -27,20 +27,20 @@ router.get('/:classroomId/lesson/:lessonId/quizgame',
         });
     };
 });
-
-//TODO: ADD attempt student in dashboard
     
-//@ ROUTE  GET api/classroom/:classroomId/lesson/:lessonId/quizgame/result
-//@ DESC   GET a quizgame result and save student's attempt
+//@ ROUTE  POST api/classroom/:classroomId/lesson/:lessonId/quizgame/result
+//@ DESC   GET a quizgame result (by quiz context (quizID in fetching) ) and save student's attempt 
 //@ ACCESS Private (Basic)
-router.get('/:classroomId/lesson/:lessonId/quizgame/result',
-    [ValidateToken, ValidateMongooseID], async (req, res, next) => {
-
+router.post('/:classroomId/lesson/:lessonId/quizgame/result',
+[[check('quizContext').not().isEmpty().withMessage('No result found')],
+    [ValidateToken, ValidateMongooseID, ValidatorErrorHelper]], async (req, res, next) => {
+    
+    const { quizContext } = req.body;
     const { classroomId, lessonId } = req.params;
     const { id, username } = req.user;
 
     try {
-        const { data } = await service.GetQuizGameResult({ classroomId, lessonId, userId: id, username });
+        const { data } = await service.GetQuizGameResult({ classroomId, lessonId, userId: id, quizContext });
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);

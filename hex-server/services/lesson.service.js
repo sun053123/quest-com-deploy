@@ -518,6 +518,59 @@ class LessonService {
         };
     };
 
+    async EditQuizController({ classroomId, lessonId, userId }) {
+
+        try {
+         const isExistClassroom = this.checkClassroomIsExistandIsCreator({ classroomId, userId });
+            if (!isExistClassroom) {
+                return FormateData({
+                    error: [
+                        {
+                            "msg": "Classroom not found!",
+                            "location": "server"
+                        }
+                    ],
+                    status: HTTP_STATUS_CODES.NOT_FOUND,
+                });
+            }
+            
+            const Lesson = await this.LessonEntity.getLessonById({ lessonId });
+            if (!Lesson) {
+                return FormateData({
+                    error: [
+                        {
+                            "msg": "Lesson not found!",
+                            "location": "server"
+                        }
+                    ],
+                    status: HTTP_STATUS_CODES.NOT_FOUND,
+                });
+            }
+
+            const UpdatedQuizController = await this.LessonEntity.updateQuizController({ LessonId, quizIsReday, quizIsRandom, quizLimit });
+            if (!UpdatedQuizController) {
+                return FormateData({
+                    error: [
+                        {
+                            "msg": "QuizController not updated!",
+                            "location": "server"
+                        }
+                    ],
+                    status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
+                });
+            }
+
+            return FormateData({
+                lesson: UpdatedQuizController,
+                status: HTTP_STATUS_CODES.OK,
+            });
+            
+        } catch (error) {
+            throw error;
+        }
+    }   
+
+
 };
 
 module.exports = LessonService;

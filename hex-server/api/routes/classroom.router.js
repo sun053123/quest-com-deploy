@@ -36,8 +36,12 @@ router.post('/', [
 //@ DESC   Get all classrooms
 //@ ACCESS Public
 router.get('/', async (req, res, next) => {
+    //query params page and limit
+    const { page, category } = req.query;
+    // console.log(page)
+
     try {
-        const { data } = await service.GetClassrooms();
+        const { data } = await service.GetClassrooms({page, category});
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
