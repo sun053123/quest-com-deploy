@@ -4,7 +4,6 @@ class ClassroomEntity {
 
     async createClassroom({ title, description, classroomImg, userId, username, level, tags, isComplete, category }) {
         try {
-            
             // let creator = {}
             // creator.user = userId
             // creator.name = username
@@ -133,7 +132,6 @@ class ClassroomEntity {
 
             Classroom.studentCount++;
             const UpdatedClassroom = await Classroom.save();
-
             return UpdatedClassroom;
         }
         catch (error) {
@@ -149,11 +147,9 @@ class ClassroomEntity {
             if (Classroom.lessonCount > 0) {
                 Classroom.isComplete = true;
             }
-
+            
             const UpdatedClassroom = await Classroom.save();
-
             return UpdatedClassroom;
-
         }
         catch (error) {
             throw error;
@@ -169,7 +165,6 @@ class ClassroomEntity {
             }
             
             const UpdatedClassroom = await Classroom.save();
-
             return UpdatedClassroom;
         }
         catch (error) {

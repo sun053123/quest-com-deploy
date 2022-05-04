@@ -30,8 +30,23 @@ const ProfilleSchema = new mongoose.Schema({
     ],
     quizHistory: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Quiz',
+            quizOfLesson: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Lesson',
+                required: true
+            },
+            scores: {
+                type: Number,
+                required: true
+            },
+            timeTaken: {
+                type: Number,
+                required: true
+            },
+            createdAt: {
+                type: Date,
+                default: Date.now
+            },
         }
     ],
     recentClassroom: [

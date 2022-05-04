@@ -42,6 +42,10 @@ router.get('/', async (req, res, next) => {
 
     try {
         const { data } = await service.GetClassrooms({page, category});
+        
+        //delay for testing
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
