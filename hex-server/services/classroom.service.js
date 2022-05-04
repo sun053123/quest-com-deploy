@@ -62,7 +62,11 @@ class ClassroomService {
     async GetClassrooms({page, category}) {
         try {
             // calcurate pagination by page
-            const LIMIT = 10;
+            if (page <= 0) {
+                page = 1;
+            }
+            
+            const LIMIT = 2;
             const SKIP = (page - 1) * LIMIT;
 
             const Classrooms = await this.ClassroomEntity.getClassrooms({ SKIP, LIMIT, category });

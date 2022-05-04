@@ -38,13 +38,14 @@ router.post('/', [
 router.get('/', async (req, res, next) => {
     //query params page and limit
     const { page, category } = req.query;
+    console.log(page, category);
     // console.log(page)
 
     try {
         const { data } = await service.GetClassrooms({page, category});
         
         //delay for testing
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // await new Promise(resolve => setTimeout(resolve, 1500));
 
         return res.status(data.status).json(data);
     } catch (err) {

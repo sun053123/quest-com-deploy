@@ -41,6 +41,7 @@ router.post('/', [[
 ], ValidatorErrorHelper], async (req, res, next) => {
 
     const { email, password } = req.body;
+    console.log("do login")
 
     try {
         const { data } = await service.LoginUser({ email, password });

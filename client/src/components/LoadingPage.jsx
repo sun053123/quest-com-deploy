@@ -1,10 +1,11 @@
 //create loading page
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 
 import { Grid } from '@mui/material';
+import { Navigate } from 'react-router-dom';
 
 import HashLoader from "react-spinners/HashLoader";
-import SyncLoader from "react-spinners/SyncLoader";
+// import SyncLoader from "react-spinners/SyncLoader";
 
 import Animatedpage from './Animatedpage';
 
@@ -16,10 +17,19 @@ function LoadingPage() {
     //set window to center
     const myRef = useRef(null)
     const executeScroll = () => scrollToRef(myRef)
+    const [navigateback, setNavigateback] = useState(false);
 
     useEffect(() => {
         executeScroll()
+        const interval = setInterval(() => {
+            setNavigateback(true);
+        }, 3000);
+        return () => clearInterval(interval);
     }, []);
+
+    if (navigateback) {
+        return <Navigate to="/" />
+    }
 
     return (
         <Animatedpage >
