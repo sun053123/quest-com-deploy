@@ -66,11 +66,12 @@ class ClassroomService {
                 page = 1;
             }
             
-            const LIMIT = 2;
+            const LIMIT = 10;
             const SKIP = (page - 1) * LIMIT;
 
-            const Classrooms = await this.ClassroomEntity.getClassrooms({ SKIP, LIMIT, category });
+            const ClassroomsTotal = await this.ClassroomEntity.getClassrooms({ SKIP, LIMIT, category });
             // const Classrooms = await this.ClassroomEntity.getClassrooms();
+            const { Classrooms, Total} = ClassroomsTotal;
             if(Classrooms.length === 0){
                 return FormateData({
                     error: [
@@ -86,6 +87,7 @@ class ClassroomService {
 
             return FormateData({
                 classrooms: Classrooms,
+                maximumitem: Total,
                 status: HTTP_STATUS_CODES.OK
             });
         } catch (error) {

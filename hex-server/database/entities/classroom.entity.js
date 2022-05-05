@@ -50,13 +50,25 @@ class ClassroomEntity {
     async getClassrooms({ SKIP, LIMIT, category}) {
         try {
             //get all classrooms paginated any category sort by timecreated
-            if(category === "all" || category === undefined || category === null) {
-                const Classrooms = await ClassroomModel.find({ isComplete : true}).sort({ createdAt: -1 }).skip(SKIP).limit(LIMIT);
-                return Classrooms;
+            if (category === "all" || category === undefined || category === null) {
+                const Classrooms = await ClassroomModel.find({ isComplete: true }).sort({ createdAt: -1 }).skip(SKIP).limit(LIMIT);
+                const Count = await ClassroomModel.countDocuments({ isComplete: true });
+                if (Count === 0) {
+                    return { Classrooms, Total: 0 };
+                } else {
+                    const Total = Count / LIMIT;
+                    return { Classrooms, Total };
+                }
             } else {
-            //get all classrooms paginated by category sort by timecreated
-                const Classrooms = await ClassroomModel.find({ isComplete : true, category  }).sort({ createdAt: -1 }).skip(SKIP).limit(LIMIT);
-                return Classrooms;
+                //get all classrooms paginated by category sort by timecreated
+                const Classrooms = await ClassroomModel.find({ isComplete: true, category }).sort({ createdAt: -1 }).skip(SKIP).limit(LIMIT);
+                const Count = await ClassroomModel.countDocuments({ isComplete: true, category });
+                if (Count === 0) {
+                    return { Classrooms, Total: 0 };
+                } else {
+                    const Total = Count / LIMIT;
+                    return { Classrooms, Total };
+                }
             }
         }
         catch (error) {

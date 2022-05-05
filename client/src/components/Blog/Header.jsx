@@ -5,10 +5,16 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
+
+import { useNavigate } from 'react-router-dom';
 
 function Header(props) {
   const { sections, title, setCategory } = props;
+  let navigate = useNavigate();
+
+  const HandleRouteChange = () => {
+    navigate('/createclassroom');
+    }
 
     const HandleOnSetCategory = (category) => {
         console.log(category);
@@ -32,7 +38,7 @@ function Header(props) {
         {/* <Button onClick={() => HandleOnSetCategory('sci')} size="small">
             sci
         </Button> */}
-        <Button variant="outlined" size="small">
+        <Button variant="outlined" size="small" onClick={HandleRouteChange} >
           Create Classroom
         </Button>
       </Toolbar>

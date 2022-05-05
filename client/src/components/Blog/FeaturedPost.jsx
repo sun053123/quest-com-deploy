@@ -6,24 +6,31 @@ import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
+import { useNavigate } from 'react-router-dom';
 
 // import NOIMG from '../../assets/img/no-image.png'
 
 function FeaturedPost(props) {
   const { classroom } = props;
-
 //   console.log(classroom)
+    let navigate = useNavigate(); 
 
-  const HandleOnClick = () => {
-    window.location.href = `/classroom/${classroom.id}`
+    const routeChange = () =>{ 
+        navigate(`/classroom/${classroom._id}`)
     }
+
 
   return (
     <Grid item xs={12} md={6}>
-      <CardActionArea component="a" href="#">
+      <CardActionArea component="a" onClick={routeChange}>
         <Card sx={{ display: 'flex' }}>
           <CardContent sx={{ flex: 1 }}>
-            <Typography component="h2" variant="h5">
+            <Typography component="h2" variant="h5" sx={{
+                //limit text
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+            }}>
               {classroom.title}
             </Typography>
             <Typography variant="subtitle1" color="text.secondary">

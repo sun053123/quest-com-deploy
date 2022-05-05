@@ -10,6 +10,7 @@ const AuthReducer = (state, action) => {
         case LOGIN_START: {
             return {
                 user: null,
+                userinfo: null,
                 isLoading: true,
                 error: null
             };

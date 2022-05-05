@@ -8,7 +8,7 @@ import { Logout, SetUserInfo } from "../Actions/AuthAction";
 
 const INITIAL_STATE = {
     user: JSON.parse(localStorage.getItem("user")) || null,
-    userinfo: null,
+    userinfo: jwt_decode(JSON.parse(localStorage.getItem("user"))) || null,
     isAuthenticated: false,
     isLoading: false,
     error: null,

@@ -4,7 +4,6 @@ import Container from "@mui/material/Container";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import Card from "@mui/material/Card";
 
 import Header from "../components/Blog/Header";
 import MainFeaturedPost from "../components/Blog/MainFeaturedPost";
@@ -27,7 +26,7 @@ import { AlertShow } from "../store/Actions/AlertAction";
 
 import LoadingPage from "../components/LoadingPage";
 
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button, Typography } from "@mui/material";
 
@@ -100,6 +99,7 @@ export default function Blog() {
   const [category, setCategory] = React.useState("all");
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(1);
+  const [maximumpages, setMaximumPages] = useState(1);
   const [classes, setClasses] = useState([]);
   const [usersocres, setUsersocres] = useState("");
   const [ownclassroom, setOwnclassroom] = useState("");
@@ -122,6 +122,7 @@ export default function Blog() {
       keepPreviousData: true,
       onSuccess: (data) => {
         setClasses(data.data.classrooms);
+        setMaximumPages(data.data.maximumitem);
       },
       onError: (error) => {
         AlertDispatch(AlertShow(error.response.data.error));
@@ -134,54 +135,52 @@ export default function Blog() {
   );
 
   //query score by useQuery
-//   const {
-//     isLoading: isLoadingScore,
-//     isError: isErrorScore,
-//     data: dataScore,
-//     error: errorScore,
-//   } = useQuery(
-//     ["score"],
-//     () => axios.get("http://localhost:8000/api/user/scores"),
-//     {
-//       retry: false,
-//       refetchOnWindowFocus: false,
-//       //retechOnmount is important to avoid empty render when navigating from another page (always true)
-//       refetchOnMount: true,
-//       keepPreviousData: true,
-//       //on guest mode, no need to query scores
-//       enabled: user? true : false,
-//       onSuccess: (data) => {
-//         console.log(data.data.score);
-//         setOwnclassroom(data.data.score);
-//         console.log(usersocres);
-//       },
-//     }
-//   );
+  //   const {
+  //     isLoading: isLoadingScore,
+  //     isError: isErrorScore,
+  //     data: dataScore,
+  //     error: errorScore,
+  //   } = useQuery(
+  //     ["score"],
+  //     () => axios.get("http://localhost:8000/api/user/scores"),
+  //     {
+  //       retry: false,
+  //       refetchOnWindowFocus: false,
+  //       //retechOnmount is important to avoid empty render when navigating from another page (always true)
+  //       refetchOnMount: true,
+  //       keepPreviousData: true,
+  //       //on guest mode, no need to query scores
+  //       enabled: user? true : false,
+  //       onSuccess: (data) => {
+  //         console.log(data.data.score);
+  //         setOwnclassroom(data.data.score);
+  //         console.log(usersocres);
+  //       },
+  //     }
+  //   );
 
-//   const {
-//     isLoading: isLoadingOwnClassroom,
-//     isError: isErrorOwnClassrooom,
-//     data: dataOwnClassroom,
-//     error: errorOwnClassroom,
-//   } = useQuery(
-//     ["ownclassroom"],
-//     () => axios.get("http://localhost:8000/api/user/ownclassroom"),
-//     {
-//       retry: false,
-//       refetchOnWindowFocus: false,
-//       //retechOnmount is important to avoid empty render when navigating from another page (always true)
-//       refetchOnMount: true,
-//       keepPreviousData: true,
-//       //on guest mode, no need to query scores
-//     //   enabled: userinfo?.user.role === true ? true : false,
-//       onSuccess: (data) => {
-//         setOwnclassroom(data.data.ownclassroom);
-//         console.log("ownclassroom :",ownclassroom);
-//       },
-//     }
-//   );
-
- 
+  //   const {
+  //     isLoading: isLoadingOwnClassroom,
+  //     isError: isErrorOwnClassrooom,
+  //     data: dataOwnClassroom,
+  //     error: errorOwnClassroom,
+  //   } = useQuery(
+  //     ["ownclassroom"],
+  //     () => axios.get("http://localhost:8000/api/user/ownclassroom"),
+  //     {
+  //       retry: false,
+  //       refetchOnWindowFocus: false,
+  //       //retechOnmount is important to avoid empty render when navigating from another page (always true)
+  //       refetchOnMount: true,
+  //       keepPreviousData: true,
+  //       //on guest mode, no need to query scores
+  //     //   enabled: userinfo?.user.role === true ? true : false,
+  //       onSuccess: (data) => {
+  //         setOwnclassroom(data.data.ownclassroom);
+  //         console.log("ownclassroom :",ownclassroom);
+  //       },
+  //     }
+  //   );
 
   // initial page params url
   useEffect(() => {
@@ -200,18 +199,17 @@ export default function Blog() {
     return <LoadingPage />;
   }
 
-//   if (isLoadingScore) {
-//     console.log("score laoding");
-//     }
+  //   if (isLoadingScore) {
+  //     console.log("score laoding");
+  //     }
 
-//     if (isErrorScore) {
-//     console.log("score error",errorScore);
-//     }
+  //     if (isErrorScore) {
+  //     console.log("score error",errorScore);
+  //     }
 
-//   if (dataScore) {
-//     console.log("score", dataScore);
-//   }
-
+  //   if (dataScore) {
+  //     console.log("score", dataScore);
+  //   }
   return (
     <div className="blog-service">
       <CssBaseline />
@@ -244,6 +242,15 @@ export default function Blog() {
                   fontSize: "1.5rem",
                   fontWeight: "bold",
                   color: "orange",
+
+                  //on mobile device
+                  "@media screen and (max-width:40em)": {
+                    fontSize: "16px",
+                    fontWeight: "regular",
+                    color: "orange",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
                 }}
               >
                 Category : {category.toUpperCase()}
@@ -253,6 +260,17 @@ export default function Blog() {
               <Typography
                 sx={{
                   fontSize: "1.5rem",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  display: "flex",
+                  fontWeight: "regular",
+                  "@media screen and (max-width:40em)": {
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    display: "flex",
+                  },
                 }}
               >
                 Page : {page}
@@ -270,8 +288,9 @@ export default function Blog() {
                 marginBottom: "1rem",
               }}
             >
-              <Button
+              {/* <Button
                 disabled={page === 1}
+                variant="contained"
                 onClick={() => setPage(page - 1)}
                 sx={{
                   outlineStyle: "2px solid #fff",
@@ -299,40 +318,30 @@ export default function Blog() {
                     cursor: "pointer",
                     transition: "all 0.3s ease",
                   },
+                  '@media screen and (max-width:40em)': {
+                    color: "orange",
+                    fontSize: "10px",
+                    fontWeight: "regular",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    display: "flex",
+                    },
                 }}
               >
                 Previous Page
-              </Button>
+              </Button> */}
               <Button
-                disabled={isError}
+                variant="outlined"
+                disabled={page === 1}
+                onClick={() => setPage(page - 1)}
+              >
+                Previous Page
+              </Button>
+
+              <Button
+                variant="outlined"
+                disabled={page === Math.ceil(maximumpages)}
                 onClick={() => setPage(page + 1)}
-                sx={{
-                  outlineStyle: "2px solid #fff",
-                  outlineColor: "#fff",
-                  outlineOffset: "2px",
-                  border: "none",
-                  backgroundColor: "#fff",
-                  color: "#000",
-                  // fontSize: "1.2rem",
-                  // fontWeight: "bold",
-                  padding: "0.5rem",
-                  borderRadius: "0.5rem",
-                  cursor: "pointer",
-                  margin: "0.5rem",
-                  width: "fit-content",
-                  textAlign: "center",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    backgroundColor: "orange",
-                    color: "#fff",
-                    outlineColor: "#fff",
-                    outlineStyle: "2px solid #fff",
-                    outlineOffset: "2px",
-                    border: "none",
-                    cursor: "pointer",
-                    transition: "all 0.3s ease",
-                  },
-                }}
               >
                 Next Page
               </Button>

@@ -1,0 +1,24 @@
+import { useContext } from 'react';
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { AuthContext } from '../store/Contexts/AuthContext';
+
+const useAuth = () => {
+    const { userinfo } = useContext(AuthContext);
+    
+    console.log("userinfo ",userinfo);
+    const { role}  = userinfo;
+    console.log("role ",role);
+    return role
+}
+
+const ProtectRoute = () => {
+    const isAuth = useAuth();
+    const location = useLocation();
+
+    //if user role === true (only teacher can aceess)
+  return isAuth ? <Outlet /> : <Navigate to="/" replace state={{from: location}} /> 
+  // react router v6
+
+
+}
+export default ProtectRoute;

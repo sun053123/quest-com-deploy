@@ -10,7 +10,7 @@ import { Logout } from '../store/Actions/AuthAction';
 import { Link } from 'react-router-dom';
 
 
-const pages = ['Home', 'Pricing', 'Blog', 'Classroom'];
+const pages = ['Home', 'Pricing', 'Blog', 'Classroom', 'Quizcreate'];
 // const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Navbar = () => {
