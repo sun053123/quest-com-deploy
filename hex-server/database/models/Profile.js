@@ -8,19 +8,18 @@ const ProfilleSchema = new mongoose.Schema({
     },
     firstname: {
         type: String,
-        required: true
     },
     lastname: {
         type: String,
-        required: true
+    },
+    avatar: {
+        type: String,
     },
     dob: {
         type: String,
-        required: true
     },
     school: {
         type: String,
-        required: true
     },
     favoriteClassroom: [
         {

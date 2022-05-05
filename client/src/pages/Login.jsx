@@ -2,6 +2,7 @@ import { useContext, useState, useEffect } from 'react';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import axios from 'axios';
 
+
 import { Avatar, Button, Grid, Paper, Typography, TextField, Link, CssBaseline, Box } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { toast, ToastContainer } from 'react-toastify';
@@ -18,6 +19,8 @@ import { AlertShow } from '../store/Actions/AlertAction';
 import slide1 from '../assets/img/slide1.jpg';
 import slide2 from '../assets/img/slide2.jpg';
 import slide3 from '../assets/img/slide3.jpg';
+
+import GoogleLogin from 'react-google-login';
 
 function randomImageBanner() {
   const min = 0;
@@ -73,6 +76,21 @@ function Login() {
 			}
 		}
 	};
+
+	const googleSuccess = async (res) => {
+		const token = res?.tokenId;
+		try {
+		  const res = await axios.post("http://localhost:8000/api/auth/google-login", { tokenId: token }, { headers: { 'Content-Type': 'application/json' } });
+		  AuthDispatch(LoginSuccess(res.data.token));
+		} catch (err) {
+			console.log("error google login", err)
+			AlertDispatch(AlertShow(err.response.data.error, "danger"));
+		}
+	  };
+	
+	  const googleError = () => {
+		toast.error("Google login failed");
+	  };
 
 
 	return (
@@ -145,6 +163,27 @@ function Login() {
 						>
 							Sign In
 						</Button>
+						{/* <Button fullWidth variant="contained" color="secondary" disabled={isLoading}>
+							Google Login
+						</Button> */}
+						<GoogleLogin 
+							clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+							render={(renderProps) => (
+								<Button
+									fullWidth
+									variant="contained"
+									sx={{ mt: 3, mb: 2 }}
+									color="primary"
+									onClick={renderProps.onClick}
+									disabled={renderProps.disabled}
+									>
+									Google Login
+									</Button>
+							)}
+							cookiePolicy={'single_host_origin'}
+							onSuccess={googleSuccess}
+							onFailure={googleError}
+							/>
 						<Grid container>
 							<Grid item xs>
 								<Link href="#" variant="body2">

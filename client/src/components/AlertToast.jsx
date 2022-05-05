@@ -8,8 +8,7 @@ function AlertToast() {
 
     const { alerts } = useContext(AlertContext);
     
-
-    console.log("art",alerts);
+    // console.log("Alerts :",alerts);
 
     alerts != null && alerts.map(alert => {
         console.log("in AlertToast", alert.msg);

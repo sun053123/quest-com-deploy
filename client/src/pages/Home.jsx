@@ -5,15 +5,16 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 
-import Header from "../components/Blog/Header";
-import MainFeaturedPost from "../components/Blog/MainFeaturedPost";
-import FeaturedPost from "../components/Blog/FeaturedPost";
-import Main from "../components/Blog/Main";
-import Sidebar from "../components/Blog/Sidebar";
-import Footer from "../components/Blog/Footer";
-import post1 from "../components/Blog/blog-post.1.txt";
-import post2 from "../components/Blog/blog-post.1.txt";
-import post3 from "../components/Blog/blog-post.1.txt";
+import Header from "../components/Home/Header";
+import MainFeaturedPost from "../components/Home/MainFeaturedPost";
+import FeaturedPost from "../components/Home/FeaturedPost";
+import Main from "../components/Home/Main";
+import Sidebar from "../components/Home/Sidebar";
+import Footer from "../components/Home/Footer";
+
+import post1 from "../components/Home/blog-post.1.txt";
+import post2 from "../components/Home/blog-post.1.txt";
+import post3 from "../components/Home/blog-post.1.txt";
 
 import React, { useState, useEffect, useContext } from "react";
 import { useQuery } from "react-query";
@@ -217,13 +218,7 @@ export default function Blog() {
       <Container maxWidth="lg">
         <Header title="Blog" sections={sections} setCategory={setCategory} />
         <main>
-          {isError && <div>Error</div>}
-          {/* <button disabled={page === 1} onClick={() => setPage(page - 1)}>
-            Previous Page
-          </button>
-          <button disabled={isError} onClick={() => setPage(page + 1)}>
-            Next Page
-          </button> */}
+          {isError && <div>Error! Server is Down!</div>}
           <MainFeaturedPost post={mainFeaturedPost} />
           <Grid
             container

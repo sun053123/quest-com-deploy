@@ -73,4 +73,18 @@ router.get('/', ValidateToken, async (req, res, next) => {
     }
 });
 
+router.post('/google-login', async (req, res, next) => {
+    console.log("google login")
+
+    const { tokenId } = req.body;
+    try{
+        const { data } = await service.GoogleLogin({ tokenId });
+        return res.status(data.status).json(data);
+    } catch(err){
+        console.error(err);
+        return res.status(500).json({ error: 'Server error' });
+    }
+});
+    
+
 module.exports = router;
