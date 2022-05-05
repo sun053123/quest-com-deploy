@@ -1,4 +1,4 @@
-const { AuthEntity } = require('../database');
+const { AuthEntity, ProfileEntity } = require('../database');
 const bcrypt = require('bcrypt');
 
 const { FormateData, GenerateToken } = require('../utils');
@@ -8,20 +8,19 @@ class AuthService {
 
     Packpayload(user) {
         return {
-            user: {
-                id: user.id,
-                email: user.email,
-                username: user.username,
-                role: user.role
-            }
+            id: user.id,
+            email: user.email,
+            username: user.username,
+            role: user.role
         }
     }
 
     constructor() {
         this.AuthEntity = new AuthEntity();
+        this.ProfileEntity = new ProfileEntity();
     }
 
-    async RegisterUser({ email, username, password, role }) {
+    async RegisterUser({ email, username, password, role, firstname, lastname, dob, school }) {
         try {
 
             const user = await this.AuthEntity.getUserByEmail({ email });
@@ -71,13 +70,35 @@ class AuthService {
                 }) 
             }
 
+            //create user profile
+
+            //formate dob date to Datetype
+            const createdProfile = await this.ProfileEntity.createProfile({
+                userId: createdUser.id, firstname, lastname, dob, school
+            });
+            if (!createdProfile) {
+                return FormateData({
+                    error: [
+                        {
+                            "msg": "Failed to create user profile!",
+                            "location": "server",
+                            "type": "error"
+                        }
+                    ],
+                    status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
+                })
+            }
+
             //make payload
             const payload = this.Packpayload(createdUser);
 
             //generate token
             const token = GenerateToken(payload);
 
-            return FormateData({token, status: HTTP_STATUS_CODES.CREATED});
+            return FormateData({
+                token, 
+                status: HTTP_STATUS_CODES.CREATED
+            });
 
            
         } catch (error) {
@@ -123,6 +144,8 @@ class AuthService {
 
             //generate token
             const token = GenerateToken(payload);
+            
+            
 
             return FormateData({token, status: HTTP_STATUS_CODES.OK});
 

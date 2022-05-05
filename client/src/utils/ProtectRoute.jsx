@@ -9,11 +9,11 @@ const useAuth = () => {
     return user 
 }
 
-const ProtectRoute = ({children}) => {
+const ProtectRoute = () => {
     const isAuth = useAuth();
-    console.log("isAuth ",isAuth);
     const location = useLocation();
-  return !isAuth ? children : <Navigate to="/" replace state={{from: location}} /> 
+
+  return !isAuth ? <Outlet /> : <Navigate to="/" replace state={{from: location}} /> 
   // react router v6
 
 

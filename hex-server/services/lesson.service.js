@@ -78,7 +78,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Classroom not found! or Not Ready!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ]
                 });
@@ -90,7 +91,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Lesson not found",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,
@@ -115,7 +117,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Classroom not found!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,
@@ -127,7 +130,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "You are not the creator of this classroom!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.UNAUTHORIZED,
@@ -147,7 +151,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Lesson not created!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
@@ -173,7 +178,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "You are not the creator of this classroom!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.UNAUTHORIZED,
@@ -186,7 +192,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Lesson not found!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,
@@ -198,7 +205,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "You are not the creator of this lesson!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.UNAUTHORIZED,
@@ -217,7 +225,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Lesson not updated!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
@@ -241,7 +250,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "You are not the creator of this classroom!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.UNAUTHORIZED,
@@ -254,7 +264,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Lesson not found!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,
@@ -266,7 +277,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "You are not the creator of this lesson!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.UNAUTHORIZED,
@@ -280,7 +292,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Lesson not deleted!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
@@ -306,7 +319,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Classroom not found! or Not Ready!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,
@@ -318,7 +332,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Lesson not found!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,
@@ -345,7 +360,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Classroom not found!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,
@@ -357,7 +373,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Lesson not found!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,
@@ -375,7 +392,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Comment not created!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
@@ -399,7 +417,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Classroom not found!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,
@@ -411,7 +430,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Lesson not found!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,
@@ -424,7 +444,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Comment not found!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,
@@ -436,7 +457,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "You are not the creator of this comment!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.UNAUTHORIZED,
@@ -449,7 +471,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Comment not deleted!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
@@ -473,7 +496,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Classroom not found!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,
@@ -486,7 +510,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Lesson not found!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,
@@ -499,7 +524,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Comment not found!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,
@@ -527,7 +553,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Classroom not found!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,
@@ -540,7 +567,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "Lesson not found!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,
@@ -553,7 +581,8 @@ class LessonService {
                     error: [
                         {
                             "msg": "QuizController not updated!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "error"
                         }
                     ],
                     status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,

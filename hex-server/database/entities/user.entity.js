@@ -1,13 +1,14 @@
 //use profile MODEL
-const Profile = require('../models/Quiz');
+const UserModel = require('../models/User');
+const ProfileModel = require('../models/Profile');
 
 //FIXME: there is something wrong ( favorite push to profile )
 
 class UserEntity {
 //get user score
-    async getUserScore({ userId }) {
+    async getUserScores({ userId }) {
         try {
-            const UserScore = await Profile.find({ user: userId }).sort({ createdAt: -1 });
+            const UserScore = await ProfileModel.findOne({ user: userId })
 
             const UserScores = {
                 math_score: UserScore.math_score,
@@ -23,9 +24,27 @@ class UserEntity {
         }
     }
 
+    async getUserByEmail({ email }) {
+        try {
+            const User = await UserModel.findOne({ email }).select('-password');
+            return User;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getUserById({ userId }) {
+        try {
+            const User = await UserModel.findById(userId).select('-password');
+            return User;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async updateScoreToUser({ userId, score, category }) {
         try {
-            const UserScore = await Profile.findOne({ user: userId });
+            const UserScore = await ProfileModel.findOne({ user: userId });
             if(category === "science"){
                 UserScore.science_score++;
             }else if(category === "math"){
@@ -51,7 +70,7 @@ class UserEntity {
 //save fav classroom
     async saveFavClassroom({ userId, classroomId }) {
         try {
-            const User = await Profile.findById(userId);
+            const User = await ProfileModel.findById(userId);
             User.favClassroom.push(classroomId);
             const UserUpdate = await User.save();
             return UserUpdate;
@@ -63,7 +82,7 @@ class UserEntity {
 
     async getFavClassroom({ userId }) {
         try {
-            const User = await Profile.findById(userId);
+            const User = await ProfileModel.findById(userId);
             return User.favClassroom;
         }
         catch (error) {
@@ -74,7 +93,7 @@ class UserEntity {
 //save recent classroom
     async saveRecentClassroom({ userId, classroomId }) {
         try {
-            const User = await Profile.findById(userId);
+            const User = await ProfileModel.findById(userId);
             User.recentClassroom.push(classroomId);
             const UserUpdate = await User.save();
             return UserUpdate;
@@ -86,8 +105,18 @@ class UserEntity {
 
     async getRecentClassroom({ userId }) {
         try {
-            const User = await Profile.findById(userId);
+            const User = await ProfileModel.findById(userId);
             return User.recentClassroom;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+
+    async getUserOwnClassroom({ userId }) {
+        try {
+            const Classroom = await ClassroomModel.find({ creator: { user: userId } }).sort({ createdAt: -1 });
+            return Classroom;
         }
         catch (error) {
             throw error;

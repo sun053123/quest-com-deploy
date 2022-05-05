@@ -15,7 +15,7 @@ const ProfilleSchema = new mongoose.Schema({
         required: true
     },
     dob: {
-        type: Date,
+        type: String,
         required: true
     },
     school: {
@@ -71,23 +71,23 @@ const ProfilleSchema = new mongoose.Schema({
     },
     math_score: {
         type: Number,
-        default: 0
+        default: 0,
     },
     english_score: {
         type: Number,
-        default: 0
+        default: 0,
     },
     computer_score: {
         type: Number,
-        default: 0
+        default: 0,
     },
     science_score: {
         type: Number,
-        default: 0
+        default: 0,
     },
     social_score: {
         type: Number,
-        default: 0
+        default: 0,
     },
 });
 

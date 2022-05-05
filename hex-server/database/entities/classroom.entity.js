@@ -49,7 +49,6 @@ class ClassroomEntity {
 
     async getClassrooms({ SKIP, LIMIT, category}) {
         try {
-
             //get all classrooms paginated any category sort by timecreated
             if(category === "all" || category === undefined || category === null) {
                 const Classrooms = await ClassroomModel.find({ isComplete : true}).sort({ createdAt: -1 }).skip(SKIP).limit(LIMIT);

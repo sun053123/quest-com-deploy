@@ -13,8 +13,10 @@ const service = new UserService()
 //@ ACCESS Private (Basic)
 router.get('/scores', ValidateToken, async (req, res, next) => {
     const { id } = req.user;
+
+    console.log("get scores")
     try {
-        const { data } = await service.GetScores({ id });
+        const { data } = await service.GetUserScores({ userId:id });
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
@@ -30,7 +32,7 @@ router.get('/scores', ValidateToken, async (req, res, next) => {
 router.get('/ownclassroom', ValidateTokenAndTeacher, async (req, res, next) => {
     const { id } = req.user;
     try {
-        const { data } = await service.GetOwnClassroom({ id });
+        const { data } = await service.GetUserOwnClassroom({ userId:id });
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);

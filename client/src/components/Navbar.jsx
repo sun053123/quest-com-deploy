@@ -10,7 +10,7 @@ import { Logout } from '../store/Actions/AuthAction';
 import { Link } from 'react-router-dom';
 
 
-const pages = ['Home', 'Pricing', 'Blog'];
+const pages = ['Home', 'Pricing', 'Blog', 'Classroom'];
 // const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Navbar = () => {
@@ -130,11 +130,10 @@ const Navbar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              
-            <MenuItem>
+            <MenuItem onClick={handleCloseUserMenu}>
                 <Typography textAlign="center">Profile</Typography>
             </MenuItem>
-            <MenuItem>
+            <MenuItem onClick={handleCloseUserMenu}>
                 <Typography textAlign="center" onClick={handleLogout}>Logout</Typography>
             </MenuItem>
              
@@ -143,15 +142,16 @@ const Navbar = () => {
               <Box sx={{
                 flexGrow: 0,
                 display: { xs: 'flex' },
-              }} >
-                <Link to="/login">
+                textDecoration: 'none'
+              }} component={Link} to="/login" >
+                
                     <Button
                         onClick={handleCloseNavMenu}
                         sx={{ my: 2, color: 'white', display: 'block' }}
                     >
                         Login
                     </Button>
-                </Link>
+               
                 </Box>
              )
             }

@@ -24,8 +24,7 @@ module.exports.ValidateSignature = (req) => {
     try {
         if(signature){
             const decoded =  jsonwebtoken.verify(signature.split(' ')[1], process.env.JWT_SECRET || 'secret');
-            req.user = decoded.user
-
+            req.user = decoded
             return true;
         };
         return false;

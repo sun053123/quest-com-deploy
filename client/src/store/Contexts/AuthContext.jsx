@@ -3,11 +3,12 @@ import jwt_decode from 'jwt-decode';
 
 import  AuthReducer  from '../Reducers/AuthReducer';
 import setAuthToken from '../../utils/setAuthToken';
-import { Logout } from "../Actions/AuthAction";
+import { Logout, SetUserInfo } from "../Actions/AuthAction";
 
 
 const INITIAL_STATE = {
     user: JSON.parse(localStorage.getItem("user")) || null,
+    userinfo: null,
     isAuthenticated: false,
     isLoading: false,
     error: null,
@@ -21,6 +22,7 @@ export const AuthProvider = ({ children }) => {
     //check if token was expired
     const checkExpiredToken = () => {
         const token = JSON.parse(localStorage.getItem('user'));
+        // console.log(token.token)
         if (token) {
             const decoded = jwt_decode(token);
             if (decoded.exp < Date.now() / 1000) {
@@ -44,12 +46,15 @@ export const AuthProvider = ({ children }) => {
 
     //set token to state
     if(state.user) {
-        setAuthToken(state.user.token);
+        // console.log("token set axios",state.user);
+        setAuthToken(state.user);
     }
+
 
     return (
         <AuthContext.Provider value={{
             user: state.user,
+            userinfo: state.userinfo,
             isAuthenticated: state.isAuthenticated,
             isLoading: state.isLoading,
             error: state.error,

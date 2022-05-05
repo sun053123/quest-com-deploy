@@ -76,7 +76,8 @@ class ClassroomService {
                     error: [
                         {
                             "msg": "Out of index pagination!",
-                            "location": "server"
+                            "location": "server",
+                            "type": "warning"
                         }
                     ],
                     status: HTTP_STATUS_CODES.NOT_FOUND,

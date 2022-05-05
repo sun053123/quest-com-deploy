@@ -60,7 +60,7 @@ function Login() {
 
 		try {
 			const res = await axios.post("http://localhost:8000/api/auth", { email, password });
-
+			console.log("login res",res.data)
 			AuthDispatch(LoginSuccess(res.data.token));
 		} catch (err) {
 			AuthDispatch(LoginFailure());

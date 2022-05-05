@@ -8,6 +8,8 @@ const AuthService = require('../../services/auth.service');
 const router = Router();
 const service = new AuthService();
 
+//FIXME: add register profile form !!!! 
+
 //@ ROUTE  POST api/auth/register
 //@ DESC   Register user
 //@ ACCESS Public
@@ -15,13 +17,17 @@ router.post('/register', [[
     check('email').isEmail().withMessage('Please enter a valid email address'),
     check('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
     check('username').not().isEmpty().withMessage('Please enter a valid username'),
-    check('role').isIn(['teacher', 'student']).withMessage('Please enter a valid role')
+    check('role').isIn(['teacher', 'student']).withMessage('Please enter a valid role'),
+    check('firstname').not().isEmpty().withMessage('Please enter a valid firstname'),
+    check('lastname').not().isEmpty().withMessage('Please enter a valid lastname'),
+    check('dob').not().isEmpty().withMessage('Please enter a valid date of birth'),
+    check('school').not().isEmpty().withMessage('Please enter a valid school'),
 ], ValidatorErrorHelper], async (req, res, next) => {
 
-    const { username, email, password, role } = req.body;
+    const { username, email, password, role, firstname, lastname, dob, school } = req.body;
 
     try {
-        const { data } = await service.RegisterUser({ email, username, password, role });
+        const { data } = await service.RegisterUser({ email, username, password, role, firstname, lastname, dob, school });
 
         return res.status(data.status).json(data);
     } catch (err) {
