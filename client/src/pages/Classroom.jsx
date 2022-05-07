@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useQuery } from "react-query";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import moment from "moment";
 
 import {
@@ -20,17 +20,17 @@ import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 
 import { AlertContext } from "../store/Contexts/AlertContext";
 import { AlertShow } from "../store/Actions/AlertAction";
+import { AuthContext } from "../store/Contexts/AuthContext";
 
-
-import ClassroomSidebar from "../components/ClassroomSidebar";
+import ClassroomSidebar from "../components/Classroom/ClassroomSidebar";
 import LoadingPage from "../components/LoadingPage";
 import ErrorPage from "../components/ErrorPage";
-import ClassroomBody from "../components/ClassroomBody";
+import ClassroomBody from "../components/Classroom/ClassroomBody";
 
 
 
 function Classroom() {
-
+  const { userinfo } = useContext(AuthContext);
   const { AlertDispatch } = useContext(AlertContext);
 
   const [classroom, setClassroom] = useState({});
@@ -38,11 +38,15 @@ function Classroom() {
 
   //search params
   let { classroomId } = useParams();
+  let navigate = useNavigate();
 
   //modal delete classroom
   const [openmodal, setOpenmodal] = React.useState(false);
   const handleOpen = () => setOpenmodal(true);
   const handleClose = () => setOpenmodal(false);
+  const handleNavigateToEditClassroom = () => {
+    navigate(`/classroom/edit/${classroomId}`);
+  }
 
   //use react-query to get data from server
   const { isLoading, isError, isSuccess} = useQuery(["single_classroom", classroomId],
@@ -88,14 +92,16 @@ function Classroom() {
       handleClose();
       setTimeout(() => {
         window.location.href = "/";
-      }, 2000);
+      }, 1000);
     } catch (error) {
       console.log(error)
       AlertDispatch(AlertShow(error.response.data.error));
     }
   };
 
-  if( isSuccess && lessons ){
+
+  if( isSuccess && lessons && classroom ){
+    console.log(classroom)
   return (
     <div className="classroom">
       <CssBaseline />
@@ -238,6 +244,7 @@ function Classroom() {
           </Modal>
 
           {/* ADMIN TOOL CREATOR ONLY */}
+          {classroom?.creator?.user === userinfo.id && (
           <Box marginTop={2}>
             <Typography variant="h6" gutterBottom>
               Admin Tools
@@ -256,6 +263,7 @@ function Classroom() {
                   <Button
                     variant="contained"
                     sx={{ backgroundColor: "yellow", color: "text" }}
+                    onClick={handleNavigateToEditClassroom}
                   >
                     <HistoryEduIcon />
                   </Button>
@@ -273,6 +281,7 @@ function Classroom() {
               <Typography>{classroom?.name}</Typography>
             </Paper>
           </Box>
+          )}
           <Grow in={true}>
             <div>
               <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>

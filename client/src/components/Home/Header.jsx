@@ -8,7 +8,7 @@ function Header(props) {
   let navigate = useNavigate();
 
   const HandleRouteChange = () => {
-    navigate('/createclassroom');
+    navigate('/classroom/create');
     }
 
     const HandleOnSetCategory = (category) => {

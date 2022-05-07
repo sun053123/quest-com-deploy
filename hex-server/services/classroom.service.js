@@ -10,7 +10,7 @@ class ClassroomService {
         this.LessonEntity = new LessonEntity();
     }
 
-    async CreateClassroom({ title, description, userId, username, classroomImg, category, level, tags }) {
+    async CreateClassroom({ title, description, content, userId, username, classroomImg, category, level, tags }) {
 
         if (tags) {
             tags = tags.split(',').map(tag => tag.trim());
@@ -20,6 +20,7 @@ class ClassroomService {
             const CreatedClassroom = await this.ClassroomEntity.createClassroom({
                 title,
                 description,
+                content,
                 userId,
                 username,
                 classroomImg,
@@ -193,7 +194,7 @@ class ClassroomService {
     async UpdateClassroom({ classroomId, title, description, userId, username, classroomImg, category, level, tags }) {
 
         if (tags && Array.isArray(tags) === false) {
-            console.log("been here");
+
             tags = tags.split(',').map(tag => tag.trim());
         }
 
@@ -239,6 +240,7 @@ class ClassroomService {
             category ? ClassroomUpdateFields.category = category : Classroom.category;
             level ? ClassroomUpdateFields.level = level : Classroom.level;
             tags ? ClassroomUpdateFields.tags = tags : Classroom.tags;
+
 
 
             const UpdatedClassroom = await this.ClassroomEntity.updateClassroom({ classroomId, ClassroomUpdateFields });

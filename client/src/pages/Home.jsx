@@ -32,7 +32,7 @@ import OwnClassroom from "../components/Home/OwnClassroom";
 const sections = [
   { title: "Science", value: "science" },
   { title: "Math", value: "math" },
-  { title: "Society", value: "society" },
+  { title: "Social", value: "social" },
   { title: "English", value: "english" },
   { title: "Computer", value: "computer" },
   { title: "All", value: "all" },
@@ -197,12 +197,12 @@ export default function Blog() {
                 sx={{
                   fontSize: "1.5rem",
                   fontWeight: "bold",
-                  color: "orange",
+                  color: `${category.toLowerCase() === "all" ? "orange" : category.toLowerCase()}`,
                   //on mobile device
                   "@media screen and (max-width:40em)": {
                     fontSize: "12px",
                     fontWeight: "regular",
-                    color: "orange",
+                    color: `${category.toLowerCase() === "all" ? "orange" : category.toLowerCase()}`,
                     justifyContent: "center",
                     alignItems: "center",
                   },

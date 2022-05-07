@@ -109,7 +109,7 @@ class LessonService {
         }
     }
 
-    async CreateLesson({ classroomId, userId, title, description, lessonImg, lessonFile }) {
+    async CreateLesson({ classroomId, userId, title, content, lessonImg, lessonFile }) {
         try {
             const Classroom = await this.ClassroomEntity.getClassroomById({ classroomId });
             if (!Classroom) {
@@ -142,7 +142,7 @@ class LessonService {
                 classroomId,
                 userId,
                 title,
-                description,
+                content,
                 lessonImg,
                 lessonFile,
             });
@@ -170,7 +170,7 @@ class LessonService {
         }
     }
 
-    async UpdateLesson({ classroomId, lessonId, userId, title, description, lessonImg, lessonFile }) {
+    async UpdateLesson({ classroomId, lessonId, userId, title, content, lessonImg }) {
         try {
             const isExistclassroomAndCreator = await this.checkClassroomIsExistandIsCreator({ classroomId, userId });
             if (!isExistclassroomAndCreator) {
@@ -216,9 +216,8 @@ class LessonService {
             const UpdatedLesson = await this.LessonEntity.updateLesson({
                 lessonId,
                 title,
-                description,
+                content,
                 lessonImg,
-                lessonFile,
             });
             if (!UpdatedLesson) {
                 return FormateData({

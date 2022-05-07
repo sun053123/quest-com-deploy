@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Grow, Typography, Grid, Card, CardActionArea, CardContent, CardMedia } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 // import NOIMG from '../../assets/img/no-image.png'
 
@@ -44,9 +44,9 @@ function FeaturedPost(props) {
             }}>
               {classroom.description}
             </Typography>
-            <Typography variant="subtitle1" color="primary">
-              Continue reading...
-            </Typography>
+            <Typography variant="subtitle1" color={`${classroom.category}`} component={Link} to={`/home?category=${classroom.category}`}>
+                      {classroom.category}
+              </Typography>
           </CardContent>
           <CardMedia
             component="img"

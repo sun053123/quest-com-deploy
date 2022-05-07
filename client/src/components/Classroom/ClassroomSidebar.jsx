@@ -118,6 +118,7 @@ function ClassroomSidebar(props) {
           width: "100%",
         }}
       >
+
         <List sx={style} component="nav" aria-label="mailbox folders" >
           <ListItemText sx={{
             textAlign: "center",
@@ -162,7 +163,7 @@ function ClassroomSidebar(props) {
               <ListItemIcon>
                <ClassIcon /> 
               </ListItemIcon>
-              <ListItemText primary={`${index+1} ${lesson.title}`} />
+              <ListItemText primary={`${index+1}${" :"} ${lesson.title}`} />
             </ListItem >
             
           ))}

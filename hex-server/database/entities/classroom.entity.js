@@ -2,7 +2,7 @@ const ClassroomModel = require('../models/Classroom');
 
 class ClassroomEntity {
 
-    async createClassroom({ title, description, classroomImg, userId, username, level, tags, isComplete, category }) {
+    async createClassroom({ title, description, content, classroomImg, userId, username, level, tags, isComplete, category }) {
         try {
             // let creator = {}
             // creator.user = userId
@@ -11,6 +11,7 @@ class ClassroomEntity {
             const NewClassroom = new ClassroomModel({
                 title,
                 description,
+                content,
                 classroomImg,
                 creator: {
                     user: userId,

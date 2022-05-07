@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -49,7 +49,8 @@ function App() {
 
         {/* TeacherAuthRoute /> */}
         <Route element={<TeacherRoute />} >
-          <Route path="/createclassroom" element={<ClassroomCreate />} />
+          <Route path="/classroom/create" element={<ClassroomCreate />} />
+          <Route path="/classroom/edit/:classroomId" element={<ClassroomCreate />} />
           <Route path="/classroom/:classroomId/createlesson" element={<LessonCreate />} />
           <Route path="/classroom/:classroomId/lesson/:lessonId/createquiz" element={<QuizCreate />} />
         </Route>

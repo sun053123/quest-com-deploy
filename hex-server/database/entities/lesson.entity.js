@@ -17,7 +17,7 @@ class LessonEntity {
 
     async getLessonById({ lessonId }) {
         try {
-            const Lesson = await LessonModel.findById(lessonId).populate('creator',['username','email']).populate('classroom',['title']);
+            const Lesson = await LessonModel.findById(lessonId).populate('creator',['username','email']).populate('classroom',['title','content','category']);
             return Lesson;
         }
         catch (error) {
@@ -25,13 +25,13 @@ class LessonEntity {
         }
     }
 
-    async createLesson({ classroomId, userId, title, description, lessonImg, lessonFile }) {
+    async createLesson({ classroomId, userId, title, content, lessonImg, lessonFile }) {
         try {
             const NewLesson = new LessonModel({
                 classroom: classroomId,
                 creator: userId,
                 title,
-                description,
+                content,
                 lessonImg,
                 lessonFile,
             });
@@ -43,11 +43,11 @@ class LessonEntity {
         }
     }
 
-    async updateLesson({ lessonId, title, description, lessonImg, lessonFile }) {
+    async updateLesson({ lessonId, title, content, lessonImg, lessonFile }) {
         try {
             const UpdatedLesson = await LessonModel.findByIdAndUpdate(lessonId, {
                 title,
-                description,
+                content,
                 lessonImg,
                 lessonFile,
                 updateAt: Date.now(),

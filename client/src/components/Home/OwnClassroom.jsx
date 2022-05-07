@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 
 import {
@@ -85,8 +85,8 @@ function OwnClassroom(props) {
                       }}>
                       {ownclassroom.description}
                     </Typography>
-                    <Typography variant="subtitle1" color="primary">
-                      Continue reading...
+                    <Typography variant="subtitle1" color={`${ownclassroom.category}`} component={Link} to={`/home?category=${ownclassroom.category}`}>
+                      {ownclassroom.category}
                     </Typography>
                   </CardContent>
                   <CardMedia
