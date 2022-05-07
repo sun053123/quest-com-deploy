@@ -11,6 +11,7 @@ import { ThemeProvider } from '@mui/material/styles';
 
 import { AuthProvider } from './store/Contexts/AuthContext';
 import { AlertProvider } from './store/Contexts/AlertContext';
+import { BrowserRouter } from 'react-router-dom';
 
 
 const queryClient = new QueryClient()
@@ -23,7 +24,9 @@ root.render(
 
         <ReactQueryDevtools />
         <ThemeProvider theme={theme}>
-          <App />
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
         </ThemeProvider>
 
       </QueryClientProvider>

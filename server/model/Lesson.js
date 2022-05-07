@@ -81,7 +81,7 @@ const LessonSchema = new mongoose.Schema({
         required: true
     },
     randomQuiz: {
-        type: boolean,
+        type: Boolean,
         default: false,
         required: true
     },

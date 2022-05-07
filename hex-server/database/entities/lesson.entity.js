@@ -7,7 +7,7 @@ class LessonEntity {
             const Lessons = await LessonModel.find({ classroom: classroomId })
                 .populate('creator',['username','email'])
                 .populate('classroom',['title'])
-                .sort({ createdAt: -1 });
+                .sort({ createdAt: 1 });
             return Lessons;
         }
         catch (error) {

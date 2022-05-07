@@ -9,8 +9,10 @@ import { AuthContext } from '../store/Contexts/AuthContext';
 import { Logout } from '../store/Actions/AuthAction';
 import { Link } from 'react-router-dom';
 
+import NavbarLogo from '../assets/img/logo-questcom.png';
 
-const pages = ['Home', 'Pricing', 'Blog', 'Classroom', 'Quizcreate'];
+
+const pages = ['Home', 'About', "Github"];
 // const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Navbar = () => {
@@ -35,6 +37,7 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
+    handleCloseUserMenu()
     AuthDispatch(Logout());
   }
 
@@ -42,13 +45,19 @@ const Navbar = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+        <Avatar alt="Quest Com Logo" src={NavbarLogo} sx={{
+            display: { xs: 'none', md: 'flex' },
+            mr: 1,
+        }} />
           <Typography
             variant="h6"
             noWrap
             component="div"
+            color={'secondary'}
+            fontWeight="bold"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
-            LOGO
+            QuestCom
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -91,7 +100,7 @@ const Navbar = () => {
             variant="h6"
             noWrap
             component="div"
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
+            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }, }}
           >
             LOGO
           </Typography>
@@ -130,11 +139,11 @@ const Navbar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-            <MenuItem onClick={handleCloseUserMenu}>
+            <MenuItem onClick={handleCloseUserMenu} component={Link} to="/profile">
                 <Typography textAlign="center">Profile</Typography>
             </MenuItem>
-            <MenuItem onClick={handleCloseUserMenu}>
-                <Typography textAlign="center" onClick={handleLogout}>Logout</Typography>
+            <MenuItem onClick={handleLogout} component={Link} to="/login">
+                <Typography textAlign="center" >Logout</Typography>
             </MenuItem>
              
             </Menu>

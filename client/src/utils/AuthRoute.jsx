@@ -13,7 +13,7 @@ const ProtectRoute = () => {
     const isAuth = useAuth();
     const location = useLocation();
 
-  return isAuth ? <Outlet /> : <Navigate to="/" replace state={{from: location}} /> 
+  return isAuth ? <Outlet /> : <Navigate to="/login" replace state={{from: location}} /> 
   // react router v6
 
 

@@ -5,7 +5,6 @@ import { AuthContext } from '../store/Contexts/AuthContext';
 const useAuth = () => {
     const { userinfo } = useContext(AuthContext);
     
-    console.log("userinfo on teacher protected route :", userinfo);
     if (userinfo && userinfo?.role === true) {
         return true;
     } else {

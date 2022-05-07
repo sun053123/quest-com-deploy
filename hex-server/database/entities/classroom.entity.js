@@ -128,7 +128,8 @@ class ClassroomEntity {
 
     async deleteClassroom({ classroomId }) {
         try {
-            const DeletedClassroom = await ClassroomModel.deleteMany(classroomId);
+            //remove classroom
+            const DeletedClassroom = await ClassroomModel.findByIdAndDelete(classroomId);
             return DeletedClassroom;
         }
         catch (error) {

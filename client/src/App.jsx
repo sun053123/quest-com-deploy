@@ -14,14 +14,18 @@ import AuthRoute from "./utils/AuthRoute";
 import TeacherRoute from "./utils/TeacherRoute";
 import QuizCreate from "./pages/QuizCreate";
 import ClassroomCreate from "./pages/ClassroomCreate";
+import LessonCreate from "./pages/LessonCreate";
+import Lesson from "./pages/Lesson";
+import QuizGame from "./pages/QuizGame";
+import QuizGameResult from "./pages/QuizGame";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
-    <BrowserRouter>
+    <>
       <Navbar />
       <AlertToast />
       <Routes>
-        
         {/* TOKEN ROUTE PROTECT */}
         <Route element={<ProtectRoute />} >
           <Route path="/login" element={ <Login />} />
@@ -32,18 +36,25 @@ function App() {
         <Route path="/" exact element={<Navigate to="/home" />} />
         <Route path="/home" element={<Home />} />
         <Route path="/loading" element={<LoadingPage />} />
+        <Route path="*" element={<NoPage />} />
+
         {/* BasicAuth Route />} /> */}
         <Route element={<AuthRoute />} >
-          <Route path="/classroom/:id" element={<Classroom />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/classroom/:classroomId" element={<Classroom />} />
+          <Route path="/classroom/:classroomId/lesson/:lessonId" element={<Lesson />} />
+          <Route path="/classroom/:classroomId/lesson/:lessonId/quizgame" element={<QuizGame />} />
+          <Route path="/classroom/:classroomId/lesson/:lessonId/quizgameresult" element={<QuizGameResult />} />
         </Route>
+
         {/* TeacherAuthRoute /> */}
         <Route element={<TeacherRoute />} >
           <Route path="/createclassroom" element={<ClassroomCreate />} />
-          <Route path="/createquiz" element={<QuizCreate />} />
+          <Route path="/classroom/:classroomId/createlesson" element={<LessonCreate />} />
+          <Route path="/classroom/:classroomId/lesson/:lessonId/createquiz" element={<QuizCreate />} />
         </Route>
-        <Route path="*" element={<NoPage />} />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }
 

@@ -12,9 +12,6 @@ const ProfilleSchema = new mongoose.Schema({
     lastname: {
         type: String,
     },
-    avatar: {
-        type: String,
-    },
     dob: {
         type: String,
     },

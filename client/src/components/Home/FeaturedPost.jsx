@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Grid, Card, CardActionArea, CardContent, CardMedia } from '@mui/material';
+import { Grow, Typography, Grid, Card, CardActionArea, CardContent, CardMedia } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 // import NOIMG from '../../assets/img/no-image.png'
@@ -16,6 +16,7 @@ function FeaturedPost(props) {
   }
 
   return (
+    <Grow in={true}>
     <Grid item xs={12} md={6}>
       <CardActionArea component="a" onClick={routeChange}>
         <Card sx={{ display: 'flex' }}>
@@ -31,7 +32,16 @@ function FeaturedPost(props) {
             <Typography variant="subtitle1" color="text.secondary">
               {classroom.category}
             </Typography>
-            <Typography variant="subtitle1" paragraph>
+            <Typography variant="subtitle1" paragraph sx={{
+              //limit text
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              textTrim: 'word',
+              display: '-webkit-box',
+              WebkitLineClamp: '2',
+              WebkitBoxOrient: 'vertical',
+              
+            }}>
               {classroom.description}
             </Typography>
             <Typography variant="subtitle1" color="primary">
@@ -47,6 +57,7 @@ function FeaturedPost(props) {
         </Card>
       </CardActionArea>
     </Grid>
+    </Grow>
   );
 }
 

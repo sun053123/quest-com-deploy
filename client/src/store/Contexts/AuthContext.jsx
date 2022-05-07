@@ -3,12 +3,13 @@ import jwt_decode from 'jwt-decode';
 
 import  AuthReducer  from '../Reducers/AuthReducer';
 import setAuthToken from '../../utils/setAuthToken';
-import { Logout, SetUserInfo } from "../Actions/AuthAction";
+import { Logout } from "../Actions/AuthAction";
 
+//if token is in local storage
 
 const INITIAL_STATE = {
-    user: JSON.parse(localStorage.getItem("user")) || null,
-    userinfo: null,
+    user: JSON.parse(localStorage.getItem("user")) || null ,
+    userinfo: JSON.parse(localStorage.getItem("userinfo")) || null,
     isAuthenticated: false,
     isLoading: false,
     error: null,
@@ -22,6 +23,7 @@ export const AuthProvider = ({ children }) => {
     //check if token was expired
     const checkExpiredToken = () => {
         const token = JSON.parse(localStorage.getItem('user'));
+        
         // console.log(token.token)
         if (token) {
             const decoded = jwt_decode(token);
@@ -40,12 +42,14 @@ export const AuthProvider = ({ children }) => {
     //set token to local storage
     useEffect(() => {
         localStorage.setItem("user", JSON.stringify(state.user));
+        localStorage.setItem("userinfo", JSON.stringify(state.userinfo));
         checkExpiredToken();
         
-    }, [state.user]);
+    }, [state.user, state.userinfo]);
 
     //set token to state
     if(state.user) {
+        
         // console.log("token set axios",state.user);
         setAuthToken(state.user);
     }

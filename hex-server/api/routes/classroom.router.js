@@ -64,6 +64,7 @@ router.get('/:classroomId', [ValidateToken, ValidateMongooseID], async (req, res
     const { classroomId } = req.params;
     const { id, username, role } = req.user;
 
+    console.log("get single classroom")
     try {
         const { data } = await service.GetSingleClassroom({ classroomId, userId: id, username, role });
         return res.status(data.status).json(data);

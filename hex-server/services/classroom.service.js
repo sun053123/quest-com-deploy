@@ -72,18 +72,18 @@ class ClassroomService {
             const ClassroomsTotal = await this.ClassroomEntity.getClassrooms({ SKIP, LIMIT, category });
             // const Classrooms = await this.ClassroomEntity.getClassrooms();
             const { Classrooms, Total} = ClassroomsTotal;
-            if(Classrooms.length === 0){
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Out of index pagination!",
-                            "location": "server",
-                            "type": "warning"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                })
-            }
+            // if(!Classrooms.length){
+            //     return FormateData({
+            //         error: [
+            //             {
+            //                 "msg": "Out of index pagination!",
+            //                 "location": "server",
+            //                 "type": "warning"
+            //             }
+            //         ],
+            //         status: HTTP_STATUS_CODES.NOT_FOUND,
+            //     })
+            // }
 
             return FormateData({
                 classrooms: Classrooms,
@@ -154,8 +154,7 @@ class ClassroomService {
                     return FormateData({
                         data: {
                             classroom: ClassroomStudentCount,
-                            lesson: Lessons,
-                            dashboard: DashboardStudent
+                            lessons: Lessons,
                         },
                         status: HTTP_STATUS_CODES.OK
                     });
@@ -165,8 +164,7 @@ class ClassroomService {
                     return FormateData({
                         data: {
                             classroom: Classroom,
-                            lesson: Lessons,
-                            dashboard: isStudent
+                            lessons: Lessons,
                         },
                         status: HTTP_STATUS_CODES.OK
                     });
@@ -181,7 +179,7 @@ class ClassroomService {
                 return FormateData({
                     data: {
                         classroom: Classroom,
-                        lesson: Lessons,
+                        lessons: Lessons,
                         dashboard: DashBoard
                     },
                     status: HTTP_STATUS_CODES.OK

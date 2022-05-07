@@ -23,7 +23,7 @@ function LoadingPage() {
         executeScroll()
         const interval = setInterval(() => {
             setNavigateback(true);
-        }, 3000);
+        }, 5000);
         return () => clearInterval(interval);
     }, []);
 

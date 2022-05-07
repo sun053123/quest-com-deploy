@@ -67,11 +67,10 @@ class UserService{
             const UserOwnClassroom = await this.UserEntity.getUserOwnClassroom({ userId });
 
             return FormateData({
-                ownclassroom: UserOwnClassroom,
+                ownclassrooms: UserOwnClassroom,
                 status: HTTP_STATUS_CODES.OK
             });
         }
-
 }
 
 module.exports = UserService;

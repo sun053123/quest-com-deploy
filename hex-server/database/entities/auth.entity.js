@@ -2,13 +2,14 @@ const UserModel = require('../models/User');
 
 class AuthEntity {
 
-    async createUser({ email, username, hashedPassword, role}) {
+    async createUser({ email, username, hashedPassword, role, avatar}) {
         try {
             const user = new UserModel({
                 email,
                 username,
                 password: hashedPassword,
-                role
+                role,
+                avatar
             });
 
             const CreatedUser = await user.save();

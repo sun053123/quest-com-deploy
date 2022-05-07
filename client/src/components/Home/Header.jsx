@@ -4,7 +4,7 @@ import { Toolbar, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 function Header(props) {
-  const { sections, title, setCategory } = props;
+  const { sections, setCategory } = props;
   let navigate = useNavigate();
 
   const HandleRouteChange = () => {
@@ -12,14 +12,13 @@ function Header(props) {
     }
 
     const HandleOnSetCategory = (category) => {
-        console.log(category);
         setCategory(category);
     }
 
   return (
     <React.Fragment>
       <Toolbar sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Button size="small">Subscribe</Button>
+        <Button size="small"></Button>
         <Typography
           component="h2"
           variant="h5"
@@ -28,20 +27,17 @@ function Header(props) {
           noWrap
           sx={{ flex: 1 }}
         >
-          {title}
+          Home
         </Typography>
-        {/* <Button onClick={() => HandleOnSetCategory('sci')} size="small">
-            sci
-        </Button> */}
-        <Button variant="outlined" size="small" onClick={HandleRouteChange} >
+
+        <Button variant="outlined" size="meduim" onClick={HandleRouteChange} color={"secondary"} >
           Create Classroom
         </Button>
       </Toolbar>
       <Toolbar
         component="nav"
         variant="dense"
-        sx={{ justifyContent: 'space-between', overflowX: 'auto' }}
-      >
+        sx={{ justifyContent: 'space-between', overflowX: 'auto' }}>
         {sections.map((section, index) => (
         <Button key={index} onClick={() => HandleOnSetCategory(`${section.value}`)} size="small">
             {section.title}
@@ -59,7 +55,6 @@ Header.propTypes = {
       value: PropTypes.string.isRequired,
     }),
   ).isRequired,
-  title: PropTypes.string.isRequired,
   setCategory: PropTypes.func.isRequired,
 };
 

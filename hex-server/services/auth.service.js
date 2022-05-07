@@ -16,7 +16,8 @@ class AuthService {
             id: user.id,
             email: user.email,
             username: user.username,
-            role: user.role
+            role: user.role,
+            avatar: user.avatar
         }
     }
 
@@ -59,7 +60,7 @@ class AuthService {
                 email,
                 username,
                 hashedPassword,
-                role
+                role,
             });
             
             //if created Failed
@@ -219,6 +220,25 @@ class AuthService {
             //user not found, Register
             if (!User) {
 
+                let role = false; //default gmail role
+                //check kmitlemail 
+                const verifyKMITLemail = email.includes("@kmitl.ac.th");
+                if (verifyKMITLemail) {
+                    //if email is kmitl email
+                    //if email is number (61050273@kmitl.ac.th) (student email)
+                    const verifyNumber = /^\d+$/.test(email[7]);
+                    if (verifyNumber) {
+                        //if email is number
+                        role = false;
+                    } else {
+                        //if email is not number (teacher@kmtil.ac.th)
+                        role = true;
+                    }
+                } else {
+                    //if email is not kmitl email
+                    role = false;
+                }
+
                 //generate password
                 const password = email + process.env.GOOGLE_CLIENT_ID;
                 const salt = await bcrypt.genSalt(12);
@@ -230,15 +250,14 @@ class AuthService {
                 const createdUser = await this.AuthEntity.createUser({
                     email,
                     username: name,
-                    role: false,
-                    hashedPassword
+                    role: role,
+                    hashedPassword,
+                    avatar: picture
                 });
                 
                 //create user profile
                 const createdProfile = await this.ProfileEntity.createProfile({
                     userId: createdUser.id,
-                    avatar: picture
-
                 });
 
                 //if failed to create user
@@ -262,7 +281,6 @@ class AuthService {
                 const token = GenerateToken(payload);
 
                 return FormateData({token, status: HTTP_STATUS_CODES.CREATED});
-
 
             } else {
                 // if user exists, login
