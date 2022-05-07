@@ -5,6 +5,7 @@ class LessonEntity {
     async getLessons({ classroomId }) {
         try {
             const Lessons = await LessonModel.find({ classroom: classroomId })
+                .select('-comments -__v')
                 .populate('creator',['username','email'])
                 .populate('classroom',['title'])
                 .sort({ createdAt: 1 });
@@ -205,6 +206,45 @@ class LessonEntity {
             throw error;
         }
     }
+
+    async getCommentsLesson({ lessonId, SKIP, LIMIT }) {
+        try {
+            
+            const Lesson = await LessonModel.findById(lessonId);
+            return  Lesson.comments
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+            
+
+    async uploadLessonPDF({ lessonId, pdfFile }) {
+        try {
+            const Lesson = await LessonModel.findByIdAndUpdate(lessonId, {
+                pdfFile,
+                updateAt: Date.now(),
+            }, { new: true });
+            return Lesson;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+
+    async updateLessonPDF({ lessonId, pdfFile }) {
+        try {
+            const Lesson = await LessonModel.findByIdAndUpdate(lessonId, {
+                pdfFile,
+                updateAt: Date.now(),
+            }, { new: true });
+            return Lesson;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+            
 
 }
 

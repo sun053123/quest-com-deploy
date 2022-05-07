@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { MenuItem, Tooltip, Button, Avatar, Container, 
     AppBar, Box, Toolbar, IconButton, Typography, Menu} from '@mui/material';
 
@@ -16,8 +16,8 @@ const pages = ['Home', 'About', "Github"];
 // const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Navbar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const { user, AuthDispatch } = useContext(AuthContext);
 
@@ -41,8 +41,37 @@ const Navbar = () => {
     AuthDispatch(Logout());
   }
 
+  const [show, setShow] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  // const controlNavbar = () => {
+  //   if (typeof window !== 'undefined') { 
+  //     if (window.scrollY > lastScrollY) { // if scroll down hide the navbar
+  //       setShow(false); 
+  //     } else { // if scroll up show the navbar
+  //       setShow(true);  
+  //     }
+
+  //     // remember current page location to use in the next move
+  //     setLastScrollY(window.scrollY); 
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (typeof window !== 'undefined') {
+  //     window.addEventListener('scroll', controlNavbar);
+
+  //     // cleanup function
+  //     return () => {
+  //       window.removeEventListener('scroll', controlNavbar);
+  //     };
+  //   }
+  // }, [lastScrollY]);
+
+  
+
   return (
-    <AppBar position="static">
+    <AppBar position="static" style={{ display: show ? 'flex' : 'none' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
         <Avatar alt="Quest Com Logo" src={NavbarLogo} sx={{

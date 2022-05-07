@@ -29,6 +29,15 @@ import LoadingPage from "../components/LoadingPage";
 import UserScore from "../components/Home/UserScore";
 import OwnClassroom from "../components/Home/OwnClassroom";
 
+// const Header = React.lazy(() => import("../components/Home/Header"));
+// const MainFeaturedPost = React.lazy(() => import("../components/Home/MainFeaturedPost"));
+// const FeaturedPost = React.lazy(() => import("../components/Home/FeaturedPost"));
+// const Main = React.lazy(() => import("../components/Home/Main"));
+// const Footer = React.lazy(() => import("../components/Home/Footer"));
+// const UserScore = React.lazy(() => import("../components/Home/UserScore"));
+// const OwnClassroom = React.lazy(() => import("../components/Home/OwnClassroom"));
+
+
 const sections = [
   { title: "Science", value: "science" },
   { title: "Math", value: "math" },

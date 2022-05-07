@@ -1,6 +1,7 @@
 import React,{useState, useEffect, useContext} from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import FileBase from 'react-file-base64';
 
 import { AuthContext } from "../store/Contexts/AuthContext";
 import { AlertContext } from "../store/Contexts/AlertContext";
@@ -532,10 +533,16 @@ function ClassroomCreate() {
                     </Grid>
                   </Grid>
 
-                  <FormControlLabel
-                    control={<Checkbox value="remember" color="primary" />}
-                    label="Remember me"
-                  />
+                  <Box mt={2}>
+                <FileBase 
+                    multiple={false}
+                    // type="file"
+                    type="image/*"
+                    onDone={({base64}) => setClassroomForm({...classroomForm, classroomImg: base64})}
+                    inputProps={{ accept: 'image/*, jpg, jpeg, png' }}
+                    
+                />
+                </Box>
                   <Button
                     type="submit"
                     fullWidth

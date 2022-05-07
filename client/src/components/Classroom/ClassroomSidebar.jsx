@@ -14,87 +14,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import ClassIcon from '@mui/icons-material/Class';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 
-import { useLocation, useNavigate } from "react-router-dom";
-
-
-// const lessons = [
-//   {
-//     _id: "string",
-//     title: "string",
-//     description: "string",
-//   },
-//   {
-//     _id: "string",
-//     title: "string",
-//     description: "string",
-//   },
-//   {
-//     _id: "string",
-//     title: "string",
-//     description: "string",
-//   },
-//   {
-//     _id: "string",
-//     title: "string",
-//     description: "string",
-//   },
-//   {
-//     _id: "string",
-//     title: "string",
-//     description: "string",
-//   },
-//   {
-//     _id: "string",
-//     title: "string",
-//     description: "string",
-//   },
-//   {
-//     _id: "string",
-//     title: "string",
-//     description: "string",
-//   },
-//   {
-//     _id: "string",
-//     title: "string",
-//     description: "string",
-//   },
-//   {
-//     _id: "string",
-//     title: "string",
-//     description: "string",
-//   },
-//   {
-//     _id: "string",
-//     title: "string",
-//     description: "string",
-//   },
-//   {
-//     _id: "string",
-//     title: "string",
-//     description: "string",
-//   },
-//   {
-//     _id: "string",
-//     title: "string",
-//     description: "string",
-//   },
-//   {
-//     _id: "string",
-//     title: "string",
-//     description: "string",
-//   },
-//   {
-//     _id: "string",
-//     title: "string",
-//     description: "string",
-//   },
-//   {
-//     _id: "string",
-//     title: "string",
-//     description: "string",
-//   },
-// ];
-
+import { useLocation, useNavigate, useParams, Link } from "react-router-dom";
 
 const style = {
   width: '100%',
@@ -105,6 +25,7 @@ const style = {
 
 function ClassroomSidebar(props) {
   const { lessons } = props;
+  const { classroomId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -132,7 +53,9 @@ function ClassroomSidebar(props) {
           <ListItem button sx={{
             backgroundColor: "wheat" ,
               height: "4.5rem"
-            }}>
+            }}
+            component={Link}
+            to={`/classroom/${classroomId}/lesson/create`}>
               <ListItemIcon>
                  <BorderColorIcon /> 
               </ListItemIcon>

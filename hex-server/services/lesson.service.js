@@ -544,7 +544,6 @@ class LessonService {
     };
 
     async EditQuizController({ classroomId, lessonId, userId }) {
-
         try {
          const isExistClassroom = this.checkClassroomIsExistandIsCreator({ classroomId, userId });
             if (!isExistClassroom) {
@@ -574,7 +573,7 @@ class LessonService {
                 });
             }
 
-            const UpdatedQuizController = await this.LessonEntity.updateQuizController({ LessonId, quizIsReday, quizIsRandom, quizLimit });
+            const UpdatedQuizController = await this.LessonEntity.updateQuizController({ lessonId, quizIsReday, quizIsRandom, quizLimit });
             if (!UpdatedQuizController) {
                 return FormateData({
                     error: [
@@ -596,7 +595,139 @@ class LessonService {
         } catch (error) {
             throw error;
         }
-    }   
+    }
+
+    async GetCommentLesson({ lessonId, classroomId, userId }) {
+        try {
+            const isExistClassroom = this.checkClassroomIsExist({ classroomId });
+            if (!isExistClassroom) {
+                return FormateData({
+                    error: [
+                        {
+                            "msg": "Classroom not found!",
+                            "location": "server",
+                            "type": "error"
+                        }
+                    ],
+                    status: HTTP_STATUS_CODES.NOT_FOUND,
+                });
+            }
+            const Lesson = await this.LessonEntity.getLessonById({ lessonId });
+            if (!Lesson) {
+                return FormateData({
+                    error: [
+                        {
+                            "msg": "Lesson not found!",
+                            "location": "server",
+                            "type": "error"
+                        }
+                    ],
+                    status: HTTP_STATUS_CODES.NOT_FOUND,
+                });
+            }
+
+            if (page <= 0) {
+                page = 1;
+            }
+            
+            const LIMIT = 10;
+            const SKIP = (page - 1) * LIMIT;
+
+
+            const Comments = await this.LessonEntity.getCommentsLesson({ lessonId,LIMIT,SKIP });
+            
+            return FormateData({
+                comments: Comments,
+                status: HTTP_STATUS_CODES.OK,
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    //Upload Pdffile
+    async UploadFilePDF({ classroomId, lessonId, userId, pdfFile }) {
+        try {
+            const isExistClassroom = this.checkClassroomIsExistandIsCreator({ classroomId, userId });
+            if (!isExistClassroom) {
+                return FormateData({
+                    error: [
+                        {
+                            "msg": "Classroom not found!",
+                            "location": "server",
+                            "type": "error"
+                        }
+                    ],
+                    status: HTTP_STATUS_CODES.NOT_FOUND,
+                });
+            }
+
+            const Lesson = await this.LessonEntity.getLessonById({ lessonId });
+            if (!Lesson) {
+                return FormateData({
+                    error: [
+                        {
+                            "msg": "Lesson not found!",
+                            "location": "server",
+                            "type": "error"
+                        }
+                    ],
+                    status: HTTP_STATUS_CODES.NOT_FOUND,
+                });
+            }
+            const UpdatedLessonPDF = await this.LessonEntity.uploadLessonPDF({ lessonId, pdfFile });
+
+            return FormateData({
+                pdffile: UpdatedLessonPDF,
+                status: HTTP_STATUS_CODES.OK,
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    //UpdatePDF file
+    async UpdateFilePDF({ classroomId, lessonId, userId, pdfFile }) {
+        try {
+            
+            const isExistClassroom = this.checkClassroomIsExistandIsCreator({ classroomId, userId });
+            if (!isExistClassroom) {
+                return FormateData({
+                    error: [
+                        {
+                            "msg": "Classroom not found!",
+                            "location": "server",
+                            "type": "error"
+                        }
+                    ],
+                    status: HTTP_STATUS_CODES.NOT_FOUND,
+                });
+            }
+
+            const Lesson = await this.LessonEntity.getLessonById({ lessonId });
+            if (!Lesson) {
+                return FormateData({
+                    error: [
+                        {
+                            "msg": "Lesson not found!",
+                            "location": "server",
+                            "type": "error"
+                        }
+                    ],
+                    status: HTTP_STATUS_CODES.NOT_FOUND,
+                });
+            }
+
+            const UpdatedLessonPDF = await this.LessonEntity.updateLessonPDF({ lessonId, pdfFile });
+
+            return FormateData({
+                pdffile: UpdatedLessonPDF,
+                status: HTTP_STATUS_CODES.OK,
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
 
 
 };

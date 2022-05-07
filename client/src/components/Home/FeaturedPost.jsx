@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Grow, Typography, Grid, Card, CardActionArea, CardContent, CardMedia } from '@mui/material';
 import { useNavigate, Link } from 'react-router-dom';
 
-// import NOIMG from '../../assets/img/no-image.png'
+import no_img from '../../assets/img/no_img.png'
 
 function FeaturedPost(props) {
   const { classroom } = props;
@@ -18,8 +18,8 @@ function FeaturedPost(props) {
   return (
     <Grow in={true}>
     <Grid item xs={12} md={6}>
-      <CardActionArea component="a" onClick={routeChange}>
-        <Card sx={{ display: 'flex' }}>
+      <CardActionArea component="a" onClick={routeChange} >
+        <Card sx={{ display: 'flex', minHeight: '25vh', maxHeight:'30vh' }}>
           <CardContent sx={{ flex: 1 }}>
             <Typography component="h2" variant="h5" sx={{
               //limit text
@@ -44,14 +44,14 @@ function FeaturedPost(props) {
             }}>
               {classroom.description}
             </Typography>
-            <Typography variant="subtitle1" color={`${classroom.category}`} component={Link} to={`/home?category=${classroom.category}`}>
+            <Typography variant="subtitle1" color={`${classroom.category}`} >
                       {classroom.category}
               </Typography>
           </CardContent>
           <CardMedia
             component="img"
             sx={{ width: 160, display: { xs: 'none', sm: 'block' } }}
-            image={classroom.classroomImg ? classroom.classroomImg : 'https://source.unsplash.com/photos/JpTY4gUviJM'}
+            image={classroom.classroomImg ? classroom.classroomImg : no_img}
           // alt={classes.imageLabel}
           />
         </Card>

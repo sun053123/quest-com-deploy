@@ -19,11 +19,11 @@ router.post('/', [
     check('level').isIn(['beginner', 'intermediate', 'advanced']).withMessage('Please enter a valid level'),],
     ValidateTokenAndTeacher, ValidatorErrorHelper], async (req, res, next) => {
 
-    const { title, description, category, level, tags, content } = req.body;
+    const { title, description, category, level, tags, content, classroomImg } = req.body;
     const { id, username } = req.user;
 
     try {
-        const { data } = await service.CreateClassroom({ title, description, content, category, level, userId: id, username, tags });
+        const { data } = await service.CreateClassroom({ title, description, content, category, level, userId: id, username, tags, classroomImg });
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);

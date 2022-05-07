@@ -20,9 +20,18 @@ import QuizGame from "./pages/QuizGame";
 import QuizGameResult from "./pages/QuizGame";
 import Profile from "./pages/Profile";
 
+import { Worker } from '@react-pdf-viewer/core';
+
+
+// const Home = React.lazy(() => import("./pages/Home"));
+// const Lesson = React.lazy(() => import("./pages/Lesson"));
+// const Classroom = React.lazy(() => import("./pages/Classroom"));
+
+
 function App() {
   return (
     <>
+    <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.13.216/build/pdf.worker.min.js">
       <Navbar />
       <AlertToast />
       <Routes>
@@ -51,10 +60,11 @@ function App() {
         <Route element={<TeacherRoute />} >
           <Route path="/classroom/create" element={<ClassroomCreate />} />
           <Route path="/classroom/edit/:classroomId" element={<ClassroomCreate />} />
-          <Route path="/classroom/:classroomId/createlesson" element={<LessonCreate />} />
+          <Route path="/classroom/:classroomId/lesson/create" element={<LessonCreate />} />
           <Route path="/classroom/:classroomId/lesson/:lessonId/createquiz" element={<QuizCreate />} />
         </Route>
       </Routes>
+      </Worker>
     </>
   );
 }

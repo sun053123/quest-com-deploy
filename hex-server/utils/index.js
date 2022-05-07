@@ -1,7 +1,14 @@
 const jsonwebtoken = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const cloudinary = require('cloudinary');
 
 dotenv.config();
+
+cloudinary.config({ 
+    cloud_name: 'dnjlql8bq', 
+    api_key: '862357535629183', 
+    api_secret: 'zgnVNvDPYIKeVI5IR-yTNj5t6bM' 
+  });
 
 module.exports.FormateData = (data) => {
     if(data){
@@ -32,5 +39,7 @@ module.exports.ValidateSignature = (req) => {
         console.error(error);
     };
 };
+
+
 
 

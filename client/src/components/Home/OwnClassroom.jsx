@@ -2,6 +2,8 @@ import React, { useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 
+import no_img from "../../assets/img/no_img.png";
+
 import {
   Toolbar,
   CardActionArea,
@@ -85,17 +87,17 @@ function OwnClassroom(props) {
                       }}>
                       {ownclassroom.description}
                     </Typography>
-                    <Typography variant="subtitle1" color={`${ownclassroom.category}`} component={Link} to={`/home?category=${ownclassroom.category}`}>
+                    <Typography variant="subtitle1" color={`${ownclassroom.category}`} >
                       {ownclassroom.category}
                     </Typography>
                   </CardContent>
                   <CardMedia
                     component="img"
-                    sx={{ width: 160, display: { xs: "none", sm: "block" } }}
+                    sx={{ width: 160, display: { xs: "none", sm: "block" }, maxHeight: '20vh', maxWidth: '20vh' }}
                     image={
                       ownclassroom.classroomImg
                         ? ownclassroom.classroomImg
-                        : "https://source.unsplash.com/photos/JpTY4gUviJM"
+                        : no_img
                     }
                     // alt={classes.imageLabel}
                   />

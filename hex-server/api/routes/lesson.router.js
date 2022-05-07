@@ -13,15 +13,15 @@ const service = new LessonService();
 //@ ACCESS Private (Teacher)
 router.post('/:classroomId/lesson', [
     [check('title').not().isEmpty().withMessage('Please enter a valid Title'),
-    check('description').not().isEmpty().withMessage('Please enter a valid description'),], 
+    check('content').not().isEmpty().withMessage('Please enter a valid description'),], 
     ValidateTokenAndTeacher, ValidateMongooseID, ValidatorErrorHelper ], async (req, res, next) => {
 
-    const { title, description, lessonImg, lessonFile } = req.body;
+    const { title, content, lessonImg, lessonFile } = req.body;
     const { id, username } = req.user;
     const { classroomId } = req.params;
 
     try {
-        const { data } = await service.CreateLesson({ title, description, classroomId, userId: id, username, lessonImg, lessonFile });
+        const { data } = await service.CreateLesson({ title, content, classroomId, userId: id, username, lessonImg, lessonFile });
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
@@ -190,7 +190,7 @@ router.delete('/:classroomId/lesson/:lessonId/comment/:commentId', [ValidateToke
     };
 });
 
-//@ ROUTE  GET api/classroom/:classroomId/lesson/:lessonId/comment/:commentId/like
+//@ ROUTE  PUT api/classroom/:classroomId/lesson/:lessonId/comment/:commentId/like
 //@ DESC   Like a comment
 //@ ACCESS Private (Basic)
 router.put('/:classroomId/lesson/:lessonId/comment/:commentId/like', [ValidateToken, ValidateMongooseID], async (req, res, next) => {
@@ -200,6 +200,65 @@ router.put('/:classroomId/lesson/:lessonId/comment/:commentId/like', [ValidateTo
 
     try {
         const { data } = await service.LikeCommentLesson({ userId: id, lessonId, classroomId, commentId });
+        return res.status(data.status).json(data);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            error: 'Server error'
+        });
+    };
+});
+
+//@ ROUTE GET api/classroom/:classroomId/lesson/:lessonId/comment
+//@ DESC   Get all comments on a lesson
+//@ ACCESS Private (Basic)
+router.get('/:classroomId/lesson/:lessonId/comment', [ValidateToken, ValidateMongooseID], async (req, res, next) => {
+
+    const { lessonId, classroomId } = req.params;
+    const { id } = req.user;
+
+    try {
+        const { data } = await service.GetCommentLesson({ userId: id, lessonId, classroomId });
+        return res.status(data.status).json(data);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            error: 'Server error'
+        });
+    };
+});
+
+//@ ROUTE PATCH api/classroom/:classroomId/lesson/:lessonId/pdffile
+//@ DESC   Upload a pdf file
+//@ ACCESS Private (Teacher)
+router.patch('/:classroomId/lesson/:lessonId/pdffile', [ValidateTokenAndTeacher, ValidateMongooseID], async (req, res, next) => {
+
+    const { lessonId, classroomId } = req.params;
+    const { id } = req.user;
+    const { file } = req.files;
+
+    try {
+        const { data } = await service.UploadPdf({ userId: id, lessonId, classroomId, pdfFile: file });
+        return res.status(data.status).json(data);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            error: 'Server error'
+        });
+    };
+});
+
+//@ ROUTE PUT api/classroom/:classroomId/lesson/:lessonId/pdffile
+//@ DESC   update a pdf file
+//@ ACCESS Private (Teacher)
+router.put('/:classroomId/lesson/:lessonId/pdffile', [ValidateTokenAndTeacher, ValidateMongooseID], async (req, res, next) => {
+
+    const { lessonId, classroomId } = req.params;
+    const { id } = req.user;
+    const { file } = req.files;
+
+    try {
+        const { data } = await service.UpdatePdf({ userId: id, lessonId, classroomId, pdfFile: file });
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
