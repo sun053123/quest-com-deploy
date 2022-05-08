@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { Avatar, Button, Grid, Paper, Typography, TextField, Link, CssBaseline, Box } from "@mui/material";
 import NavbarLogo from "../assets/img/logo-questcom.png";
@@ -29,6 +30,11 @@ function randomImageBanner() {
 }
 
 function Login() {
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const redirectPath = location.state ? location.state.from.pathname : "/";
+
   const [imageslide, setImageslide] = useState("");
 
   const [formData, setFormData] = useState({
@@ -63,6 +69,7 @@ function Login() {
       });
       console.log("login res", res.data);
       AuthDispatch(LoginSuccess(res.data.token));
+      navigate(redirectPath, { replace: true });
     } catch (err) {
       AuthDispatch(LoginFailure());
 

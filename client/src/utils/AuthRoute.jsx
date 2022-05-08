@@ -12,6 +12,7 @@ const useAuth = () => {
 const ProtectRoute = () => {
     const isAuth = useAuth();
     const location = useLocation();
+    //important for push to direct path
 
   return isAuth ? <Outlet /> : <Navigate to="/login" replace state={{from: location}} /> 
   // react router v6

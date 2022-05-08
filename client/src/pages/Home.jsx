@@ -7,7 +7,7 @@ import { AuthContext } from "../store/Contexts/AuthContext";
 import { AlertContext } from "../store/Contexts/AlertContext";
 import { AlertShow } from "../store/Actions/AlertAction";
 
-import { CssBaseline, Grid, Box, Button, Typography } from "@mui/material";
+import { CssBaseline, Grid, Box, Button, Typography, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import Container from "@mui/material/Container";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -159,7 +159,24 @@ export default function Blog() {
       category: category,
       page: page,
     });
-  }, [page, searchParams, setSearchParams, category]);
+  }, []);
+
+  // everytime category is changed, set page to 1 
+  useEffect(()=> {
+    setSearchParams({
+      category: category,
+      page: 1,
+    });
+    setPage(1);
+  }, [category]);
+
+  //everytime page changes, set url
+  useEffect(() => {
+    setSearchParams({
+      category: category,
+      page: page,
+    });
+  }, [page]);
 
     
 
@@ -221,7 +238,7 @@ export default function Blog() {
               </Typography>
             </Grid>
             <Grid item xs>
-              <Typography
+              {/* <Typography
                 sx={{
                   fontSize: "1.5rem",
                   justifyContent: "center",
@@ -238,7 +255,8 @@ export default function Blog() {
                 }}
               >
                 Page : {page}
-              </Typography>
+              </Typography> */}
+              
             </Grid>
             <Grid
               item
@@ -260,6 +278,22 @@ export default function Blog() {
               >
                 Previous Page
               </Button>
+              <FormControl variant="filled" sx={{ m: 1, minWidth: 60, maxHeight:40 }}>
+                <InputLabel id="demo-simple-select-filled-label">Page</InputLabel>
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  value={page}
+                  onChange={(e) => setPage(e.target.value)}
+                >
+                  {/* { Math.ceil(maximumpages) > 0 && Array.from(Array(Math.ceil(maximumpages)), (val, index) => index + 1).map((val, index) => ( */}
+                  {[...Array(Math.ceil(maximumpages))].map((_, index) => (
+                    <MenuItem key={index} value={index + 1}>
+                      {index + 1}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <Button
               variant="outlined"
               disabled={page === Math.ceil(maximumpages) || classes.length ===  0}
