@@ -13,9 +13,13 @@ const service = new ClassroomService();
 //@ ACCESS Private (Teacher)
 router.post('/', [
     [check('title').not().isEmpty().withMessage('Please enter a valid Title'),
+    check('title').isLength({ min: 5, max: 50 }).withMessage('Title must be between 5 and 50 characters'),
     check('description').not().isEmpty().withMessage('Please enter a valid description'),
+    check('description').isLength({ min: 15, max: 150 }).withMessage('Description must be between 5 and 200 characters'),
     check('content').not().isEmpty().withMessage('Please enter a valid content'),
+    check('content').isLength({ min: 15, max: 1500 }).withMessage('Content must be between 15 and 200 characters'),
     check('category').isIn(['math', 'science', 'social', 'english', 'computer', 'other']).withMessage('Please enter a valid category'),
+    check('tags').isLength({ min: 1, max: 100 }).withMessage('tags must be between 1 and 100 characters'),
     check('level').isIn(['beginner', 'intermediate', 'advanced']).withMessage('Please enter a valid level'),],
     ValidateTokenAndTeacher, ValidatorErrorHelper], async (req, res, next) => {
 
@@ -83,17 +87,23 @@ router.get('/:classroomId', [ValidateToken, ValidateMongooseID], async (req, res
 //@ ACCESS Private (Teacher)
 router.put('/:classroomId', [
     [check('title').not().isEmpty().withMessage('Please enter a valid Title'),
+    check('title').isLength({ min: 5, max: 200 }).withMessage('Title must be between 5 and 50 characters'),
     check('description').not().isEmpty().withMessage('Please enter a valid description'),
-    check('category').isIn(['math', 'science', 'society', 'english', 'computer', 'other']).withMessage('Please enter a valid category'),
+    check('description').isLength({ min: 15, max: 200 }).withMessage('Description must be between 5 and 200 characters'),
+    check('content').not().isEmpty().withMessage('Please enter a valid content'),
+    check('content').isLength({ min: 15, max: 1500 }).withMessage('Content must be between 15 and 200 characters'),
+    check('category').isIn(['math', 'science', 'social', 'english', 'computer', 'other']).withMessage('Please enter a valid category'),
+    check('tags').isLength({ min: 1, max: 50 }).withMessage('tags must be between 1 and 100 characters'),
+
     check('level').isIn(['beginner', 'intermediate', 'advanced']).withMessage('Please enter a valid level'),],
     ValidateTokenAndTeacher,ValidateMongooseID, ValidatorErrorHelper], async (req, res, next) => {
 
     const { classroomId } = req.params;
     const { id, username } = req.user;
-    const { title, description, category, level, tags, classroomImg } = req.body;
+    const { title, content, description, category, level, tags, classroomImg } = req.body;
 
     try {
-        const { data } = await service.UpdateClassroom({ classroomId, title, description, category, level, userId: id, username, tags, classroomImg });
+        const { data } = await service.UpdateClassroom({ classroomId, title, category, level, userId: id, username, tags, classroomImg, content, description });
         return res.status(data.status).json(data);
     }
     catch (err) {

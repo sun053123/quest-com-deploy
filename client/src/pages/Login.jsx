@@ -91,6 +91,8 @@ function Login() {
         { headers: { "Content-Type": "application/json" } }
       );
       AuthDispatch(LoginSuccess(res.data.token));
+      navigate(redirectPath, { replace: true });
+
     } catch (err) {
       console.log("error google login", err);
       AlertDispatch(AlertShow(err.response.data.error, "danger"));

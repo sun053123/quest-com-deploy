@@ -60,7 +60,7 @@ function OwnClassroom(props) {
               <CardActionArea component="a" onClick={
                 () => navigate(`/classroom/${ownclassroom._id}`)}  
               >
-                <Card sx={{ display: "flex", minWidth:"35vh", maxWidth:"80vh", minHeight:"18vh", maxHeight:"18vh", mt:2, mb:2 }} >
+                <Card sx={{ display: "flex", minWidth:"50vh", maxWidth:"80vh", minHeight:"18vh", maxHeight:"18vh", mt:2, mb:2 }} >
                   <CardContent sx={{ flex: 1 }}>
                  
                     <Typography

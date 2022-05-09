@@ -71,12 +71,14 @@ class QuizGameService {
                 });
             }
 
+            //FIXME: 
             
-            //check quiz is Random or not ( Limit is always on and not less than 1)
+            //check quiz is Random or not ( Limit is always on and not less than ...)
             const RANDOM = false
             if (Lesson.quizIsRandom === true) {
                 RANDOM = true
             } 
+
             const QuizGame = await this.QuizGameEntity.getAllQuizGame({ lessonId, RANDOM, limit: Lesson.quizLimit });
             return FormateData({
                 data: QuizGame,

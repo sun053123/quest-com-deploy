@@ -191,7 +191,7 @@ class ClassroomService {
         }
     }
 
-    async UpdateClassroom({ classroomId, title, description, userId, username, classroomImg, category, level, tags }) {
+    async UpdateClassroom({ classroomId, title, content, userId, description, classroomImg, category, level, tags }) {
 
         if (tags && Array.isArray(tags) === false) {
 
@@ -235,13 +235,12 @@ class ClassroomService {
             let ClassroomUpdateFields = {};
 
             title ? ClassroomUpdateFields.title = title : Classroom.title;
-            description ? ClassroomUpdateFields.description = description : Classroom.description;
+            content ? ClassroomUpdateFields.content = content : Classroom.content;
             classroomImg ? ClassroomUpdateFields.classroomImg = classroomImg : Classroom.classroomImg;
             category ? ClassroomUpdateFields.category = category : Classroom.category;
             level ? ClassroomUpdateFields.level = level : Classroom.level;
             tags ? ClassroomUpdateFields.tags = tags : Classroom.tags;
-
-
+            description ? ClassroomUpdateFields.description = description : Classroom.description;
 
             const UpdatedClassroom = await this.ClassroomEntity.updateClassroom({ classroomId, ClassroomUpdateFields });
 

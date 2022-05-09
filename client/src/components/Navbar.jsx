@@ -153,7 +153,7 @@ const Navbar = () => {
                 flexGrow: 0,
                 display: { xs: 'flex' },
                 textDecoration: 'none'
-              }} component={Link} to="/login" >
+              }} component={Link} to="/" >
                 
                     <Button
                         onClick={handleCloseNavMenu}

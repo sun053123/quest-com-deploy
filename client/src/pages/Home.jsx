@@ -7,7 +7,7 @@ import { AuthContext } from "../store/Contexts/AuthContext";
 import { AlertContext } from "../store/Contexts/AlertContext";
 import { AlertShow } from "../store/Actions/AlertAction";
 
-import { CssBaseline, Grid, Box, Button, Typography, FormControl, InputLabel, Select, MenuItem, Avatar } from "@mui/material";
+import { CssBaseline, Grid, Box, Button, FormControl, InputLabel, Select, MenuItem, Avatar } from "@mui/material";
 import Container from "@mui/material/Container";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -60,7 +60,7 @@ export default function Blog() {
   const [userscores, setUsersocres] = useState([]);
   const [ownclassrooms, setOwnclassrooms] = useState([]);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchparams, setSearchParams] = useSearchParams();
   let navigate = useNavigate();
 
   const { userinfo } = useContext(AuthContext);
@@ -154,6 +154,7 @@ export default function Blog() {
       category: category,
       page: page,
     });
+    // eslint-disable-next-line
   }, []);
 
   // everytime category is changed, set page to 1 
@@ -163,6 +164,7 @@ export default function Blog() {
       page: 1,
     });
     setPage(1);
+    // eslint-disable-next-line
   }, [category]);
 
   //everytime page changes, set url
@@ -171,11 +173,11 @@ export default function Blog() {
       category: category,
       page: page,
     });
+  // eslint-disable-next-line
   }, [page]);
 
 
   //create sticky button
-  const [sticky, setSticky] = useState(false);
   const [show, setShow] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -201,6 +203,7 @@ export default function Blog() {
         window.removeEventListener('scroll', controlStickyButton);
       };
     }
+    // eslint-disable-next-line
   }, [lastScrollY]);
 
   //State Loading while Retrieving Data
@@ -222,38 +225,11 @@ export default function Blog() {
       {/* show sticky button top right */}
       {userinfo?.role === true && show && (
         <div className="sticky-button">
-          {/* <Button
-            variant="outlined"
-            color="secondary"
-            sx={{
-              position: "fixed",
-              top: "0",
-              right: "0",
-              m:3,
-              marginRight: "8rem",
-              zIndex: "999",
-              color: "secondary.main",
-              fontSize: "1.2rem",
-              padding: "0.5rem",
-              borderRadius: "0.5rem",
-              "&:hover": {
-                cursor: "pointer",
-              },
-              "&:animation": {
-                animation: "$fadeIn 0.5s",
-              },
-            }}
-            onClick={() => {
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }
-            }
-          >
-            Create One
-          </Button> */}
           <Avatar className="sticky-button-avatar" src={CreateIcon} sx={{
               height: "6rem",
               width: "6rem",
               position: "fixed",
+              display: {xs: "none", sm: "flex"},
               top: "0",
               right: "0",
               m:3,
@@ -327,7 +303,6 @@ export default function Blog() {
                 justifyItems: "center",
                 alignContent: "center",
                 //column
-                display: "flex",
                 alignItems: "center",
                 marginTop: "1rem",
                 marginBottom: "1rem",
@@ -401,12 +376,6 @@ export default function Blog() {
           )}
           <Grid container spacing={5} sx={{ mt: 3 }}>
             <Main title="From the firehose" posts={posts} />
-            {/* <Sidebar
-              title={sidebar.title}
-              description={sidebar.description}
-              archives={sidebar.archives}
-              social={sidebar.social}
-            /> */}
           </Grid>
         </main>
       </Container>

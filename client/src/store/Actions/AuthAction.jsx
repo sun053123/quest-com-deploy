@@ -2,6 +2,7 @@ const { LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, SET_USERINFO } = require
 
 
 export const LoginStart = () => ({
+    
     type: LOGIN_START,
 });
 

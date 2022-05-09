@@ -31,11 +31,12 @@ class ClassroomEntity {
     }
 
     async updateClassroom({ classroomId, ClassroomUpdateFields }) {
-        const { title, description, classroomImg, category, level, tags } = ClassroomUpdateFields
+        const { title, description, classroomImg, category, level, tags ,content } = ClassroomUpdateFields
         try {
             const UpdatedClassroom = await ClassroomModel.findOneAndUpdate({ _id: classroomId }, {
                 title,
                 description,
+                content,
                 classroomImg,
                 category,
                 level,

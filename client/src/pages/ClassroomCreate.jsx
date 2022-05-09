@@ -73,9 +73,6 @@ function ClassroomCreate() {
   });
 
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [success, setSuccess] = useState('');
-  const [saving, setSaving] = useState("");
 
   let { classroomId } = useParams();
 
@@ -141,26 +138,25 @@ function ClassroomCreate() {
   }
 
   const updateClassroom = async () => {
-    setSaving(true);
     setLoading(true);
     try {
       const res = await axios.put(`http://localhost:8000/api/classroom/${_id}`, classroomForm);
       navigate(`/classroom/${res.data.classroom._id}`);
     } catch (error) {
-      console.log(error);
       AlertDispatch(AlertShow(error.response.data.error, "error"));
+      setLoading(false);
     }
   }
 
   const createClassroom = async () => {
-    setSaving(true);
     setLoading(true);
     try {
       const res = await axios.post("http://localhost:8000/api/classroom", classroomForm);
       navigate(`/classroom/${res.data.data.classroom._id}`);
+      setLoading(false);
     } catch (error) {
-
       AlertDispatch(AlertShow(error.response.data.error, "error"));
+      setLoading(false);
     }
   }
 
@@ -168,22 +164,22 @@ function ClassroomCreate() {
   const { title, description, content, category, level, tags, classroomImg } = classroomForm;
 
   const validateCheckbox = () => {
-    if (title.length >= 5) {
+    if (title.length >= 15 && title.length <= 200) {
       setIsvalidateTitle(true);
     }else{
       setIsvalidateTitle(false);
     }
-    if (description.length >= 15) {
+    if (description.length >= 15 && description.length <= 200) {
       setIsvalidateDescription(true);
     }else{
       setIsvalidateDescription(false);
     }
-    if (content.length >= 20) {
+    if (content.length >= 20 && content.length <= 1500) {
       setIsvalidateContent(true);
     }else{
       setIsvalidateContent(false);
     }
-    if (category !== "" && category !== null) {
+    if (category !== "" && category !== null ) {
       setIsvalidateCategory(true);
     }else{
       setIsvalidateCategory(false);
@@ -194,16 +190,18 @@ function ClassroomCreate() {
       setIsvalidateLevel(false);
     }
     // not in passvalidate field
-    if (tags.length >= 1) {
+    if (tags.length >= 1 && tags.length <= 50) {
       setIsvalidateTags(true);
     }else{
       setIsvalidateTags(false);
     }
-    if (classroomImg !== "" && classroomImg !== null && classroomImg !== undefined) {
+
+    if (classroomImg?.type === "image/jpeg" || classroomImg?.type === "image/jpg" || classroomImg?.type === "image/png") {
       setIsvalidateClassroomImg(true);
     }else{
       setIsvalidateClassroomImg(false);
     }
+    
   }
 
   const checkPassValidate = () => {
@@ -228,6 +226,15 @@ function ClassroomCreate() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    if (classroomImg?.type !== "image/jpeg" || classroomImg?.type !== "image/jpg" || classroomImg?.type !== "image/png"){
+      
+      setClassroomForm({
+        ...classroomForm,
+        classroomImg: null,
+      });
+      return toast.error("Please choose a image file");
+    }
 
     if(_id && _id !== "" && _id != null) {
       updateClassroom();
@@ -544,9 +551,12 @@ function ClassroomCreate() {
                     multiple={false}
                     // type="file"
                     type="image/*"
-                    onDone={({base64}) => setClassroomForm({...classroomForm, classroomImg: base64})}
                     inputProps={{ accept: 'image/*, jpg, jpeg, png' }}
-                    
+                    onDone={({base64}) => setClassroomForm({...classroomForm, classroomImg: base64})}
+                    label="Imgae"
+                    name="classroomImage"
+                    size="small"
+                    variant="standard"
                 />
                 </Box>
                   

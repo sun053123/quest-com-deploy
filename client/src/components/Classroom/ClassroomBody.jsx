@@ -9,17 +9,19 @@ function ClassroomBody(props) {
   const { classroom } = props;
 
   return (
+    <>
     <Paper
       sx={{
         position: 'relative',
         backgroundColor: 'grey.800',
-        color: '#fff',
+        //set background transparent
+        color: 'white',
         mb: 4,
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
-        backgroundImage: `url(${classroom?.classroomImg})` && 'url(https://source.unsplash.com/random)',
+        backgroundImage: `url(${classroom?.classroomImg})` || 'url(/no_img.png)',
         width: '100%',
+        minHeight: '50vh',
+        maxHeight: 'auto',
       }}
     >
       {/* Increase the priority of the hero background image */}
@@ -31,7 +33,7 @@ function ClassroomBody(props) {
           bottom: 0,
           right: 0,
           left: 0,
-          backgroundColor: 'rgba(0,0,0,.3)',
+          backgroundColor: 'rgba(0,0,0,.6)',
         }}
       />
       <Grid container>
@@ -41,15 +43,15 @@ function ClassroomBody(props) {
               p: { xs: 3, md: 6 },
               pr: { md: 0 },
             }}>
-            <Typography component="h1" variant="h3" color="inherit" gutterBottom>
+            <Typography component="h1" variant="h3" color="inherit" gutterBottom sx={{
+              backgroundColor: 'rgba(255,255,255,.1)',
+              borderRadius: '8px',
+            }}>
               {classroom?.title}
             </Typography>
             <Typography variant="h5" color="inherit" paragraph>
               {classroom?.description}
             </Typography>
-            <Link variant="subtitle1" href="#">
-              {classroom?.category}
-            </Link>
           </Box>
         </Grid>
         <Grid item md={6}>
@@ -58,16 +60,14 @@ function ClassroomBody(props) {
               p: { xs: 3, md: 6 },
               pl: { md: 0 },
             }}>
-            <Typography variant="h5" color="inherit" gutterBottom>
-              {classroom?.content}
-            </Typography>
-            <Typography variant="h5" color="inherit" paragraph>
+            <Typography variant="h5" color="inherit" gutterBottom >              
               {classroom?.content}
             </Typography>
           </Box>
         </ Grid>
       </Grid>
     </Paper>
+    </>
   );
 }
 
