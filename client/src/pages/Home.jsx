@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useQuery } from "react-query";
 import axios from "axios";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../store/Contexts/AuthContext";
 import { AlertContext } from "../store/Contexts/AlertContext";
 import { AlertShow } from "../store/Actions/AlertAction";
 
-import { CssBaseline, Grid, Box, Button, Typography, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { CssBaseline, Grid, Box, Button, Typography, FormControl, InputLabel, Select, MenuItem, Avatar } from "@mui/material";
 import Container from "@mui/material/Container";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -29,13 +29,7 @@ import LoadingPage from "../components/LoadingPage";
 import UserScore from "../components/Home/UserScore";
 import OwnClassroom from "../components/Home/OwnClassroom";
 
-// const Header = React.lazy(() => import("../components/Home/Header"));
-// const MainFeaturedPost = React.lazy(() => import("../components/Home/MainFeaturedPost"));
-// const FeaturedPost = React.lazy(() => import("../components/Home/FeaturedPost"));
-// const Main = React.lazy(() => import("../components/Home/Main"));
-// const Footer = React.lazy(() => import("../components/Home/Footer"));
-// const UserScore = React.lazy(() => import("../components/Home/UserScore"));
-// const OwnClassroom = React.lazy(() => import("../components/Home/OwnClassroom"));
+import CreateIcon from "../assets/img/create.png"
 
 
 const sections = [
@@ -67,6 +61,7 @@ export default function Blog() {
   const [ownclassrooms, setOwnclassrooms] = useState([]);
 
   const [searchParams, setSearchParams] = useSearchParams();
+  let navigate = useNavigate();
 
   const { userinfo } = useContext(AuthContext);
   const { AlertDispatch } = useContext(AlertContext);
@@ -178,9 +173,35 @@ export default function Blog() {
     });
   }, [page]);
 
-    
 
+  //create sticky button
+  const [sticky, setSticky] = useState(false);
+  const [show, setShow] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
+  const controlStickyButton = () => {
+    if (typeof window !== 'undefined') { 
+      if (window.scrollY > lastScrollY) { // if scroll down hide the navbar
+        setShow(true); 
+      } else { // if scroll up show the navbar
+        setShow(false);  
+      }
+
+      // remember current page location to use in the next move
+      setLastScrollY(window.scrollY); 
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', controlStickyButton);
+
+      // cleanup function
+      return () => {
+        window.removeEventListener('scroll', controlStickyButton);
+      };
+    }
+  }, [lastScrollY]);
 
   //State Loading while Retrieving Data
   if (isLoading || isLoadingOwnClassroom || isLoadingScore) {
@@ -194,9 +215,65 @@ export default function Blog() {
 
   if( isSuccess ){
   return (
-    <div className="blog-service">
+    <>
       <CssBaseline />
       <ToastContainer />
+      
+      {/* show sticky button top right */}
+      {userinfo?.role === true && show && (
+        <div className="sticky-button">
+          {/* <Button
+            variant="outlined"
+            color="secondary"
+            sx={{
+              position: "fixed",
+              top: "0",
+              right: "0",
+              m:3,
+              marginRight: "8rem",
+              zIndex: "999",
+              color: "secondary.main",
+              fontSize: "1.2rem",
+              padding: "0.5rem",
+              borderRadius: "0.5rem",
+              "&:hover": {
+                cursor: "pointer",
+              },
+              "&:animation": {
+                animation: "$fadeIn 0.5s",
+              },
+            }}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+            }
+          >
+            Create One
+          </Button> */}
+          <Avatar className="sticky-button-avatar" src={CreateIcon} sx={{
+              height: "6rem",
+              width: "6rem",
+              position: "fixed",
+              top: "0",
+              right: "0",
+              m:3,
+              marginRight: "10rem",
+              zIndex: "999",
+              color: "secondary.main",
+              fontSize: "1.2rem",
+              padding: "0.5rem",
+              borderRadius: "0.5rem",
+              //onhover show text
+              "&:hover": {
+                cursor: "pointer",
+                scale: 1.1,
+            }
+            }}
+            onClick={() => {
+              navigate("/classroom/create");
+            }} />
+        </div>
+      )}
       <Container maxWidth="lg">
         <Header title="Blog" sections={sections} setCategory={setCategory} />
         <main>
@@ -218,44 +295,27 @@ export default function Blog() {
               marginBottom: "1rem",
             }}
           >
-            <Grid item xs>
-              <Typography
-                sx={{
-                  fontSize: "1.5rem",
-                  fontWeight: "bold",
-                  color: `${category.toLowerCase() === "all" ? "orange" : category.toLowerCase()}`,
-                  //on mobile device
-                  "@media screen and (max-width:40em)": {
-                    fontSize: "12px",
-                    fontWeight: "regular",
+            <Grid item xs>         
+              <FormControl variant="outlined" color="math" sx={{ m: 1, minWidth: 120, maxHeight:40, }} >
+                <InputLabel id="selector-category" sx={{backgroundColor:"white"}} >Category</InputLabel>
+                <Select
+                  labelId="selector-category"
+                  id="selector-category"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  sx={{
                     color: `${category.toLowerCase() === "all" ? "orange" : category.toLowerCase()}`,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  },
-                }}
-              >
-                Category : {category.toUpperCase()}
-              </Typography>
+                  }}
+                >
+                  { sections.map((val, index) => (
+                    <MenuItem key={index} value={val.value}>
+                      {val.title}
+                    </MenuItem>
+                  )) }
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs>
-              {/* <Typography
-                sx={{
-                  fontSize: "1.5rem",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  display: "flex",
-                  fontWeight: "regular",
-                  "@media screen and (max-width:40em)": {
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    display: "flex",
-                  },
-                }}
-              >
-                Page : {page}
-              </Typography> */}
               
             </Grid>
             <Grid
@@ -264,9 +324,14 @@ export default function Blog() {
               sx={{
                 flexWrap: "wrap",
                 justifyContent: "space-between",
+                justifyItems: "center",
+                alignContent: "center",
+                //column
+                display: "flex",
                 alignItems: "center",
                 marginTop: "1rem",
                 marginBottom: "1rem",
+                //make its disapear on ipad display
                 display: { xs: "none", sm: "flex" },
               }}
             >
@@ -274,7 +339,6 @@ export default function Blog() {
                 variant="outlined"
                 disabled={page === 1}
                 onClick={() => setPage(page - 1)}
-               
               >
                 Previous Page
               </Button>
@@ -351,7 +415,7 @@ export default function Blog() {
         title="Footer"
         description="Something here to give the footer a purpose!"
       />
-    </div>
+    </>
   );
   }
 }

@@ -27,10 +27,6 @@ const LessonSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    lessonVideoURL: {
-        type: String,
-        required: false
-    },
     quizCount: {
         type: Number,
         required: true,

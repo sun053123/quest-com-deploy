@@ -52,6 +52,20 @@ function ClassroomBody(props) {
             </Link>
           </Box>
         </Grid>
+        <Grid item md={6}>
+          <Box sx={{
+              position: 'relative',
+              p: { xs: 3, md: 6 },
+              pl: { md: 0 },
+            }}>
+            <Typography variant="h5" color="inherit" gutterBottom>
+              {classroom?.content}
+            </Typography>
+            <Typography variant="h5" color="inherit" paragraph>
+              {classroom?.content}
+            </Typography>
+          </Box>
+        </ Grid>
       </Grid>
     </Paper>
   );

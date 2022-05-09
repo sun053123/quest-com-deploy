@@ -1,7 +1,8 @@
-import { Box } from '@mui/material'
+import { Box, FormGroup } from '@mui/material'
 import React from 'react'
 
-function Preview() {
+function Preview(props) {
+  const { previewHTML } = props
   return (
     <Box width="100%" component={'nav'}  display="flex" sx={{
         overflowY: "auto",
@@ -10,13 +11,16 @@ function Preview() {
         flexDirection: "column",
     }}> 
 
-    {[1,2,3,4,5,6,7,8,0,0,0,0,0,0,0,9,123,123,2,2,2,2,2,2,2,2].map((item, index) => {
-        return ( <Box key={index} width="100%" height="100px" display="flex" justifyContent="center" alignItems="center" >
-            <Box width="100%"  display="flex"  sx={{backgroundColor:'pink'}}>
-            <h1>sadad</h1>
-        </Box>
-        </Box>)
-    })}
+<FormGroup>
+                        <h1>Preview</h1>
+                        <div className="border ql-container p-2">
+                            <div 
+                                dangerouslySetInnerHTML={{ 
+                                    __html: previewHTML
+                                }} 
+                            />
+                        </div>
+                    </FormGroup>
         
         
     </Box>

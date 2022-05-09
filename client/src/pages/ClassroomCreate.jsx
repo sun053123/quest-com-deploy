@@ -9,6 +9,7 @@ import { AlertShow } from "../store/Actions/AlertAction";
 
 import { Grow, Box, Grid, Typography, TextField, ListItem,ListItemText,List,Divider, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
+import LoadingButton from '@mui/lab/LoadingButton';
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -28,7 +29,7 @@ import moment from "moment";
 
 const style = {
   width: '100%',
-  maxWidth: 360,
+  maxWidth: 'auto',
   bgcolor: 'background.paper',
   backgroundColor: '#fafafa',
 };
@@ -55,13 +56,11 @@ function ClassroomCreate() {
   
 
   const [_id, setId] = useState("");
-  // const [title, setTitle] = useState("");
-  // const [description, setDescription] = useState("");
-  // const [content, setContent] = useState("");
-  // const [category, setCategory] = useState("");
-  // const [level, setLevel] = useState("");
-  // const [tags, setTags] = useState("");
-  // const [classroomImg, setClassroomImg] = useState("");
+  
+  //set back to top 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const [classroomForm, setClassroomForm] = useState({
     title: "",
@@ -143,6 +142,7 @@ function ClassroomCreate() {
 
   const updateClassroom = async () => {
     setSaving(true);
+    setLoading(true);
     try {
       const res = await axios.put(`http://localhost:8000/api/classroom/${_id}`, classroomForm);
       navigate(`/classroom/${res.data.classroom._id}`);
@@ -154,6 +154,7 @@ function ClassroomCreate() {
 
   const createClassroom = async () => {
     setSaving(true);
+    setLoading(true);
     try {
       const res = await axios.post("http://localhost:8000/api/classroom", classroomForm);
       navigate(`/classroom/${res.data.data.classroom._id}`);
@@ -243,7 +244,7 @@ function ClassroomCreate() {
       <ToastContainer />
       <Grid container spacing={0}>
         {/* classroom title */}
-        <Grid item xs={2}>
+        <Grid item xs={2} > 
           <Grow in={true}>
             <Box
               sx={{
@@ -259,7 +260,7 @@ function ClassroomCreate() {
                   //column
                   display: "flex",
                   flexDirection: "row",
-                  width: "100%",
+                  width: "auto",
                   height: "12vh",
 
                   //if pass allvalidate change color to green from red
@@ -270,7 +271,9 @@ function ClassroomCreate() {
                   alignItems: "center",
                 }}
               >
-                Classroom Form
+                <Typography variant="h6">
+                    Classroom Form
+                </Typography>
               </Box>
               <List sx={style} component="nav" aria-label="mailbox folders">
                 <ListItemText
@@ -315,7 +318,10 @@ function ClassroomCreate() {
                       </ListItemText>
                       <ListItemText
                         primary={item ? "pass" : "valid"}
-                        sx={{ display: { xs: "none", sm: "flex" } }}
+                        sx={{ display: { xs: "none", sm: "flex" }
+                        //stick at right
+                        , justifyContent: "flex-end"
+                       }}
                       />
                     </ListItem>
                   );
@@ -543,16 +549,18 @@ function ClassroomCreate() {
                     
                 />
                 </Box>
-                  <Button
+                  
+                  < LoadingButton
                     type="submit"
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
                     disabled={!isPassValidate}
                     onClick={handleSubmit}
+                    loading={loading}
                   >
                     Submit Form
-                  </Button>
+                  </LoadingButton>
                 </Box>
               </Box>
             </Container>

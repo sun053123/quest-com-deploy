@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import moment from "moment";
 import PropTypes from 'prop-types';
-
+import CircleIcon from '@mui/icons-material/Circle';
 import no_img from "../../assets/img/no_img.png";
 
 import {
@@ -13,7 +14,8 @@ import {
   Card,
   CardMedia,
   CardContent,
-  Grow
+  Grow,
+  CardActions,
 } from "@mui/material";
 
 function OwnClassroom(props) {
@@ -35,7 +37,7 @@ function OwnClassroom(props) {
           boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.2)",
         }}
       >
-        <Typography variant="h5" fontWeight="regular" gutterBottom color="secondary">
+        <Typography variant="h5" fontWeight="bold" gutterBottom color="primary" ml={3}>
           My Classrooms
         </Typography>
         {/* <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ justifyContent: 'space-between', overflowX: 'auto' }} > */}
@@ -58,18 +60,34 @@ function OwnClassroom(props) {
               <CardActionArea component="a" onClick={
                 () => navigate(`/classroom/${ownclassroom._id}`)}  
               >
-                <Card sx={{ display: "flex" }} >
+                <Card sx={{ display: "flex", minWidth:"35vh", maxWidth:"80vh", minHeight:"18vh", maxHeight:"18vh", mt:2, mb:2 }} >
                   <CardContent sx={{ flex: 1 }}>
+                 
                     <Typography
                       component="h2"
                       variant="h5"
                       sx={{
                         //limit text
-                        textOverflow: "ellipsis",
-                        overflow: "hidden",
-                        whiteSpace: "nowrap",
+                        textOverflow: 'ellipsis',
+                        textTrim: 'word',
+                        
+                        //limt only 2 lines
+                        overflow: 'hidden',
+                        maxWidth: '100%',
+                        display: '-webkit-box',
+                        WebkitLineClamp: '2',
+                        WebkitBoxOrient: 'vertical',
+                        
                       }}
                     >
+                       <CircleIcon sx={{
+                        height: "10px",
+                        width: "10px",
+                        marginRight: "5px",
+                        marginBottom: "2px",
+                        color: `${ownclassroom.isComplete ? "green" : "red"}`,
+                        
+                      }} />
                       {ownclassroom.title}
                     </Typography>
                     <Typography variant="subtitle1" color="text.secondary">
@@ -78,18 +96,46 @@ function OwnClassroom(props) {
                     <Typography variant="subtitle1" paragraph sx={{
                         //limit text
                         textOverflow: 'ellipsis',
-                        overflow: 'hidden',
                         textTrim: 'word',
                         display: '-webkit-box',
                         WebkitLineClamp: '2',
                         WebkitBoxOrient: 'vertical',
-                        
+                        overflow: 'hidden',
                       }}>
                       {ownclassroom.description}
                     </Typography>
                     <Typography variant="subtitle1" color={`${ownclassroom.category}`} >
                       {ownclassroom.category}
                     </Typography>
+                    
+                    {/* if time <= 5mins show New! */}
+                    { moment(ownclassroom.updatedAt) - new Date().getTime() >= -500000 && (
+                    <CardActions sx={{
+                      //stick with bottom card
+
+                      position: "absolute",
+                      bottom: "0",
+                      left: "1",
+                      right: "0",
+                      display: "flex",
+                      m:2,
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      border: "none",
+                      backgroundColor: `${ownclassroom.category}`,
+                      borderRadius: "5px",
+                      boxShadow: "none",
+                      color: "white",
+                      textTransform: "inherit",
+                    }}>
+                    <Typography
+                    variant="body2"
+                    fontWeight="bold"
+                  >
+                    New!
+                  </Typography>
+
+                  </CardActions>)}
                   </CardContent>
                   <CardMedia
                     component="img"

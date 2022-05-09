@@ -55,7 +55,7 @@ function Classroom() {
     {
       retry: false,
       refetchOnWindowFocus: false,
-      //retechOnmount is important to avoid empty render when navigating from another page (always true)
+      //retechOnmount to false when using staletime
       refetchOnMount: true,
       // initialData: {
       //   data: {
@@ -65,7 +65,6 @@ function Classroom() {
       // },
       //initial data for query (page will not trytofetch from backend)
       // set 3 mins as the default stale time
-      // staleTime: 1000 * 60 * 5, //5 mins
       onSuccess: (data) => {
         setClassroom(data.data.data.classroom);
         setLessons(data.data.data.lessons);
@@ -179,7 +178,7 @@ function Classroom() {
             //fix position of sidebar
           }}
         >
-          <ClassroomSidebar lessons={lessons} />
+          <ClassroomSidebar lessons={lessons} classroomcreatorId={classroom?.creator?.user}/>
         </Grid>
 
         {/* Main Classroom */}

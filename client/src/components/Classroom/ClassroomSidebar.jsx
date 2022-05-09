@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import {
   ListItem,
@@ -16,6 +16,8 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 
 import { useLocation, useNavigate, useParams, Link } from "react-router-dom";
 
+import { AuthContext } from "../../store/Contexts/AuthContext";
+
 const style = {
   width: '100%',
   maxWidth: 360,
@@ -25,7 +27,9 @@ const style = {
 
 function ClassroomSidebar(props) {
   const { lessons } = props;
+  const { classroomcreatorId } = props
   const { classroomId } = useParams();
+  const { userinfo } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -41,6 +45,8 @@ function ClassroomSidebar(props) {
       >
 
         <List sx={style} component="nav" aria-label="mailbox folders" >
+          { userinfo?.role === true && userinfo?.id === classroomcreatorId && (
+            <>
           <ListItemText sx={{
             textAlign: "center",
           }} >
@@ -48,7 +54,7 @@ function ClassroomSidebar(props) {
                 Admin
             </Typography>
           </ListItemText>
-          <Divider />
+          <Divider /> 
 
           <ListItem button sx={{
             backgroundColor: "wheat" ,
@@ -62,6 +68,7 @@ function ClassroomSidebar(props) {
               <ListItemText primary="Create Lesson" />
             </ListItem>
             <Divider />
+            
             <ListItem button sx={{
               backgroundColor: "white" ,
               height: "4.5rem"
@@ -71,13 +78,17 @@ function ClassroomSidebar(props) {
               </ListItemIcon>
               <ListItemText primary="Dash Board" />
             </ListItem>
-            <Divider />
+            <Divider /> 
+            
+            </>
+            )}
+
           <ListItemText primary="Lesson" sx={{
             fontSize: "2rem",
             fontWeight: "bold",
             textAlign: "center",
           }} />
-          <Divider />
+          <Divider /> 
           { lessons && lessons?.map((lesson, index) => (
             <ListItem button key={lesson._id} sx={{
               backgroundColor: "white",

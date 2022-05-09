@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-// import Home from "./pages/Home";
+import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NoPage from "./pages/NoPage";
@@ -23,7 +23,7 @@ import Profile from "./pages/Profile";
 import { Worker } from '@react-pdf-viewer/core';
 
 
-const Home = React.lazy(() => import("./pages/Home"));
+// const Home = React.lazy(() => import("./pages/Home"));
 // const Lesson = React.lazy(() => import("./pages/Lesson"));
 // const Classroom = React.lazy(() => import("./pages/Classroom"));
 
@@ -32,7 +32,7 @@ function App() {
   return (
     <>
       <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.13.216/build/pdf.worker.min.js">
-      <Navbar />
+      
       <AlertToast />
       <Routes>
         {/* TOKEN ROUTE PROTECT */}
@@ -42,26 +42,29 @@ function App() {
         </ Route>
 
         {/* PUBLIC ROUTE */}
-        <Route path="/" exact element={<Navigate to="/home" />} />
-        <Route path="/home" element={<React.Suspense fallback={<LoadingPage />}> <Home /> </React.Suspense>} />
-        <Route path="/loading" element={<LoadingPage />} />
-        <Route path="*" element={<NoPage />} />
+        <Route path="/" element={<Navbar />} >
+          <Route path="/" exact element={<Navigate to="/home" />} />
+          {/* <Route path="/home" element={<React.Suspense fallback={<LoadingPage />}> <Home /> </React.Suspense>} /> */}
+          <Route path="/home" element={<Home />} />
+          <Route path="/loading" element={<LoadingPage />} />
+          <Route path="*" element={<NoPage />} />
 
-        {/* BasicAuth Route />} /> */}
-        <Route element={<AuthRoute />} >
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/classroom/:classroomId" element={<Classroom />} />
-          <Route path="/classroom/:classroomId/lesson/:lessonId" element={<Lesson />} />
-          <Route path="/classroom/:classroomId/lesson/:lessonId/quizgame" element={<QuizGame />} />
-          <Route path="/classroom/:classroomId/lesson/:lessonId/quizgameresult" element={<QuizGameResult />} />
-        </Route>
+          {/* BasicAuth Route />} /> */}
+          <Route element={<AuthRoute />} >
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/classroom/:classroomId" element={<Classroom />} />
+            <Route path="/classroom/:classroomId/lesson/:lessonId" element={<Lesson />} />
+            <Route path="/classroom/:classroomId/lesson/:lessonId/quizgame" element={<QuizGame />} />
+            <Route path="/classroom/:classroomId/lesson/:lessonId/quizgameresult" element={<QuizGameResult />} />
+          </Route>
 
-        {/* TeacherAuthRoute /> */}
-        <Route element={<TeacherRoute />} >
-          <Route path="/classroom/create" element={<ClassroomCreate />} />
-          <Route path="/classroom/edit/:classroomId" element={<ClassroomCreate />} />
-          <Route path="/classroom/:classroomId/lesson/create" element={<LessonCreate />} />
-          <Route path="/classroom/:classroomId/lesson/:lessonId/createquiz" element={<QuizCreate />} />
+          {/* TeacherAuthRoute /> */}
+          <Route element={<TeacherRoute />} >
+            <Route path="/classroom/create" element={<ClassroomCreate />} />
+            <Route path="/classroom/edit/:classroomId" element={<ClassroomCreate />} />
+            <Route path="/classroom/:classroomId/lesson/create" element={<LessonCreate />} />
+            <Route path="/classroom/:classroomId/lesson/:lessonId/createquiz" element={<QuizCreate />} />
+          </Route>
         </Route>
       </Routes>
       </Worker>

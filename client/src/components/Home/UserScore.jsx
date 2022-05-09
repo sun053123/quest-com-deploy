@@ -12,32 +12,32 @@ import UserDefaultProfile from "../../assets/img/user-default-profile.png";
 
 import { AuthContext } from "../../store/Contexts/AuthContext";
 
-// const userscores = [
-//   {
-//     subject: "math",
-//     exp: 456,
-//   },
-//   {
-//     subject: "science",
-//     exp: 23,
-//   },
-//   {
-//     subject: "english",
-//     exp: 462,
-//   },
-//   {
-//     subject: "social",
-//     exp: 112,
-//   },
-//   {
-//     subject: "computer",
-//     exp: 89,
-//   },
-// ];
+const userscores = [
+  {
+    subject: "math",
+    exp: 456,
+  },
+  {
+    subject: "science",
+    exp: 23,
+  },
+  {
+    subject: "english",
+    exp: 462,
+  },
+  {
+    subject: "social",
+    exp: 112,
+  },
+  {
+    subject: "computer",
+    exp: 89,
+  },
+];
 
 function UserScore(props) {
-  const { userscores } = props;
-  console.log(userscores);
+  // const { userscores } = props;
+
   //useContext auth
   const { userinfo } = useContext(AuthContext);
 
@@ -145,8 +145,19 @@ function UserScore(props) {
                     flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
+                    //on hover set zoom
+                    "&:hover": {
+                      transition: "all 0.5s",
+                      tranparent: "transparent",
+                      borderRadius: "5px",
+                      //zoom
+                      transform: "scale(1.1)",
+                    },
                   }}
                 >
+                  <Box sx={{
+                    
+                  }}>
                   <Typography
                     gutterBottom
                     sx={{
@@ -171,11 +182,13 @@ function UserScore(props) {
                     sx={{ position: "relative", display: "inline-flex" }}
                   >
                     <CircularProgress
+                    //render from 0 - 100 range
                       variant="determinate"
                       value={parseInt(`${Math.round(score.exp % 100)}%`)}
                       size={100}
                       thickness={5}
                       sx={{
+                        transform: "translate(-50%, -50%)",
                         color: score.subject.replace(/^./, (str) =>
                         str.toLowerCase()
                       )
@@ -205,6 +218,7 @@ function UserScore(props) {
                         {`${Math.round(score.exp % 100)}%`}
                       </Typography>
                     </Box>
+                  </Box>
                   </Box>
                 </Grid>
               );

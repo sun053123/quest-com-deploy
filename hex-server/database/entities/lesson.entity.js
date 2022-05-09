@@ -179,7 +179,8 @@ class LessonEntity {
             // }
 
             operation === true ? Lesson.quizCount = Lesson.quizCount + 1 : Lesson.quizCount = Lesson.quizCount - 1;
-            Lesson.quizCount > 0 ? Lesson.quizIsReday = true : Lesson.quizIsReday = false;
+            Lesson.quizCount > 4 ? Lesson.quizIsReday = true : Lesson.quizIsReday = false;
+            //if quiz count > 4, quiz is ready
 
             const UpdatedLesson = await Lesson.save();
             return UpdatedLesson;
@@ -222,7 +223,7 @@ class LessonEntity {
     async uploadLessonPDF({ lessonId, pdfFile }) {
         try {
             const Lesson = await LessonModel.findByIdAndUpdate(lessonId, {
-                pdfFile,
+                lessonFile: pdfFile,
                 updateAt: Date.now(),
             }, { new: true });
             return Lesson;
@@ -235,7 +236,7 @@ class LessonEntity {
     async updateLessonPDF({ lessonId, pdfFile }) {
         try {
             const Lesson = await LessonModel.findByIdAndUpdate(lessonId, {
-                pdfFile,
+                lessonFile: pdfFile,
                 updateAt: Date.now(),
             }, { new: true });
             return Lesson;
@@ -245,7 +246,6 @@ class LessonEntity {
         }
     }
             
-
 }
 
 module.exports = LessonEntity;

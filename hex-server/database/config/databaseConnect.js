@@ -29,6 +29,13 @@ module.exports = async() => {
 
     process.on('SIGINT', () => {
         mongoose.connection.close(() => {
+            console.log('Mongoose disconnected on app interruption');
+            process.exit(0);
+        });
+    });
+
+    process.on('SIGTERM', () => {
+        mongoose.connection.close(() => {
             console.log('Mongoose disconnected on app termination');
             process.exit(0);
         });
