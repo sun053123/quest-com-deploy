@@ -57,6 +57,10 @@ const ClassroomSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    deletedAt: {
+        type: Date,
+        default: null
+    },
     isComplete: {
         type: Boolean,
         default: false

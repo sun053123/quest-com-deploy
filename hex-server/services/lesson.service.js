@@ -349,7 +349,7 @@ class LessonService {
             const LikedLesson = await this.LessonEntity.pushLikeLesson({ lessonId, userId });
 
             return FormateData({
-                lesson: LikedLesson,
+                likes: LikedLesson,
                 status: HTTP_STATUS_CODES.OK,
             });
         }
@@ -541,7 +541,7 @@ class LessonService {
             const LikedComment = await this.LessonEntity.pushLikeCommentLesson({ lessonId, commentId, userId });
 
             return FormateData({
-                comment: LikedComment,
+                likes: LikedComment,
                 status: HTTP_STATUS_CODES.OK,
             });
         }

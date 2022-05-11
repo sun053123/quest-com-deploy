@@ -44,7 +44,11 @@ const QuizSchema = new mongoose.Schema({
     updatedAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    deletedAt: {
+        type: Date,
+        default: null
+    },
 },{
     toJSON: {
         transform(doc, ret){

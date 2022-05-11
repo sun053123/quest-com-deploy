@@ -12,31 +12,31 @@ import UserDefaultProfile from "../../assets/img/user-default-profile.png";
 
 import { AuthContext } from "../../store/Contexts/AuthContext";
 
-const userscores = [
-  {
-    subject: "math",
-    exp: 456,
-  },
-  {
-    subject: "science",
-    exp: 23,
-  },
-  {
-    subject: "english",
-    exp: 462,
-  },
-  {
-    subject: "social",
-    exp: 112,
-  },
-  {
-    subject: "computer",
-    exp: 89,
-  },
-];
+// const userscores = [
+//   {
+//     subject: "math",
+//     exp: 456,
+//   },
+//   {
+//     subject: "science",
+//     exp: 23,
+//   },
+//   {
+//     subject: "english",
+//     exp: 462,
+//   },
+//   {
+//     subject: "social",
+//     exp: 112,
+//   },
+//   {
+//     subject: "computer",
+//     exp: 89,
+//   },
+// ];
 
 function UserScore(props) {
-  // const { userscores } = props;
+  const { userscores } = props;
 
   //useContext auth
   const { userinfo } = useContext(AuthContext);

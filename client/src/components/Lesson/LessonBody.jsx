@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import DOMPurify from 'dompurify';
 import moment from 'moment';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 import { Box, Typography, Paper, Grid, Button } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -10,6 +12,7 @@ import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import MuiAccordion from '@mui/material/Accordion';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
 import { Viewer, ProgressBar } from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
@@ -21,8 +24,10 @@ import { AuthContext } from '../../store/Contexts/AuthContext'
 function LessonBody(props) {
     const { userinfo } = useContext(AuthContext);
     const [expanded, setExpanded] = React.useState('panel1');
-
+    const { classroomId, lessonId } = useParams();
     const { lesson } = props;
+    const [liked, setLiked] = useState(false);
+    const [likes, setLikes] = useState([]);
 
     useEffect(() => {
         //every expanded bring user to top
@@ -46,6 +51,32 @@ function LessonBody(props) {
 
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
+    const handleLikeLesson = async () => {
+        setLiked(!liked)
+        
+        const { data } = await axios.put(`http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/like`, {
+            userId: userinfo.id
+        })
+        setLikes(data.likes)
+        // console.log(likes)
+    }
+
+    //chheck if user liked it
+    useEffect(
+      () => {
+        if (lesson?.likes?.length > 0) {
+          if(userinfo.id && lesson.likes.find((like) => like.user)){
+              setLiked(true)
+          } else {
+                setLiked(false)
+          }
+        }
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+        []
+    );
+
+
     return (
         <>
             {/* ////////////////////////////// LESSON HEADER ////////////////////////////// */}
@@ -53,7 +84,7 @@ function LessonBody(props) {
                 display: "flex",
                 flexDirection: "column",
                 height: "100%",
-                backgroundColor:  `${lesson.classroom.category}`
+                backgroundColor:  `${lesson.classroom?.category}` || "primary",
             }}>
                 <Paper
                     sx={{
@@ -198,7 +229,7 @@ function LessonBody(props) {
                     </Accordion>
                 </Box>
                 {/* ////////////////////////////// LESSON FOOTER ////////////////////////////// */}
-                <Grid container spacing={0} sx={{backgroundColor: `${lesson.classroom.category}`}}>
+                <Grid container spacing={0} sx={{backgroundColor: `${lesson.classroom?.category}`}}>
                     <Grid item md={6} >
                         <Box sx={{
                             display: "flex",
@@ -212,15 +243,37 @@ function LessonBody(props) {
                             <Typography variant="h5" component="h5" fontWeight={"bold"} ml={2} color={"white"} m={2}>
                                 Do you like this lesson ?
                             </Typography>
-                            <ThumbUpAltOutlinedIcon sx={{
-                                color: "white",
-                                height: "5vh",
-                                width: "5vh",
-                                mt:"2vh",
-                            }} />
-                            <Typography variant="h5" component="h5" fontWeight={"bold"} ml={2} color={"white"} m={2}>
-                                like it!
-                            </Typography>
+                            {!liked ? (
+                            <><ThumbUpAltOutlinedIcon sx={{
+                                    color: "white",
+                                    height: "5vh",
+                                    width: "5vh",
+                                    mt: "2vh",
+                                    //onhover pointer and color
+                                    '&:hover': {
+                                        cursor: 'pointer',
+                                        color: '#ffc107',
+                                    }
+                                }}
+                                    onClick={handleLikeLesson} /><Typography variant="h5" component="h5" fontWeight={"bold"} ml={2} color={"white"} m={2}>
+                                        like it!
+                                    </Typography></>) : (
+                            <><ThumbUpIcon sx={{
+                                        color: "white",
+                                        height: "5vh",
+                                        width: "5vh",
+                                        mt: "2vh",
+                                        //onhover pointer and color
+                                        '&:hover': {
+                                            cursor: 'pointer',
+                                            color: '#ffc107',
+                                        }
+                                    }}
+                                        onClick={handleLikeLesson} />
+                                        <Typography variant="h5" component="h5" fontWeight={"bold"} ml={2} color={"white"} m={2}>
+                                            you and { lesson?.likeCount } others like it!
+                                        </Typography></>
+                            )}
                         </Box>
                         
                     </Grid>

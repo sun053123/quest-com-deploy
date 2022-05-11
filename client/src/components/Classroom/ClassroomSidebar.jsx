@@ -38,8 +38,12 @@ function ClassroomSidebar(props) {
   const [toggleLesson, setToggleLesson] = useState(-1);
 
   
+  
   useEffect(() => {
+    if(lessonId){
       mapLocationLessonIndex(lessonId)
+    }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const mapLocationLessonIndex = (lessonId) => {
@@ -48,6 +52,10 @@ function ClassroomSidebar(props) {
       const lessonIndex = lessons.findIndex(lesson => lesson._id === lessonId)
       setToggleLesson(lessonIndex)
   }
+
+  //onclick listitem do press
+
+  
 
   // console.log(toggleLesson)
   // console.log(lessons[toggleLesson]?.quizIsReady)
@@ -134,7 +142,8 @@ function ClassroomSidebar(props) {
                 <ListItem button sx={{
                   backgroundColor: "white" ,
                   height: "4.5rem"
-                }}>
+                }}
+                onClick={() => navigate(`/classroom/${classroomId}/lesson/${lessonId}/quizcontroller`)}>
                   <ListItemIcon>
                      <DashboardIcon /> 
                   </ListItemIcon>
@@ -187,7 +196,11 @@ function ClassroomSidebar(props) {
               backgroundColor: toggleLesson === index ? "grey.300" : "white",
               height: "4.5rem"
             }}
-            onClick={() => navigate(`/classroom/${classroomId}/lesson/${lesson._id}`)}>
+            onClick={
+              () => {
+                navigate(`/classroom/${classroomId}/lesson/${lesson._id}`)
+                setToggleLesson(index)
+              }}>
               <ListItemIcon>
                <ClassIcon /> 
               </ListItemIcon>

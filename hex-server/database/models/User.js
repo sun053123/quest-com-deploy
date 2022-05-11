@@ -32,7 +32,11 @@ const UserSchema = new mongoose.Schema({
     updatedAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    deletedAt: {
+        type: Date,
+        default: null
+    },
 },{
     // this will make sure that the __v, password is not included in the json response
     toJSON: {

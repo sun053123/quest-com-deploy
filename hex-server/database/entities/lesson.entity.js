@@ -100,7 +100,7 @@ class LessonEntity {
             }
 
             const UpdatedLesson = await Lesson.save();
-            return "great you liked this lesson";;
+            return UpdatedLesson.likes;
         }
 
         catch (error) {
@@ -171,7 +171,7 @@ class LessonEntity {
                 Comment.likeCount++;
             }
             const UpdatedLessonComment = await Lesson.save();
-            return "great you liked this comment";
+            return UpdatedLessonComment.comments;
         }catch (error) {
             throw error;
         }

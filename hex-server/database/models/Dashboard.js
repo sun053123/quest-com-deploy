@@ -29,7 +29,11 @@ const DashboardSchema = new mongoose.Schema({
             updatedAt: {
                 type: Date,
                 default: Date.now
-            }
+            },
+            deletedAt: {
+                type: Date,
+                default: null
+            },
         }
     ],
     studentCompleteQuiz: [
@@ -76,7 +80,11 @@ const DashboardSchema = new mongoose.Schema({
             updatedAt: {
                 type: Date,
                 default: Date.now
-            }
+            },
+            deletedAt: {
+                type: Date,
+                default: null
+            },
         }
     ]
 },{

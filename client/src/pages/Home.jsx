@@ -120,6 +120,7 @@ export default function Blog() {
         //retechOnmount is important to avoid empty render when navigating from another page (always true)
         refetchOnMount: true,
         //on guest mode, no need to query scores
+        enabled: userinfo?.role === false ? true : false,
         onSuccess: (data) => {
           setUsersocres(data.data.scores);
         },

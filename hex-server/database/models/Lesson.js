@@ -70,6 +70,10 @@ const LessonSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    deletedAt: {
+        type: Date,
+        default: null
+    },
     comments: [
         {
             body: {

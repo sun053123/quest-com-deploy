@@ -43,6 +43,10 @@ const ProfilleSchema = new mongoose.Schema({
                 type: Date,
                 default: Date.now
             },
+            deletedAt: {
+                type: Date,
+                default: null
+            },
         }
     ],
     recentClassroom: [
@@ -64,6 +68,10 @@ const ProfilleSchema = new mongoose.Schema({
     updatedAt: {
         type: Date,
         default: Date.now
+    },
+    deletedAt: {
+        type: Date,
+        default: null
     },
     math_score: {
         type: Number,
