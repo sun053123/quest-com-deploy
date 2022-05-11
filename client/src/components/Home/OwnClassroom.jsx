@@ -60,7 +60,7 @@ function OwnClassroom(props) {
               <CardActionArea component="a" onClick={
                 () => navigate(`/classroom/${ownclassroom._id}`)}  
               >
-                <Card sx={{ display: "flex", minWidth:"50vh", maxWidth:"80vh", minHeight:"18vh", maxHeight:"18vh", mt:2, mb:2 }} >
+                <Card sx={{ display: "flex", minWidth:"50vh", maxWidth:"80vh", minHeight:"24vh", maxHeight:"24vh", mt:2, mb:2 }} >
                   <CardContent sx={{ flex: 1 }}>
                  
                     <Typography
@@ -139,7 +139,7 @@ function OwnClassroom(props) {
                   </CardContent>
                   <CardMedia
                     component="img"
-                    sx={{ width: 160, display: { xs: "none", sm: "block" }, maxHeight: '20vh', maxWidth: '20vh' }}
+                    sx={{ width: 160, display: { xs: "none", sm: "block" }, maxHeight: '20vh', maxWidth: '25vh' }}
                     image={
                       ownclassroom.classroomImg
                         ? ownclassroom.classroomImg
@@ -157,22 +157,6 @@ function OwnClassroom(props) {
   );
 }
 
-// OwnClassroom.propTypes = {
-//   ownclassrooms: PropTypes.arrayOf({
-//     creator: PropTypes.object.isRequired,
-//     _id: PropTypes.string.isRequired,
-//     title: PropTypes.string.isRequired,
-//     description: PropTypes.string.isRequired,
-//     category: PropTypes.string.isRequired,
-//     level: PropTypes.string.isRequired,
-//     updatedAt: PropTypes.string.isRequired,
-//     createdAt: PropTypes.string.isRequired,
-//     studentCount: PropTypes.number.isRequired,
-//     lessonCount: PropTypes.number.isRequired,
-//     isComplete: PropTypes.bool.isRequired,
-//     tags: PropTypes.arrayOf(PropTypes.string).isRequired,
-//   }).isRequired,
-// };
 
 OwnClassroom.propTypes = {
   ownclassrooms: PropTypes.arrayOf(PropTypes.object).isRequired

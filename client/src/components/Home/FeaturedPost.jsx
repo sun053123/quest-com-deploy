@@ -91,7 +91,7 @@ function FeaturedPost(props) {
                     m: 2,
                     alignItems: "center",
                     border: "none",
-                    backgroundColor: `${classroom.category}`,
+                    backgroundColor: "red",
                     borderRadius: "5px",
                     boxShadow: "none",
                     color: "white",

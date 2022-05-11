@@ -1,10 +1,12 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Toolbar, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../store/Contexts/AuthContext';
 
 function Header(props) {
   const { sections, setCategory } = props;
+  const { userinfo } = useContext(AuthContext)
   let navigate = useNavigate();
 
   const HandleRouteChange = () => {
@@ -14,6 +16,7 @@ function Header(props) {
     const HandleOnSetCategory = (category) => {
         setCategory(category);
     }
+
 
   return (
     <React.Fragment>
@@ -29,10 +32,12 @@ function Header(props) {
         >
           Home
         </Typography>
-
+        
+        { userinfo && userinfo?.role != false && (
         <Button variant="outlined" size="meduim" onClick={HandleRouteChange} color={"secondary"} >
           Create Classroom
         </Button>
+        )}
       </Toolbar>
       <Toolbar
         component="nav"

@@ -196,7 +196,7 @@ function ClassroomCreate() {
       setIsvalidateTags(false);
     }
 
-    if (classroomImg?.type === "image/jpeg" || classroomImg?.type === "image/jpg" || classroomImg?.type === "image/png") {
+    if (classroomImg !== null) {
       setIsvalidateClassroomImg(true);
     }else{
       setIsvalidateClassroomImg(false);
@@ -226,15 +226,6 @@ function ClassroomCreate() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    if (classroomImg?.type !== "image/jpeg" || classroomImg?.type !== "image/jpg" || classroomImg?.type !== "image/png"){
-      
-      setClassroomForm({
-        ...classroomForm,
-        classroomImg: null,
-      });
-      return toast.error("Please choose a image file");
-    }
 
     if(_id && _id !== "" && _id != null) {
       updateClassroom();
@@ -551,8 +542,20 @@ function ClassroomCreate() {
                     multiple={false}
                     // type="file"
                     type="image/*"
-                    inputProps={{ accept: 'image/*, jpg, jpeg, png' }}
-                    onDone={({base64}) => setClassroomForm({...classroomForm, classroomImg: base64})}
+                    // accept only an image file type
+                    inputProps={{
+                      name: "image",
+                      id: "image",
+                      accept: "image/*, .jpeg, .png",
+                      required: true,
+                    }}
+                    onDone={({base64}) => {
+                      setClassroomForm({
+                        ...classroomForm,
+                        classroomImg: base64,
+                      });
+                    }
+                  }
                     label="Imgae"
                     name="classroomImage"
                     size="small"

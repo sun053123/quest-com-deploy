@@ -136,7 +136,7 @@ class ClassroomService {
             //in this case Classroom.iscomplete is always true ( lesson is more than 1)
 
             //find and Get Lessons in Classroom
-            const Lessons = await this.LessonEntity.getLessons({ classroomId });
+            const Lessons = await this.LessonEntity.getLessonsNavigation({ classroomId });
 
             //check user is student
             if (role === false) {

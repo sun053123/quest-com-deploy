@@ -83,6 +83,7 @@ export default function Blog() {
       //retechOnmount is important to avoid empty render when navigating from another page (always true)
       refetchOnMount: true,
       keepPreviousData: true,
+      cacheTime: 1000 * 60 * 5, // 5 minutes
       // initialData: {
       //   data: {
       //     classrooms: [],
@@ -112,14 +113,13 @@ export default function Blog() {
       isError: isErrorScore,
     } = useQuery(
       "score",
-      () => axios.get("http://localhost:8000/api/user/scores"),
+      async() => await axios.get("http://localhost:8000/api/user/scores"),
       {
         retry: false,
         refetchOnWindowFocus: false,
         //retechOnmount is important to avoid empty render when navigating from another page (always true)
         refetchOnMount: true,
         //on guest mode, no need to query scores
-        enabled: userinfo?.role === false ? true : false,
         onSuccess: (data) => {
           setUsersocres(data.data.scores);
         },
@@ -188,7 +188,6 @@ export default function Blog() {
       } else { // if scroll up show the navbar
         setShow(false);  
       }
-
       // remember current page location to use in the next move
       setLastScrollY(window.scrollY); 
     }
@@ -208,7 +207,6 @@ export default function Blog() {
 
   //State Loading while Retrieving Data
   if (isLoading || isLoadingOwnClassroom || isLoadingScore) {
-    console.log("loading classrooms data");
     return <LoadingPage />;
   }
 
@@ -244,13 +242,14 @@ export default function Blog() {
                 cursor: "pointer",
                 scale: 1.1,
             }
-            }}
+          }}
             onClick={() => {
               navigate("/classroom/create");
             }} />
         </div>
       )}
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" >
+
         <Header title="Blog" sections={sections} setCategory={setCategory} />
         <main>
           <MainFeaturedPost post={mainFeaturedPost} />

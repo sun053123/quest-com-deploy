@@ -18,7 +18,7 @@ class LessonEntity {
 
     async getLessonById({ lessonId }) {
         try {
-            const Lesson = await LessonModel.findById(lessonId).populate('creator',['username','email']).populate('classroom',['title','content','category']);
+            const Lesson = await LessonModel.findById(lessonId).populate('creator',['username','email','_id']).populate('classroom',['title','content','category']);
             return Lesson;
         }
         catch (error) {
@@ -26,7 +26,19 @@ class LessonEntity {
         }
     }
 
-    async createLesson({ classroomId, userId, title, content, lessonImg, lessonFile }) {
+    async getLessonsNavigation({ classroomId}) {
+        try {
+            const Lessons = await LessonModel.find({ classroom: classroomId })
+                .select('-comments -__v -content -lessonImg -lessonFile -likes')
+                .sort({ createdAt: 1 });
+            return Lessons;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+
+    async createLesson({ classroomId, userId, title, content, lessonImg, lessonFile, isShowLessonImg }) {
         try {
             const NewLesson = new LessonModel({
                 classroom: classroomId,
@@ -35,6 +47,7 @@ class LessonEntity {
                 content,
                 lessonImg,
                 lessonFile,
+                isShowLessonImg,
             });
             const CreatedLesson = await NewLesson.save();
             return CreatedLesson;
@@ -44,13 +57,14 @@ class LessonEntity {
         }
     }
 
-    async updateLesson({ lessonId, title, content, lessonImg, lessonFile }) {
+    async updateLesson({ lessonId, title, content, lessonImg, lessonFile, isShowLessonImg }) {
         try {
             const UpdatedLesson = await LessonModel.findByIdAndUpdate(lessonId, {
                 title,
                 content,
                 lessonImg,
                 lessonFile,
+                isShowLessonImg,
                 updateAt: Date.now(),
             }, { new: true });
           
@@ -86,7 +100,7 @@ class LessonEntity {
             }
 
             const UpdatedLesson = await Lesson.save();
-            return UpdatedLesson;
+            return "great you liked this lesson";;
         }
 
         catch (error) {
@@ -115,7 +129,7 @@ class LessonEntity {
             Lesson.comments.push({ user: userId, username, body:comment });
 
             const UpdatedLesson = await Lesson.save();
-            return UpdatedLesson;
+            return UpdatedLesson.comments;
         }
 
         catch (error) {
@@ -157,7 +171,7 @@ class LessonEntity {
                 Comment.likeCount++;
             }
             const UpdatedLessonComment = await Lesson.save();
-            return UpdatedLessonComment;
+            return "great you liked this comment";
         }catch (error) {
             throw error;
         }
@@ -179,7 +193,7 @@ class LessonEntity {
             // }
 
             operation === true ? Lesson.quizCount = Lesson.quizCount + 1 : Lesson.quizCount = Lesson.quizCount - 1;
-            Lesson.quizCount > 4 ? Lesson.quizIsReday = true : Lesson.quizIsReday = false;
+            Lesson.quizCount > 4 ? Lesson.quizIsReady = true : Lesson.quizIsReady = false;
             //if quiz count > 4, quiz is ready
 
             const UpdatedLesson = await Lesson.save();
@@ -191,11 +205,11 @@ class LessonEntity {
         }
     }
 
-    async updateLessonQuizCtroller({ LessonId, quizIsReday, quizIsRandom, quizLimit }) {
+    async updateLessonQuizCtroller({ LessonId, quizIsReady, quizIsRandom, quizLimit }) {
         try {
 
             const Lesson = await LessonModel.findById(LessonId);
-            if(quizIsReday) Lesson.quizIsReday = quizIsReday;
+            if(quizIsReady) Lesson.quizIsReady = quizIsReady;
             if(quizIsRandom) Lesson.quizIsRandom = quizIsRandom;
             if(quizLimit) Lesson.quizLimit = quizLimit;
 

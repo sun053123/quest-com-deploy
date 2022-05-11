@@ -23,6 +23,11 @@ const LessonSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+    isShowLessonImg: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
     lessonFile: {
         type: String,
         required: false
@@ -32,7 +37,7 @@ const LessonSchema = new mongoose.Schema({
         required: true,
         default: 0
     },
-    quizIsReday: {
+    quizIsReady: {
         type: Boolean,
         required: true,
         default: false

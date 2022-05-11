@@ -143,7 +143,7 @@ const Navbar = () => {
             <MenuItem onClick={handleCloseUserMenu} component={Link} to="/profile">
                 <Typography textAlign="center">Profile</Typography>
             </MenuItem>
-            <MenuItem onClick={handleLogout} component={Link} to="/login">
+            <MenuItem onClick={handleLogout} component={Link} to="/">
                 <Typography textAlign="center" >Logout</Typography>
             </MenuItem>
              
@@ -153,7 +153,7 @@ const Navbar = () => {
                 flexGrow: 0,
                 display: { xs: 'flex' },
                 textDecoration: 'none'
-              }} component={Link} to="/" >
+              }} component={Link} to="/login" >
                 
                     <Button
                         onClick={handleCloseNavMenu}

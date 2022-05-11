@@ -50,7 +50,7 @@ function Classroom() {
   //use react-query to get data from server
   const { isLoading, isError, isSuccess } = useQuery(
     ["single_classroom", classroomId],
-    () => axios.get(`http://localhost:8000/api/classroom/${classroomId}`),
+    async () => await axios.get(`/classroom/${classroomId}`),
     {
       retry: false,
       refetchOnWindowFocus: false,
@@ -98,7 +98,6 @@ function Classroom() {
   };
 
   if (isSuccess && lessons && classroom) {
-    console.log(classroom);
     return (
       <div className="classroom">
         <CssBaseline />

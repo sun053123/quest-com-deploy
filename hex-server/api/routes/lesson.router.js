@@ -16,12 +16,12 @@ router.post('/:classroomId/lesson', [
     check('content').not().isEmpty().withMessage('Please enter a valid description'),], 
     ValidateTokenAndTeacher, ValidateMongooseID, ValidatorErrorHelper ], async (req, res, next) => {
 
-    const { title, content, lessonImg, lessonFile } = req.body;
+    const { title, content, lessonImg, pdfFile, isShowLessonImg } = req.body;
     const { id, username } = req.user;
     const { classroomId } = req.params;
-
+    
     try {
-        const { data } = await service.CreateLesson({ title, content, classroomId, userId: id, username, lessonImg, lessonFile });
+        const { data } = await service.CreateLesson({ title, content, classroomId, userId: id, username, lessonImg,isShowLessonImg, lessonFile:pdfFile });
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
@@ -72,15 +72,16 @@ router.get('/:classroomId/lesson/:lessonId', [ValidateToken, ValidateMongooseID]
 //@ ACCESS Private (Teacher)
 router.put('/:classroomId/lesson/:lessonId', [
     [check('title').not().isEmpty().withMessage('Please enter a valid Title'),
-    check('description').not().isEmpty().withMessage('Please enter a valid description'),],
+    check('content').not().isEmpty().withMessage('Please enter a valid description'),],
     ValidateTokenAndTeacher, ValidateMongooseID, ValidatorErrorHelper], async (req, res, next) => {
 
         const { classroomId, lessonId } = req.params;
-        const { title, description, lessonImg, lessonFile } = req.body;
+        const { title, content, lessonImg, pdfFile, isShowLessonImg } = req.body;
         const { id, username } = req.user;
 
+
         try {
-            const { data } = await service.UpdateLesson({ userId: id, classroomId, lessonId, title, description, lessonImg, lessonFile });
+            const { data } = await service.UpdateLesson({ userId: id, classroomId, lessonId, title, content, lessonImg, isShowLessonImg, lessonFile: pdfFile });
             return res.status(data.status).json(data);
         } catch (err) {
             console.error(err);

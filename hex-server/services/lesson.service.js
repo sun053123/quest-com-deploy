@@ -98,9 +98,13 @@ class LessonService {
                     status: HTTP_STATUS_CODES.NOT_FOUND,
                 })
             }
+            const LessonNav = await this.LessonEntity.getLessonsNavigation({ classroomId });
 
             return FormateData({
-                lesson: Lesson,
+                data: {
+                    lesson: Lesson,
+                    lessons: LessonNav,
+                },
                 status: HTTP_STATUS_CODES.OK,
             })
         }
@@ -109,7 +113,7 @@ class LessonService {
         }
     }
 
-    async CreateLesson({ classroomId, userId, title, content, lessonImg, lessonFile }) {
+    async CreateLesson({ classroomId, userId, title, content, lessonImg, lessonFile, isShowLessonImg }) {
         try {
             const Classroom = await this.ClassroomEntity.getClassroomById({ classroomId });
             if (!Classroom) {
@@ -145,6 +149,7 @@ class LessonService {
                 content,
                 lessonImg,
                 lessonFile,
+                isShowLessonImg
             });
             if (!CreatedLesson) {
                 return FormateData({
@@ -170,7 +175,7 @@ class LessonService {
         }
     }
 
-    async UpdateLesson({ classroomId, lessonId, userId, title, content, lessonImg }) {
+    async UpdateLesson({ classroomId, lessonId, userId, title, content, lessonImg, lessonFile, isShowLessonImg }) {
         try {
             const isExistclassroomAndCreator = await this.checkClassroomIsExistandIsCreator({ classroomId, userId });
             if (!isExistclassroomAndCreator) {
@@ -200,7 +205,7 @@ class LessonService {
                 });
             }
 
-            if (userId != Lesson.creator.user.toString()) {
+            if (userId != Lesson.creator._id.toString()) {
                 return FormateData({
                     error: [
                         {
@@ -218,6 +223,8 @@ class LessonService {
                 title,
                 content,
                 lessonImg,
+                isShowLessonImg,
+                lessonFile
             });
             if (!UpdatedLesson) {
                 return FormateData({
@@ -488,7 +495,7 @@ class LessonService {
     }
 
     async LikeCommentLesson({ commentId, lessonId, classroomId, userId }) {
-        try{
+        try {
             const isExistClassroom = this.checkClassroomIsExist({ classroomId });
             if (!isExistClassroom) {
                 return FormateData({
@@ -545,7 +552,7 @@ class LessonService {
 
     async EditQuizController({ classroomId, lessonId, userId }) {
         try {
-         const isExistClassroom = this.checkClassroomIsExistandIsCreator({ classroomId, userId });
+            const isExistClassroom = this.checkClassroomIsExistandIsCreator({ classroomId, userId });
             if (!isExistClassroom) {
                 return FormateData({
                     error: [
@@ -558,7 +565,7 @@ class LessonService {
                     status: HTTP_STATUS_CODES.NOT_FOUND,
                 });
             }
-            
+
             const Lesson = await this.LessonEntity.getLessonById({ lessonId });
             if (!Lesson) {
                 return FormateData({
@@ -573,7 +580,7 @@ class LessonService {
                 });
             }
 
-            const UpdatedQuizController = await this.LessonEntity.updateQuizController({ lessonId, quizIsReday, quizIsRandom, quizLimit });
+            const UpdatedQuizController = await this.LessonEntity.updateQuizController({ lessonId, quizIsReady, quizIsRandom, quizLimit });
             if (!UpdatedQuizController) {
                 return FormateData({
                     error: [
@@ -591,7 +598,7 @@ class LessonService {
                 lesson: UpdatedQuizController,
                 status: HTTP_STATUS_CODES.OK,
             });
-            
+
         } catch (error) {
             throw error;
         }
@@ -629,13 +636,13 @@ class LessonService {
             if (page <= 0) {
                 page = 1;
             }
-            
+
             const LIMIT = 10;
             const SKIP = (page - 1) * LIMIT;
 
 
-            const Comments = await this.LessonEntity.getCommentsLesson({ lessonId,LIMIT,SKIP });
-            
+            const Comments = await this.LessonEntity.getCommentsLesson({ lessonId, LIMIT, SKIP });
+
             return FormateData({
                 comments: Comments,
                 status: HTTP_STATUS_CODES.OK,
@@ -689,7 +696,7 @@ class LessonService {
     //UpdatePDF file
     async UpdateFilePDF({ classroomId, lessonId, userId, pdfFile }) {
         try {
-            
+
             const isExistClassroom = this.checkClassroomIsExistandIsCreator({ classroomId, userId });
             if (!isExistClassroom) {
                 return FormateData({
