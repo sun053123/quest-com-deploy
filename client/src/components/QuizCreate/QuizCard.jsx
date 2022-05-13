@@ -17,9 +17,7 @@ function QuizCard(props) {
   const deleteQuiz = (quizid) => {
     //axios
     axios.delete(`http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/quizcontrol/${quizid}`)
-      
     window.location.reload();
-    
   }
 
   return (

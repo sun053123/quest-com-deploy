@@ -18,6 +18,19 @@ router.post('/:classroomId/lesson/:lessonId/quizcontrol', [
     // check('type').isIn(['4q1a', '4qma', 'mqma', 'mq1a', 'other']).withMessage('Please enter a valid type'),
     check('explanation').not().isEmpty().withMessage('Please enter a valid explanation'),
     // check('options').isArray().withMessage('Please enter a valid options')
+    check('options').not().isEmpty().withMessage('Please enter a valid options'),
+    check('answer').not().isEmpty().withMessage('Please enter a valid answer'),
+    //isnotin options
+    check('answer').not().isIn(this.options).withMessage('Please enter a valid answer'),
+    //custom
+//    check('options').custom((value, { req }) => {
+//     const checkArray = optionsArray.filter((item, index) => optionsArray.indexOf(item) !== index);
+//         if (checkArray.length > 0) {
+//             throw new Error('Please enter a valid options');
+//         }
+//         return true;
+//     }
+//     ).withMessage('Cannot have duplicate options'),
 ],
     ValidateTokenAndTeacher,ValidateMongooseID, ValidatorErrorHelper], async (req, res, next) => {
 
@@ -29,8 +42,7 @@ router.post('/:classroomId/lesson/:lessonId/quizcontrol', [
 
     //object array to string array
     const optionsArray = options.map(option => option.questionoption);
-    // console.log(optionsArray);
-
+        
     try {
         const { data } = await service.CreateNewQuiz({ classroomId, lessonId, userId:id, question, questionImg, options: optionsArray, answer, explanation, type:'mq1a' });
         return res.status(data.status).json(data);

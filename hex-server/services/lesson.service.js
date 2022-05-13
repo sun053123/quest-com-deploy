@@ -278,7 +278,7 @@ class LessonService {
                 });
             }
 
-            if (userId != Lesson.creator.user.toString()) {
+            if (userId != Lesson.creator._id.toString()) {
                 return FormateData({
                     error: [
                         {

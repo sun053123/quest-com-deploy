@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useState } from 'react'
 import DOMPurify from 'dompurify';
 import moment from 'moment';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
-import { Box, Typography, Paper, Grid, Button } from '@mui/material'
+import { Box, Typography, Paper, Grid, Button, Modal } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete';
 import { styled } from '@mui/material/styles';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
@@ -25,9 +25,14 @@ function LessonBody(props) {
     const { userinfo } = useContext(AuthContext);
     const [expanded, setExpanded] = React.useState('panel1');
     const { classroomId, lessonId } = useParams();
+    let navigate = useNavigate();
     const { lesson } = props;
     const [liked, setLiked] = useState(false);
     const [likes, setLikes] = useState([]);
+
+    const [openmodal, setOpenmodal] = React.useState(false);
+  const handleOpen = () => setOpenmodal(true);
+  const handleClose = () => setOpenmodal(false);
 
     useEffect(() => {
         //every expanded bring user to top
@@ -76,10 +81,64 @@ function LessonBody(props) {
         []
     );
 
+    const handleDeleteLesson = async () => {
+        await axios.delete(`http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}`)
+        navigate(`/classroom/${classroomId}`)
+    }
+
 
     return (
         <>
             {/* ////////////////////////////// LESSON HEADER ////////////////////////////// */}
+            <Modal
+              open={openmodal}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: 400,
+                  bgcolor: "background.paper",
+                  boxShadow: 24,
+                  p: 4,
+                }}
+              >
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  Permanat Delete! Are you sure?
+                </Typography>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  This will permanently delete the lesson and all its content.
+                </Typography>
+                <Box
+                  sx={{
+                    mt: 3,
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleClose}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="contained"
+                    sx={{ backgroundColor: "red", color: "white" }}
+                    onClick={handleDeleteLesson}
+                  >
+                    Delete
+                  </Button>
+                </Box>
+              </Box>
+            </Modal>
+
             <Box sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -146,13 +205,19 @@ function LessonBody(props) {
                     {/* add delete icon top right */}
                     {userinfo?.id === lesson?.creator?._id &&
                         <Box
+                            onClick={handleOpen} 
                             sx={{
                                 position: 'absolute',
                                 top: 0,
                                 right: 0,
                                 backgroundColor: 'rgba(0,0,0,.6)',
                                 borderRadius: '8px',
-                                p: 2
+                                p: 2,
+                                '&:hover': {
+                                    cursor: 'pointer',
+                                    backgroundColor: 'rgba(0,0,0,.8)',
+                                }
+                                
                             }}>
                             <DeleteIcon sx={{ color: "red" }} />
                         </Box>

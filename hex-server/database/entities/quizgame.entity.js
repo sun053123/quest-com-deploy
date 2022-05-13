@@ -16,7 +16,7 @@ class QuizGameEntity {
                 const QuizGames = await QuizModel.find({ lesson: lessonId })
                     .select('-answer')
                     .limit(limit)
-                    .sort({ createdAt: -1 });
+                    .sort({ createdAt: 1 });
                 return QuizGames;
             }
             else {
@@ -50,10 +50,10 @@ class QuizGameEntity {
         }
     }
 
-    async getQuizAnswer({lessonId, quizContext}) {
+    async getQuizAnswer({lessonId, quizIdSelected}) {
         try {
             // select only answer id and question            
-            const QuizGamesAnswer = await QuizModel.find({ lesson: lessonId, _id: { $in: quizContext } })
+            const QuizGamesAnswer = await QuizModel.find({ lesson: lessonId, _id: { $in: quizIdSelected } })
                 .select('answer question _id')
                 .sort({ createdAt: -1 });
 

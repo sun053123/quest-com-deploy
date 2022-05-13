@@ -31,16 +31,16 @@ router.get('/:classroomId/lesson/:lessonId/quizgame',
 //@ ROUTE  POST api/classroom/:classroomId/lesson/:lessonId/quizgame/result
 //@ DESC   GET a quizgame result (by quiz context (quizID in fetching) ) and save student's attempt 
 //@ ACCESS Private (Basic)
-router.post('/:classroomId/lesson/:lessonId/quizgame/result',
-[[check('quizContext').not().isEmpty().withMessage('No result found')],
-    [ValidateToken, ValidateMongooseID, ValidatorErrorHelper]], async (req, res, next) => {
+router.post('/:classroomId/lesson/:lessonId/quizgame/result',[ValidateToken, ValidateMongooseID, ValidatorErrorHelper], async (req, res, next) => {
     
-    const { quizContext } = req.body;
+    const { quizIdSelected } = req.body;
     const { classroomId, lessonId } = req.params;
     const { id, username } = req.user;
 
+    // console.log("quizIdSelectedId",quizIdSelected)
+
     try {
-        const { data } = await service.GetQuizGameResult({ classroomId, lessonId, userId: id, quizContext });
+        const { data } = await service.GetQuizGameResult({ classroomId, lessonId, userId: id, quizIdSelected });
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);

@@ -5,6 +5,7 @@ import { MenuItem, Tooltip, Button, Avatar, Container,
 import MenuIcon from '@mui/icons-material/Menu';
 import StudentIcon from '../assets/img/avartar-student.png';
 
+import  useStateQuizContext  from '../store/Contexts/QuizContext';
 import { AuthContext } from '../store/Contexts/AuthContext';
 import { Logout } from '../store/Actions/AuthAction';
 import { Link, Outlet } from 'react-router-dom';
@@ -20,6 +21,8 @@ const Navbar = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
 
   const { user, AuthDispatch } = useContext(AuthContext);
+  const { quizcontext, setQuizContext } = useStateQuizContext();
+
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -38,6 +41,12 @@ const Navbar = () => {
 
   const handleLogout = () => {
     handleCloseUserMenu()
+    //clear quiz context
+    setQuizContext({
+      attempts: 0,
+      selectedOptions: [],
+      timeTaken: 0
+    })
     AuthDispatch(Logout());
   }
 

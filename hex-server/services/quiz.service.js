@@ -137,6 +137,27 @@ class QuizService {
                 });
             };
 
+            //check no if options have undefined // if have undefined delete undefined
+            if (options.length > 0) {
+                options = options.filter(option => option !== undefined || null | " " | "");
+            }
+
+            const checkArray = arr => arr.every((item) => item === arr[0]); //check options is same
+            console.log(checkArray(options));
+
+            if (checkArray(options) === true) {
+                return FormateData({
+                    error: [
+                        {
+                            "msg": "Options must be unique! or not Empty!",
+                            "location": "server",
+                            "type": "warning"
+                        }
+                    ],
+                    status: HTTP_STATUS_CODES.NOT_FOUND
+                });
+            }
+
             const NewQuiz = await this.QuizEntity.createQuiz({
                 lessonId, userId, question, questionImg, options, answer, explanation, type
             });

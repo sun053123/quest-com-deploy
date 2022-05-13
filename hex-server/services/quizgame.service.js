@@ -90,10 +90,11 @@ class QuizGameService {
         }
     }
     
-    async GetQuizGameResult({ classroomId, quizId, lessonId, quizContext }) {
+    async GetQuizGameResult({ classroomId, quizId, lessonId, quizIdSelected }) {
         try {
             // console.log(quizContext)
-            const QuizResult = await this.QuizGameEntity.getQuizAnswer({ lessonId, quizContext });
+
+            const QuizResult = await this.QuizGameEntity.getQuizAnswer({ lessonId, quizIdSelected });
             // console.log(QuizResult)
             return FormateData({
                 data: QuizResult,

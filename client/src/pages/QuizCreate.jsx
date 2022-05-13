@@ -1,24 +1,37 @@
-import React, { useState, useContext, useEffect } from 'react'
-import FileBase from 'react-file-base64';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from "react";
+import FileBase from "react-file-base64";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
-import { CssBaseline, Box, Grid, Typography, MenuItem, InputAdornment, Checkbox, Button, TextField, Avatar } from '@mui/material'
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
+import {
+  CssBaseline,
+  Box,
+  Grid,
+  Typography,
+  MenuItem,
+  InputAdornment,
+  Checkbox,
+  Button,
+  TextField,
+  Avatar,
+} from "@mui/material";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 
-import SearchIcon from '@mui/icons-material/Search';
-import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
-import { LoadingButton } from '@mui/lab';
-import ClearIcon from '@mui/icons-material/Clear';
+import SearchIcon from "@mui/icons-material/Search";
+import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
+import { LoadingButton } from "@mui/lab";
+import ClearIcon from "@mui/icons-material/Clear";
 
-import quizbg from "../assets/img/quizbg.png"
-import QuizCard from '../components/QuizCreate/QuizCard'
-import { useMutation, useQuery } from 'react-query';
+import quizbg from "../assets/img/quizbg.png";
+import QuizCard from "../components/QuizCreate/QuizCard";
+import { useMutation, useQuery } from "react-query";
 
 import { AuthContext } from "../store/Contexts/AuthContext";
-import LoadingPage from '../components/LoadingPage';
-import ErrorPage from '../components/ErrorPage';
+import { AlertContext } from "../store/Contexts/AlertContext";
+import { AlertShow } from "../store/Actions/AlertAction";
+import LoadingPage from "../components/LoadingPage";
+import ErrorPage from "../components/ErrorPage";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -26,12 +39,13 @@ import "react-toastify/dist/ReactToastify.css";
 const maxlimit = 46;
 
 function QuizCreate() {
+  const { AlertDispatch } = useContext(AlertContext);
   const { userinfo } = useContext(AuthContext);
-  const { classroomId, lessonId } = useParams()
+  const { classroomId, lessonId } = useParams();
   //set default options array length is 2
   const [questionOptions, setQuestionOptions] = useState([{}, {}]);
   const [quizId, setQuizId] = useState();
-
+  const [resetOptions, setResetOptions] = useState(false);
   const [quizzes, setQuizzes] = useState([]);
 
   const [questionForm, setQuestionForm] = useState({
@@ -40,22 +54,34 @@ function QuizCreate() {
     options: [],
     questionImg: "",
     explanation: "",
-  })
-  
+  });
+
   const [quizcontroller, setQuizcontroller] = useState({
     quizCount: 0,
     quizIsRandom: false,
     quizLimit: 0,
-    quizReady: false,
-  })
+    quizIsReady: false,
+  });
 
+  const validateQuizForm = () => {
+    //check questionOptions is not the same value
+
+    if (questionForm.options.length < 2) {
+      toast.error("Please add at least 2 options");
+      return false;
+    }
+    if (questionForm.options.map((option) => option.option).includes("")) {
+      toast.error("Please fill all options");
+      return false;
+    }
+  };
 
   const onChange = (e) => {
     setQuestionForm({
       ...questionForm,
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleFormOptions = (index, e) => {
     let data = [...questionOptions];
@@ -65,7 +91,7 @@ function QuizCreate() {
     //opject array to string array
     // let options = questionOptions.map(option => option.option);
     // setQuestionForm({...questionForm, options: options})
-  }
+  };
 
   const clearEdit = () => {
     setQuestionForm({
@@ -74,54 +100,69 @@ function QuizCreate() {
       options: [],
       questionImg: "",
       explanation: "",
-    })
-    setQuestionOptions([{}, {}]);
+    });
+    setQuestionOptions([
+      {
+        questionoption: "",
+      },
+      {
+        questionoption: "",
+      },
+    ]);
     setQuizId(null);
-  }
+    console.log(questionOptions, questionForm);
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
     //set QuestionOptions to questionForm.options array
+    // eslint-disable-next-line no-lone-blocks
     {
       questionOptions.map((option) => {
         questionForm.options.push(option);
-      })
+      });
     }
+
+    validateQuizForm();
 
     //post to server
     mutation.mutate(questionForm);
-
-    //clear form
-    setQuestionForm({
-      question: "",
-      answer: "",
-      options: [],
-      questionImg: "",
-      explanation: "",
-    })
-    setQuestionOptions([{}, {}]);
-    //refresh window //clear form
-    window.location.reload();
-  }
-
+  };
 
   const mutation = useMutation((questionForm) => {
-    axios.post(`http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/quizcontrol`, questionForm)
-      .then(res => {
-        console.log(res);
+    axios
+      .post(
+        `http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/quizcontrol`,
+        questionForm
+      )
+      .then((res) => {
+        //set new quizzes
+        window.location.reload();
       })
-      .catch(err => {
-        console.log(err);
-      })
-  })
+      .catch((err) => {
+        console.log(err)
+        //clear form
+        setResetOptions(true);
+        clearEdit();
+        //refresh window //clear form
+        AlertDispatch(AlertShow(err.response.data.error, "error"));
+        //wait for 2 seconds
+        setTimeout(() => {
+          setResetOptions(false);
+        }, 2000);
+      });
+  });
 
   const {
     isLoading: isLoadingQuiz,
     isError: isErrorQuiz,
-    ifSuccess: ifSuccessQuiz,
+    isSuccess: isSuccessQuiz,
   } = useQuery(
     "quizzes",
-    async () => await axios.get(`http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/quizcontrol`),
+    async () =>
+      await axios.get(
+        `http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/quizcontrol`
+      ),
     {
       retry: false,
       refetchOnWindowFocus: false,
@@ -143,7 +184,10 @@ function QuizCreate() {
     ifSuccess: ifSuccessSingleQuiz,
   } = useQuery(
     ["singleQuiz", quizId],
-    () => axios.get(`http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/quizcontrol/${quizId}`),
+    () =>
+      axios.get(
+        `http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/quizcontrol/${quizId}`
+      ),
     {
       retry: false,
       refetchOnWindowFocus: false,
@@ -153,125 +197,136 @@ function QuizCreate() {
       onSuccess: (data) => {
         setQuestionForm(data.data.quiz);
         setQuestionOptions(data.data.quiz.options);
-      }
+      },
     }
   );
 
   const onChangeController = (e) => {
     setQuizcontroller({
       ...quizcontroller,
-      [e.target.name]: e.target.value
-    })
+      [e.target.name]: e.target.value,
+    });
 
     console.log(quizcontroller);
-  }
+  };
 
   const handleQuizControllerSubmit = () => {
     //set values to quizcontroller by passing event
-   
-      
-    axios.put(`http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/quizcontrol`, quizcontroller)
-      .then(res => {
+
+    axios
+      .put(
+        `http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/quizcontrol`,
+        quizcontroller
+      )
+      .then((res) => {
         //set quizcontroller to new values
         setQuizcontroller(res.data.quizcontroller);
-      }).catch(err => {
-        console.log(err)
-        toast.error(err.data.message)
       })
-  }
-      
-
-
-
-  // if (isLoadingQuiz) {
-  //   return <LoadingPage />
-  // }
+      .catch((err) => {
+        console.log(err);
+        toast.error(err.data.message);
+      });
+  };
 
   if (isErrorQuiz) {
-    return <ErrorPage />
+    return <ErrorPage />;
   }
 
   return (
     <>
       <CssBaseline />
-      <Box p={2} sx={{
-        backgroundImage: `url(${quizbg})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        //fit window
-        width: "100%",
-        height: "100%",
-        minHeight: "100vh",
-
-      }}>
-        <Box sx={{
-          //center
-          justifyContent: "center",
-          display: "flex",
-          color: "white",
-          fontSize: "2rem",
-          fontWeight: "bold",
-          textShadow: "2px 2px 2px black",
-          backgroundColor: "rgba(0,0,0,0.5)",
-          borderRadius: "8px",
-          mb: 3,
-        }}>
-          <Typography variant="h2">
-            Quiz Controller
-          </Typography>
+      <ToastContainer />
+      <Box
+        p={2}
+        sx={{
+          backgroundImage: `url(${quizbg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          //fit window
+          width: "100%",
+          height: "100%",
+          minHeight: "100vh",
+        }}
+      >
+        <Box
+          sx={{
+            //center
+            justifyContent: "center",
+            display: "flex",
+            color: "white",
+            fontSize: "2rem",
+            fontWeight: "bold",
+            textShadow: "2px 2px 2px black",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            borderRadius: "8px",
+            mb: 3,
+          }}
+        >
+          <Typography variant="h2">Quiz Controller</Typography>
         </Box>
         {/* //////////////////////////// QUIZ CREATE BODY //////////////////////////// */}
 
-        <Grid container spacing={1} >
+        <Grid container spacing={1}>
           <Grid item xs={8.5}>
-            {isLoadingQuiz ? <LoadingPage /> :
-              <Box sx={{
-                //center
-                justifyContent: "center",
-                display: "flex",
-                backgroundColor: "rgba(0,0,0,0.5)",
-                borderRadius: "8px",
-                minHeight: "100vh",
-              }}>
-
+            {isLoadingQuiz ? (
+              <LoadingPage />
+            ) : (
+              <Box
+                sx={{
+                  //center
+                  justifyContent: "center",
+                  display: "flex",
+                  backgroundColor: "rgba(0,0,0,0.5)",
+                  borderRadius: "8px",
+                  minHeight: "100vh",
+                }}
+              >
                 {/* //////////////////////////// QUIZ CARD //////////////////////////// */}
                 <Grid container spacing={2}>
-
                   {quizzes.map((quiz) => (
                     <QuizCard quiz={quiz} setQuizId={setQuizId} />
                   ))}
-
                 </Grid>
-              </Box>}
+              </Box>
+            )}
           </Grid>
           {/* //////////////////////////// QUIZ FORM //////////////////////////// */}
           <Grid item xs={3.5}>
-            {isLoadingSingleQuiz ? <LoadingPage /> :
-              <Box sx={{
-                //center
-                justifyContent: "center",
-                display: "flex",
-                backgroundColor: "rgba(0,0,0,0.5)",
-                borderRadius: "8px",
-                minHeight: "100vh",
-                padding: "1rem",
-              }}>
+            {isLoadingSingleQuiz ? (
+              <LoadingPage />
+            ) : (
+              <Box
+                sx={{
+                  //center
+                  justifyContent: "center",
+                  display: "flex",
+                  backgroundColor: "rgba(0,0,0,0.5)",
+                  borderRadius: "8px",
+                  minHeight: "100vh",
+                  padding: "1rem",
+                }}
+              >
                 <Box
                   sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    backgroundColor: 'white',
-                    borderRadius: '8px',
-                    padding: '2rem',
-                  }}>
-                  <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    backgroundColor: "white",
+                    borderRadius: "8px",
+                    padding: "2rem",
+                  }}
+                >
+                  <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
                     <DriveFileRenameOutlineIcon />
                   </Avatar>
                   {quizId ? (
                     <>
-                      <Button variant="outlined" color="primary" onClick={() => clearEdit()}>
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => clearEdit()}
+                      >
                         create quiz
                       </Button>
                       <Typography component="h1" variant="h5">
@@ -286,7 +341,7 @@ function QuizCreate() {
                   <Box component="form" noValidate sx={{ mt: 1 }}>
                     <TextField
                       multiline
-                      margin='normal'
+                      margin="normal"
                       required
                       fullWidth
                       id="question"
@@ -303,7 +358,7 @@ function QuizCreate() {
                     {questionOptions.map((option, index) => (
                       <Box key={index}>
                         <TextField
-                          margin='normal'
+                          margin="normal"
                           multiline
                           required
                           fullWidth
@@ -311,13 +366,13 @@ function QuizCreate() {
                           label={"Quiz Option " + (index + 1)}
                           name="questionoption"
                           autoComplete="questionoption"
-                          onChange={(e) =>
-                            handleFormOptions(index, e)
-                          }
+                          onChange={(e) => handleFormOptions(index, e)}
                           value={
                             //when submit, set empty options array and when edit, set old options
-                            questionOptions[index].option
+                            // questionOptions[index].option
                             // quizId ? questionForm.options[index].option : ""
+                            //on submit error is empty
+                            resetOptions ? "" : questionOptions[index].option
                           }
                           inputProps={{
                             maxLength: 200,
@@ -335,17 +390,16 @@ function QuizCreate() {
                                 data.pop();
                                 setQuestionOptions(data);
                               }
-                            }
-                            }
+                            }}
                             color="secondary"
                             disabled={index < 2}
                             sx={{
                               mb: 2,
                               //set disable color
-                              '&:disabled': {
-                                backgroundColor: 'gray[300]',
-                                color: 'white',
-                              }
+                              "&:disabled": {
+                                backgroundColor: "gray[300]",
+                                color: "white",
+                              },
                             }}
                           >
                             Delete Question Option
@@ -361,19 +415,18 @@ function QuizCreate() {
                       //max index = 8
                       onClick={() => {
                         if (questionOptions.length < 8) {
-                          setQuestionOptions([...questionOptions, {}])
+                          setQuestionOptions([...questionOptions, {}]);
                         }
-                      }
-                      }
+                      }}
                       color="primary"
                       disabled={questionOptions.length >= 8}
                       sx={{
                         mb: 2,
                         //set disable color
-                        '&:disabled': {
-                          backgroundColor: 'gray[300]',
-                          color: 'white',
-                        }
+                        "&:disabled": {
+                          backgroundColor: "gray[300]",
+                          color: "white",
+                        },
                       }}
                     >
                       Add More Question Option
@@ -381,43 +434,48 @@ function QuizCreate() {
 
                     {/* //////////////////////////// QUIZ SELECT ANSWER //////////////////////////// */}
                     <TextField
-                      margin='normal'
+                      margin="normal"
                       id="outlined-select-answer"
                       select
                       label="Select"
                       fullWidth
                       value={questionForm.answer}
-                      onChange={(e) => setQuestionForm({ ...questionForm, answer: e.target.value })}
+                      onChange={(e) =>
+                        setQuestionForm({
+                          ...questionForm,
+                          answer: e.target.value,
+                        })
+                      }
                       helperText="Please select an Answer"
                       sx={{
-                        maxWidth: '40vh',
+                        maxWidth: "40vh",
                       }}
                     >
-
                       {questionOptions.map(({ questionoption }, index) => (
                         <MenuItem key={questionoption} value={questionoption}>
-                          {questionoption ? questionoption : "Please Enter Question Option"}
-                        </MenuItem>))}
-
+                          {questionoption
+                            ? questionoption
+                            : "Please Enter Question Option"}
+                        </MenuItem>
+                      ))}
                     </TextField>
                     <TextField
                       //explaination
-                      margin='normal'
+                      margin="normal"
                       multiline
                       required
                       fullWidth
                       id="explanation"
-                      label="Quiz Explaination"
+                      label="Quiz Explanation"
                       name="explanation"
+                      value={questionForm.explanation}
                       inputProps={{
                         maxLength: 300,
                       }}
                       //line
                       rows={4}
                       onChange={onChange}
-
                     />
-
 
                     <Typography component="h6" variant="h6">
                       Add Question Image
@@ -428,11 +486,15 @@ function QuizCreate() {
                       onDone={(file) => {
                         if (file.type.startsWith("image")) {
                           // console.log("imgage file", file);
-                          setQuestionForm({ ...questionForm, questionImg: file.base64 })
+                          setQuestionForm({
+                            ...questionForm,
+                            questionImg: file.base64,
+                          });
                         }
-                      }} />
+                      }}
+                    />
                     <Button
-                      type='submit'
+                      type="submit"
                       fullWidth
                       variant="contained"
                       sx={{ mt: 3, mb: 2 }}
@@ -443,28 +505,31 @@ function QuizCreate() {
                   </Box>
                 </Box>
               </Box>
-            }
+            )}
             {/* //////////////////////////// QUIZ CONTROLLER //////////////////////////// */}
-            <Box sx={{
-              //center
-              justifyContent: "center",
-              display: "flex",
-              backgroundColor: "rgba(0,0,0,0.5)",
-              borderRadius: "8px",
-              minHeight: "50vh",
-              padding: "1rem",
-              mt:2,
-            }}>
+            <Box
+              sx={{
+                //center
+                justifyContent: "center",
+                display: "flex",
+                backgroundColor: "rgba(0,0,0,0.5)",
+                borderRadius: "8px",
+                minHeight: "50vh",
+                padding: "1rem",
+                mt: 2,
+              }}
+            >
               <Box
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  backgroundColor: 'white',
-                  borderRadius: '8px',
-                  padding: '2rem',
-                }}>
-                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  backgroundColor: "white",
+                  borderRadius: "8px",
+                  padding: "2rem",
+                }}
+              >
+                <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
                   <DriveFileRenameOutlineIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
@@ -472,7 +537,7 @@ function QuizCreate() {
                 </Typography>
                 {/* select quizlimit */}
                 <TextField
-                  margin='normal'
+                  margin="normal"
                   id="outlined-select-quiz"
                   select
                   label="Max Quiz Limit"
@@ -482,63 +547,70 @@ function QuizCreate() {
                   value={quizcontroller.quizLimit}
                   onChange={onChangeController}
                   sx={{
-                    maxWidth: '40vh',
-                  }}>
+                    maxWidth: "40vh",
+                  }}
+                >
                   {/*select 50 - 5*/}
                   {[...Array(maxlimit).keys()].map((item, index) => (
                     <MenuItem key={index} value={index + 5}>
                       {index + 5}
                     </MenuItem>
                   ))}
-                  </TextField>
-                  {/* switch quizisrandom true/false */}
-                  <Checkbox checked={quizcontroller.quizIsRandom} onChange={
-                    (e) => {
-                      if (e.target.checked) {
-                        setQuizcontroller({ ...quizcontroller, quizIsRandom: true })
-                      }
-                      else {
-                        setQuizcontroller({ ...quizcontroller, quizIsRandom: false })
-                      }
+                </TextField>
+                {/* switch quizisrandom true/false */}
+                <Checkbox
+                  checked={quizcontroller.quizIsRandom}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setQuizcontroller({
+                        ...quizcontroller,
+                        quizIsRandom: true,
+                      });
+                    } else {
+                      setQuizcontroller({
+                        ...quizcontroller,
+                        quizIsRandom: false,
+                      });
                     }
-                  } name="quizIsRandom" />
-                  <Typography component="h6" variant="h6">
-                    Randomize Quiz
-                  </Typography>
-                  {/* switch quizisrandom true/false */}
-                  <Button
-                    type='submit'
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                    onClick={handleQuizControllerSubmit}
-                  >
-                    Submit Quiz Controller
-                  </Button>
-                  <Typography component="h6" variant="h6" mt={5}>
-                    Quiz Status {quizcontroller.quizIsReady ? "Ready" : "Not Ready"}
-                  </Typography>
-                  <Typography component="h6" variant="h6" mt={1}>
-                    Quiz Game Score 20 exp
-                  </Typography>
-                  <Typography component="h6" variant="h6" mt={1}>
-                    Question Current is {quizcontroller.quizCount}
-                  </Typography>
-                  <Typography component="h6" variant="h6" mt={1}>
-                    Question Max Limit is {quizcontroller.quizLimit}
-                  </Typography>
-                  <Typography component="h6" variant="h6" mt={1}>
-                    Quiz {quizcontroller.quizIsRandom ? "Random" : "Sequential"}
-                  </Typography>        
+                  }}
+                  name="quizIsRandom"
+                />
+                <Typography component="h6" variant="h6">
+                  Randomize Quiz
+                </Typography>
+                {/* switch quizisrandom true/false */}
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                  onClick={handleQuizControllerSubmit}
+                >
+                  Submit Quiz Controller
+                </Button>
+                <Typography component="h6" variant="h6" mt={5}>
+                  Quiz Status{" "}
+                  {quizcontroller.quizIsReady ? "Ready" : "Not Ready"}
+                </Typography>
+                <Typography component="h6" variant="h6" mt={1}>
+                  Quiz Game Score 20 exp
+                </Typography>
+                <Typography component="h6" variant="h6" mt={1}>
+                  Question Current is {quizcontroller.quizCount}
+                </Typography>
+                <Typography component="h6" variant="h6" mt={1}>
+                  Question Max Limit is {quizcontroller.quizLimit}
+                </Typography>
+                <Typography component="h6" variant="h6" mt={1}>
+                  Quiz {quizcontroller.quizIsRandom ? "Random" : "Sequential"}
+                </Typography>
               </Box>
             </Box>
           </Grid>
         </Grid>
-
       </Box>
     </>
-  )
+  );
 }
 
-
-export default QuizCreate
+export default QuizCreate;

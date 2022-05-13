@@ -17,7 +17,7 @@ import ClassroomCreate from "./pages/ClassroomCreate";
 import LessonCreate from "./pages/LessonCreate";
 import Lesson from "./pages/Lesson";
 import QuizGame from "./pages/QuizGame";
-import QuizGameResult from "./pages/QuizGame";
+import QuizGameResult from "./pages/QuizGameResult";
 import Profile from "./pages/Profile";
 
 import { Worker } from '@react-pdf-viewer/core';
@@ -54,7 +54,7 @@ function App() {
             <Route path="/classroom/:classroomId" element={<Classroom />} />
             <Route path="/classroom/:classroomId/lesson/:lessonId" element={<Lesson />} />
             <Route path="/classroom/:classroomId/lesson/:lessonId/quizgame" element={<QuizGame />} />
-            <Route path="/classroom/:classroomId/lesson/:lessonId/quizgameresult" element={<QuizGameResult />} />
+            <Route path="/classroom/:classroomId/lesson/:lessonId/quizgame/result" element={<QuizGameResult />} />
           </Route>
 
           {/* TeacherAuthRoute /> */}

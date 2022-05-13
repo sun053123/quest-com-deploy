@@ -46,19 +46,17 @@ function ClassroomSidebar(props) {
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+    //onclick listitem do press
   const mapLocationLessonIndex = (lessonId) => {
 
       // map location.path id to the current lesson id
       const lessonIndex = lessons.findIndex(lesson => lesson._id === lessonId)
       setToggleLesson(lessonIndex)
+
+      //when fetch again lessonindex will be -1, so we need to set it to 0
+      setToggleLesson(0)
   }
 
-  //onclick listitem do press
-
-  
-
-  // console.log(toggleLesson)
-  // console.log(lessons[toggleLesson]?.quizIsReady)
   
   return (
     <Grow in={true}>
