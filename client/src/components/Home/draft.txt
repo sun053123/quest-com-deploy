@@ -233,3 +233,76 @@
                     </Box>
               </Grid>
           ))}
+
+
+
+          //////// quiz list auto pilot
+          <Box sx={{
+              //center
+              justifyContent: "center",
+              display: "flex",
+              backgroundColor: "rgba(0,0,0,0.5)",
+              borderRadius: "8px",
+              minHeight: "100vh",
+              padding: "1rem",
+            }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  backgroundColor: 'white',
+                  borderRadius: '8px',
+                  padding: '2rem',
+                }}>
+                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                  <DriveFileRenameOutlineIcon />
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                  Quiz List
+                </Typography>
+                <Box component="form" noValidate sx={{ mt: 1 }}>
+                  <TextField
+                    margin='normal'
+                    required
+                    fullWidth
+                    id="search"
+                    label="Search"
+                    name="search"
+                    autoComplete="search"
+                    onChange={onChange}
+                    // value={search}
+                    inputProps={{
+                      maxLength: 200,
+                    }}
+                  />
+                </Box>
+                <Box sx={{ mt: 2 }}>
+                  {quizzes.map((quiz, index) => (
+                    <Box key={index}>
+                      <Button
+                        fullWidth
+                        variant="contained"
+                        onClick={() => {
+                          setQuizId(quiz.id);
+                          setQuestionForm({ ...questionForm, question: quiz.question, answer: quiz.answer, explanation: quiz.explanation, questionImg: quiz.questionImg });
+                          setQuestionOptions(quiz.options);
+                        }
+                        }
+                        color="primary"
+                        sx={{
+                          mb: 2,
+                          //set disable color
+                          '&:disabled': {
+                            backgroundColor: 'gray[300]',
+                            color: 'white',
+                          }
+                        }}
+                      >
+                        {quiz.question}
+                      </Button>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            </Box>

@@ -15,17 +15,24 @@ const service = new QuizService();
 //@ ACCESS Private (Teacher)
 router.post('/:classroomId/lesson/:lessonId/quizcontrol', [
     [check('question').not().isEmpty().withMessage('Please enter a valid Question'),
-    check('type').isIn(['4q1a', '4qma', 'mqma', 'mq1a', 'other']).withMessage('Please enter a valid type'),
+    // check('type').isIn(['4q1a', '4qma', 'mqma', 'mq1a', 'other']).withMessage('Please enter a valid type'),
     check('explanation').not().isEmpty().withMessage('Please enter a valid explanation'),
-    check('options').isArray().withMessage('Please enter a valid options')],
+    // check('options').isArray().withMessage('Please enter a valid options')
+],
     ValidateTokenAndTeacher,ValidateMongooseID, ValidatorErrorHelper], async (req, res, next) => {
 
     const { classroomId, lessonId } = req.params;
     const { id } = req.user;
     const { question, questionImg, options, answer, explanation, type } = req.body;
 
+    // console.log(question, options, answer, explanation, type);
+
+    //object array to string array
+    const optionsArray = options.map(option => option.questionoption);
+    // console.log(optionsArray);
+
     try {
-        const { data } = await service.CreateNewQuiz({ classroomId, lessonId, userId:id, question, questionImg, options, answer, explanation, type });
+        const { data } = await service.CreateNewQuiz({ classroomId, lessonId, userId:id, question, questionImg, options: optionsArray, answer, explanation, type:'mq1a' });
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
@@ -112,6 +119,28 @@ router.delete('/:classroomId/lesson/:lessonId/quizcontrol/:quizId',
 
     try {
         const { data } = await service.DeleteQuiz({ classroomId, lessonId, quizId, userId: id });
+        return res.status(data.status).json(data);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            error: 'Server error'
+        });
+    };
+});
+
+//@ ROUTE  PUT api/classroom/:classroomId/lesson/:lessonId/quizcontrol/
+//@ DESC   Update a quiz contorl
+//@ ACCESS Private (Teacher)
+router.put('/:classroomId/lesson/:lessonId/quizcontrol', ValidateMongooseID, ValidateTokenAndTeacher, async (req, res, next) => {
+
+    const { classroomId, lessonId } = req.params;
+    const { id } = req.user;
+    const { quizIsRandom, quizLimit } = req.body;
+
+    console.log(quizIsRandom, quizLimit);
+
+    try {
+        const { data } = await service.UpdateQuizControl({ classroomId, lessonId, quizIsRandom, quizLimit, userId: id });
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);

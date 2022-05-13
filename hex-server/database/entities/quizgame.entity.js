@@ -22,11 +22,26 @@ class QuizGameEntity {
             else {
                 // if Random get all quiz by Random then sort createdAt
 
+                // const QuizGames = await QuizModel.find({ lesson: lessonId })
+                //     .select('-answer')
+                //     .limit(limit)
+                //     .random()
+                //     .sort({ createdAt: -1 });
+
+                //random query by limit and random
                 const QuizGames = await QuizModel.find({ lesson: lessonId })
                     .select('-answer')
-                    .limit(limit)
-                    .random()
-                    .sort({ createdAt: -1 });
+                    // .limit(limit)
+                    // .sort({ createdAt: -1 })
+                    // .random();
+
+                //shuffle array
+                QuizGames.sort(() => Math.random() - 0.5);
+                //trim to limit
+                QuizGames.splice(limit);
+
+                // console.log(QuizGames.length);
+
                 return QuizGames;
             }
         }

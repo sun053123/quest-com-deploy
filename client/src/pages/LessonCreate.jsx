@@ -269,11 +269,14 @@ function LessonCreate() {
                   <FileBase
                     value={lessonForm.lessonImg}
                     multiple={false}
-                    onDone={(e) => {
-                      setLessonForm({
-                        ...lessonForm,
-                        lessonImg: e.base64
-                      })
+                    onDone={(img) => {
+                      //check file is img
+                      if (img.type.startsWith('image')) {
+                        setLessonForm({
+                          ...lessonForm,
+                          lessonImg: img.base64
+                        })
+                      }
                     }
                     }
                   />
@@ -304,12 +307,14 @@ function LessonCreate() {
               <FileBase
                 multiple={false}
                 value={lessonForm.pdfFile}
-                onDone={(e) => {
-                  setIsPassValidatePDF(true)
-                  setLessonForm({
-                    ...lessonForm,
-                    pdfFile: e.base64
-                  })
+                onDone={(file) => {
+                  if (file.type === 'application/pdf') {
+                    setIsPassValidatePDF(true)
+                    setLessonForm({
+                      ...lessonForm,
+                      pdfFile: file.base64
+                    })
+                  }
                 }}
               />
             </Box>
@@ -325,9 +330,6 @@ function LessonCreate() {
                 Submit Form
               </LoadingButton>
             </Box>
-            
-            
-
           </Container>
         </Grid>
         {/* //////////////////////////////////////// Preview //////////////////////////////////////// */}

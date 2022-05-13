@@ -1,14 +1,27 @@
 const QuizModel = require('../models/Quiz');
-
+const LessonModel = require('../models/Lesson');
 class QuizEntity {
 
-    async getQuizes({ lessonId }) {
+    async getQuizzes({ lessonId }) {
         try {
-            const Quizes = await QuizModel.find({ lesson: lessonId })
-                .populate('creator', ['username', 'email'])
-                .populate('lesson', ['title','quizCount','quizIsReady','quizIsRandom','quizLimit'])
+            const Quizzes = await QuizModel.find({ lesson: lessonId })
+                // .populate('creator', ['username', 'email'])
+                // .populate('lesson', ['title','quizCount','quizIsReady','quizIsRandom','quizLimit'])
                 .sort({ createdAt: -1 });
-            return Quizes;
+
+            // console.log(Quizzes);
+            return Quizzes;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+
+    async getQuizController({ lessonId }) {
+        try {
+            const QuizController = await LessonModel.findById(lessonId)
+                .select('quizCount quizIsReady quizIsRandom quizLimit');
+            return QuizController;
         }
         catch (error) {
             throw error;
@@ -69,6 +82,23 @@ class QuizEntity {
             const DeletedQuiz = await QuizModel.findByIdAndDelete(quizId);
             return DeletedQuiz;
         }
+        catch (error) {
+            throw error;
+        }
+    }
+
+    async updateQuizControl({ lessonId, quizLimit, quizIsRandom  }) {
+        try {
+            //need only quizLimit , quizIsRandom, quizCount, quizIsReady,
+            const UpdatedQuizController = await LessonModel.findByIdAndUpdate(lessonId, {
+                quizLimit,
+                quizIsRandom,
+                updateAt: Date.now(),
+            }, { new: true })
+            .select('quizCount quizIsReady quizIsRandom quizLimit');
+
+            return UpdatedQuizController;
+        } 
         catch (error) {
             throw error;
         }

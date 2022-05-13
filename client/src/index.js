@@ -11,6 +11,8 @@ import { ThemeProvider } from '@mui/material/styles';
 
 import { AuthProvider } from './store/Contexts/AuthContext';
 import { AlertProvider } from './store/Contexts/AlertContext';
+import { QuizContextProvider } from './store/Contexts/QuizContext';
+
 import { BrowserRouter } from 'react-router-dom';
 
 
@@ -20,6 +22,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <AuthProvider >
     <AlertProvider>
+      <QuizContextProvider>
       <QueryClientProvider client={queryClient}>
 
         <ReactQueryDevtools />
@@ -30,6 +33,7 @@ root.render(
         </ThemeProvider>
 
       </QueryClientProvider>
+      </QuizContextProvider>
     </AlertProvider>
   </AuthProvider>
 

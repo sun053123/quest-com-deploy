@@ -74,7 +74,7 @@ class QuizGameService {
             //FIXME: 
             
             //check quiz is Random or not ( Limit is always on and not less than ...)
-            const RANDOM = false
+            let RANDOM = false
             if (Lesson.quizIsRandom === true) {
                 RANDOM = true
             } 

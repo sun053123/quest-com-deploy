@@ -180,9 +180,8 @@ function ClassroomSidebar(props) {
               height: "4.5rem"
             }}
               disabled={lessons[toggleLesson]?.quizIsReady === false}
-
-              component={Link}
-              to={`/classroom/${classroomId}/lesson/${lessonId}/quizgame`}>
+              onClick={() => navigate(`/classroom/${classroomId}/lesson/${lessonId}/quizgame`)}
+              >
               <ListItemIcon>
                 <QuizIcon />
               </ListItemIcon>

@@ -7,6 +7,7 @@ import { AuthContext } from "../store/Contexts/AuthContext";
 import { AlertContext } from "../store/Contexts/AlertContext";
 import { AlertShow } from "../store/Actions/AlertAction";
 
+import LoadingButton from '@mui/lab/LoadingButton';
 import { CssBaseline, Grid, Box, Button, FormControl, InputLabel, Select, MenuItem, Avatar } from "@mui/material";
 import Container from "@mui/material/Container";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -310,18 +311,20 @@ export default function Blog() {
                 display: { xs: "none", sm: "flex" },
               }}
             >
-              <Button
+              <LoadingButton
+                loading={isLoading}
                 variant="outlined"
                 disabled={page === 1}
                 onClick={() => setPage(page - 1)}
               >
                 Previous Page
-              </Button>
+              </LoadingButton>
               <FormControl variant="filled" sx={{ m: 1, minWidth: 60, maxHeight:40 }}>
                 <InputLabel id="demo-simple-select-filled-label">Page</InputLabel>
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
+                  alt="page"
                   value={page}
                   onChange={(e) => setPage(e.target.value)}
                 >
@@ -333,20 +336,22 @@ export default function Blog() {
                   ))}
                 </Select>
               </FormControl>
-              <Button
+              <LoadingButton
+              loading={isLoading}
               variant="outlined"
               disabled={page === Math.ceil(maximumpages) || classes.length ===  0}
               onClick={() => setPage(page + 1)}
               
             >
               Next Page
-            </Button>
+            </LoadingButton>
             </Grid>
             
             <Box sx={{ display: { sm: "none" } }}>
               <Grid container spacing={2} columns={16}>
                 <Grid item xs={8}>
-                  <Button
+                  <LoadingButton
+                    loading={isLoading}
                     disabled={page === 1}
                     onClick={() => setPage(page - 1)}
                   >
@@ -354,15 +359,16 @@ export default function Blog() {
                       variant="contained"
                       disabled={page === 1}
                     />
-                  </Button>
+                  </LoadingButton>
                 </Grid>
                 <Grid item xs={8}>
-                  <Button
+                  <LoadingButton
+                    loading={isLoading}
                     disabled={page === Math.ceil(maximumpages) ||  classes.length ===  0}
                     onClick={() => setPage(page + 1)}
                   >
                     <ArrowForwardIosIcon variant="contained" />
-                  </Button>
+                  </LoadingButton>
                 </Grid>
               </Grid>
             </Box>

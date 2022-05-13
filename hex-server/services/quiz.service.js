@@ -66,9 +66,11 @@ class QuizService {
             //     });
             // }
 
-            const Quizes = await this.QuizEntity.getQuizes({ lessonId });
+            const Quizzes = await this.QuizEntity.getQuizzes({ lessonId });
+            const QuizController = await this.QuizEntity.getQuizController({ lessonId });
             return FormateData({
-                quiz: Quizes,
+                quiz: Quizzes,
+                quizcontroller: QuizController,
                 status: HTTP_STATUS_CODES.OK
             });
 
@@ -95,7 +97,7 @@ class QuizService {
             };
             
             const Lesson = await this.LessonEntity.getLessonById({ lessonId });
-            if (userId !== Lesson.creator.user.toString()) {
+            if (userId !== Lesson.creator._id.toString()) {
                 return FormateData({
                     status: HTTP_STATUS_CODES.FORBIDDEN,
                     error: [
@@ -289,6 +291,47 @@ class QuizService {
             throw error;
         };
     };
+
+    async UpdateQuizControl({ classroomId, lessonId, quizId, quizLimit, quizIsRandom, userId }) {
+            
+            try {
+                //check classroom and lesson is exist
+                const isExist = await this.checkClassroomandLessonIsExistAndCreator({ classroomId, lessonId, userId });
+                if (!isExist) {
+                    return FormateData({
+                        error: [
+                            {
+                                "msg": "Classroom or Lesson not found!",
+                                "location": "server"
+                            }
+                        ],
+                        status: HTTP_STATUS_CODES.NOT_FOUND
+                    });
+                }
+
+                const Quiz = await this.QuizEntity.updateQuizControl({ lessonId, quizLimit, quizIsRandom });
+                if(!Quiz) {
+                    return FormateData({
+                        error: [
+                            {
+                                "msg": "Cannot update quiz control!",
+                                "location": "server"
+                            }
+                        ],
+                        status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE
+                    });
+                }
+
+                return FormateData({
+                    quizcontroller: Quiz,
+                    status: HTTP_STATUS_CODES.OK
+                });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
 
 };
 
