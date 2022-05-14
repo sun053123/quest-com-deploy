@@ -73,18 +73,6 @@ class ClassroomService {
             const ClassroomsTotal = await this.ClassroomEntity.getClassrooms({ SKIP, LIMIT, category });
             // const Classrooms = await this.ClassroomEntity.getClassrooms();
             const { Classrooms, Total} = ClassroomsTotal;
-            // if(!Classrooms.length){
-            //     return FormateData({
-            //         error: [
-            //             {
-            //                 "msg": "Out of index pagination!",
-            //                 "location": "server",
-            //                 "type": "warning"
-            //             }
-            //         ],
-            //         status: HTTP_STATUS_CODES.NOT_FOUND,
-            //     })
-            // }
 
             return FormateData({
                 classrooms: Classrooms,

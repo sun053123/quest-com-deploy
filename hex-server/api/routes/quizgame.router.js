@@ -40,6 +40,8 @@ router.post('/:classroomId/lesson/:lessonId/quizgame/result',[ValidateToken, Val
     // console.log("quizIdSelectedId",quizIdSelected)
 
     try {
+
+        //FIXME: จะต้องคืน คำตอบ และ เช็คว่า user เคยทำหรือยัง
         const { data } = await service.GetQuizGameResult({ classroomId, lessonId, userId: id, quizIdSelected });
         return res.status(data.status).json(data);
     } catch (err) {
@@ -55,15 +57,16 @@ router.post('/:classroomId/lesson/:lessonId/quizgame/result',[ValidateToken, Val
 //@ ROUTE  POST api/classroom/:classroomId/lesson/:lessonId/quizgame/result
 //@ DESC   Save a quizgame result
 //@ ACCESS Private (Basic)
-router.post('/:classroomId/lesson/:lessonId/quizgame/result',
+router.put('/:classroomId/lesson/:lessonId/quizgame/result',
     [ValidateToken, ValidateMongooseID], async (req, res, next) => {
 
     const { classroomId, lessonId } = req.params;
     const { id, username } = req.user;
-    const { result } = req.body;
+    const { result, timeTaken, expgain, attempts, score } = req.body;
 
+    // console.log(result, timeTaken, expgain, attempts, score)
     try {
-        const { data } = await service.SaveQuizGameResult({ classroomId, lessonId, userId: id, username, result });
+        const { data } = await service.SaveQuizGameResult({ classroomId, lessonId, userId: id, username, result, timeTaken, expgain, attempts, score });
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);

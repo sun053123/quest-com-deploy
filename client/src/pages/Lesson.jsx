@@ -1,37 +1,38 @@
-import React, {useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery } from 'react-query';
 import DOMPurify from 'dompurify';
 
 import { Viewer, ProgressBar } from '@react-pdf-viewer/core';
 
-import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
-import '@react-pdf-viewer/core/lib/styles/index.css';
-import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
-import { Box,Button,Container,Grid, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography, CssBaseline } from '@mui/material';
 
 import { AuthContext } from '../store/Contexts/AuthContext'
 import { AlertContext } from '../store/Contexts/AlertContext';
 import { AlertShow } from "../store/Actions/AlertAction";
 
 import LessonBody from '../components/Lesson/LessonBody'
-import LessonRightSide from '../components/Lesson/LessonRightSide';
-import LessonMenu from '../components/Lesson/LessonComment';
+import LessonComment from '../components/Lesson/LessonComment';
+import LessonQuizModal from '../components/Lesson/LessonQuizModal';
 import axios from 'axios';
 import ClassroomSidebar from '../components/Classroom/ClassroomSidebar';
 import LoadingPage from '../components/LoadingPage';
 import ErrorPage from '../components/ErrorPage';
+import { ToastContainer } from 'react-toastify';
 
 function Lesson() {
-  const { AlertContext, AlertDispatch } = useContext(AuthContext)
-  let navigate = useNavigate()
+  const { AlertDispatch } = useContext(AuthContext)
   const { userinfo } = useContext(AuthContext)
   const { classroomId, lessonId } = useParams()
-  const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
   const [lesson, setLesson] = useState({})
   const [lessons, setLessons] = useState([])
+
+  const [quizModalopen, setQuizModalopen] = useState(false);
+  const handleQuizOpen = () => setQuizModalopen(true);
+  const handleQuizClose = () => setQuizModalopen(false);
+
 
   const {
     isLoading: isLoadingLesson,
@@ -40,7 +41,7 @@ function Lesson() {
     error: errorLesson,
   } = useQuery(
     ["lesson", classroomId, lessonId],
-    async() => await axios.get("http://localhost:8000/api/classroom/" + classroomId + "/lesson/" + lessonId),
+    () => axios.get(`http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}`),
     {
       retry: false,
       enabled: true,
@@ -50,9 +51,12 @@ function Lesson() {
       onSuccess: (data) => {
         setLesson(data.data.data.lesson)
         setLessons(data.data.data.lessons)
-      }
+      },
+      onError: (err) => {
+        AlertDispatch(AlertShow(err.data.error, "error"))
     }
-    
+  }
+
   );
 
   if (isLoadingLesson) {
@@ -63,18 +67,22 @@ function Lesson() {
     AlertDispatch(AlertShow(errorLesson))
     return <ErrorPage />
   }
-     
-  
+
+
 
   return (
     <>
-    <Grid container spacing={0} >        
-      <Grid item xs={2} sx={{ backgroundColor: "#f7f9fc",}}>
-          <ClassroomSidebar lessons={lessons} currentLessonID={lesson._id} />
-      </Grid>
-      <Grid item xs={10} sx={{ backgroundColor: "blue", }}>
+    <CssBaseline />
+    <ToastContainer />
+      {/* ////////////////////////////// LESSON MODAL SKIP QUIZGAME ////////////////////////////// */}
+      <LessonQuizModal quizModalopen={quizModalopen} handleQuizClose={handleQuizClose} />
+      <Grid container spacing={0} >
+        <Grid item xs={2} sx={{ backgroundColor: "#f7f9fc", }}>
+          <ClassroomSidebar lessons={lessons} currentLessonID={lesson._id} handleQuizOpen={handleQuizOpen} />
+        </Grid>
+        <Grid item xs={10} sx={{ backgroundColor: "blue", }}>
           <LessonBody lesson={lesson} />
-      </Grid>
+        </Grid>
       </Grid>
     </>
   )

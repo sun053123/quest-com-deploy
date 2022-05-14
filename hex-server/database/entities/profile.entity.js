@@ -13,6 +13,32 @@ class ProfileEntity{
             throw error;
         }
     }
+
+    async updateUserExp({ userId, expgain, category }) {
+        try{
+            const Profile = await ProfileModel.findOne({ user: userId });
+
+            console.log(category)
+
+            if(category === "math"){
+                Profile.math_score += expgain;
+            }else if(category === "science"){
+                Profile.science_score += expgain;
+            }else if(category === "english"){
+                Profile.english_score += expgain;
+            }else if(category === "social"){
+                Profile.social_score += expgain;
+            }else{
+                Profile.computer_score += expgain;
+            }
+
+            await Profile.save();
+        
+        }
+        catch{
+            throw error;
+        }
+    }
 }
 
 module.exports = ProfileEntity;

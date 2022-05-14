@@ -1,4 +1,5 @@
 const QuizModel = require('../models/Quiz');
+const Dashboard = require('../models/Dashboard');
 
 class QuizGameEntity {
 
@@ -9,28 +10,21 @@ class QuizGameEntity {
                 return null;
             }
 
-            
             if (!RANDOM || RANDOM === false) {
                 // if no Random get all quiz by sort createdAt
 
                 const QuizGames = await QuizModel.find({ lesson: lessonId })
                     .select('-answer')
                     .limit(limit)
-                    .sort({ createdAt: 1 });
+                    .sort({ createdAt: 1 })
+                    .where('deletedAt').equals(null);
                 return QuizGames;
             }
             else {
-                // if Random get all quiz by Random then sort createdAt
-
-                // const QuizGames = await QuizModel.find({ lesson: lessonId })
-                //     .select('-answer')
-                //     .limit(limit)
-                //     .random()
-                //     .sort({ createdAt: -1 });
-
                 //random query by limit and random
                 const QuizGames = await QuizModel.find({ lesson: lessonId })
                     .select('-answer')
+                    .where('deletedAt').equals(null);
                     // .limit(limit)
                     // .sort({ createdAt: -1 })
                     // .random();
@@ -39,8 +33,6 @@ class QuizGameEntity {
                 QuizGames.sort(() => Math.random() - 0.5);
                 //trim to limit
                 QuizGames.splice(limit);
-
-                // console.log(QuizGames.length);
 
                 return QuizGames;
             }
@@ -64,6 +56,37 @@ class QuizGameEntity {
         }
     }
 
+    async saveUserQuizResult({quizResult, classroomId}) {
+        try {
+            const dashboard = await Dashboard.findOne({ classroom: classroomId });
+            // console.log(UpdatedDashboard);
+            dashboard.studentCompleteQuiz.push({
+                ...quizResult
+            });
+
+            const UpdatedDashboard = await dashboard.save();
+               
+            return UpdatedDashboard.studentCompleteQuiz;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async findUserInQuizGame({userId, classroomId, lessonId}) {
+        try {
+            const dashboard = await Dashboard.findOne({ classroom: classroomId });
+
+            //find if user is in dashboard.studentCompleteQuiz and lesson is same
+            const userInQuizGame = dashboard.studentCompleteQuiz.find(student => student.user.toString() === userId && student.lesson.toString() === lessonId);
+            if (!userInQuizGame) {
+                return false
+            }
+            return dashboard.studentCompleteQuiz;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = QuizGameEntity;

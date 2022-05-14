@@ -181,7 +181,7 @@ function Login() {
                 color: "white",
                 backgroundColor: "primary.main",
               }}
-              fontweight="bold"
+              fontWeight="bold"
               disabled={isLoading}
             >
               Sign In

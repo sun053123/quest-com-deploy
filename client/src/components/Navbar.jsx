@@ -43,7 +43,6 @@ const Navbar = () => {
     handleCloseUserMenu()
     //clear quiz context
     setQuizContext({
-      attempts: 0,
       selectedOptions: [],
       timeTaken: 0
     })

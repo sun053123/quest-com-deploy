@@ -19,6 +19,7 @@ import QuizIcon from '@mui/icons-material/Quiz';
 import { useLocation, useNavigate, useParams, Link } from "react-router-dom";
 
 import { AuthContext } from "../../store/Contexts/AuthContext";
+import useStateQuizContext from '../../store/Contexts/QuizContext';
 
 const style = {
   width: '100%',
@@ -29,15 +30,15 @@ const style = {
 
 function ClassroomSidebar(props) {
   const { lessons } = props;
-  const { classroomcreatorId } = props
+  const { classroomcreatorId, handleQuizOpen } = props
   const { classroomId, lessonId } = useParams();
   const { userinfo } = useContext(AuthContext);
+  const { quizcontext, setQuizContext } = useStateQuizContext();
+
   const location = useLocation();
   const navigate = useNavigate();
 
   const [toggleLesson, setToggleLesson] = useState(-1);
-
-  
   
   useEffect(() => {
     if(lessonId){
@@ -48,15 +49,31 @@ function ClassroomSidebar(props) {
 
     //onclick listitem do press
   const mapLocationLessonIndex = (lessonId) => {
-
+    
       // map location.path id to the current lesson id
       const lessonIndex = lessons.findIndex(lesson => lesson._id === lessonId)
       setToggleLesson(lessonIndex)
 
       //when fetch again lessonindex will be -1, so we need to set it to 0
-      setToggleLesson(0)
+      if(lessonIndex <= -1){
+        setToggleLesson(0)
+      }
   }
 
+  const handleQuizGameRoute = () => {
+    //modal will open if student try to get into another quiz while he did not finish the current one
+    if (userinfo.role === true) {
+      navigate(`/classroom/${classroomId}/lesson/${lessonId}/quizgame`);
+    }
+    if (quizcontext.currentQuizGame === null || quizcontext.currentQuizGame === undefined || quizcontext.currentQuizGame === "" || quizcontext.currentQuizGame?.split("/")[4] === lessonId) {
+      navigate(`/classroom/${classroomId}/lesson/${lessonId}/quizgame`)
+    }
+
+    //check lessonId and quizcontext.currentQuizGame./4 (lssonId in quizcontext)
+    if (quizcontext.currentQuizGame?.split("/")[4] != lessonId) {
+      handleQuizOpen(true)
+    }
+  }
   
   return (
     <Grow in={true}>
@@ -67,15 +84,11 @@ function ClassroomSidebar(props) {
           //set text not out of box
           whiteSpace: "nowrap",
           overflowX: "hidden",
-          textOverflow: "ellipsis",
-        
-          
-        }}
-      >
-
+          textOverflow: "ellipsis", 
+        }}>
         <List sx={style} component="nav" aria-label="mailbox folders" >
           { userinfo?.role === true && userinfo?.id === classroomcreatorId && (
-            <>
+          <>
           <ListItemText sx={{
             textAlign: "center",
           }} >
@@ -178,7 +191,7 @@ function ClassroomSidebar(props) {
               height: "4.5rem"
             }}
               disabled={lessons[toggleLesson]?.quizIsReady === false}
-              onClick={() => navigate(`/classroom/${classroomId}/lesson/${lessonId}/quizgame`)}
+              onClick={handleQuizGameRoute}
               >
               <ListItemIcon>
                 <QuizIcon />
@@ -203,7 +216,6 @@ function ClassroomSidebar(props) {
               </ListItemIcon>
               <ListItemText primary={`${index+1}${" :"} ${lesson.title}`} />
             </ListItem >
-            
           ))}
         </List>
       </Box>

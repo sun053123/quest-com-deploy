@@ -121,26 +121,30 @@ class UserEntity {
             }
         }
 
-        async getRecentClassroom({ userId }) {
-            try {
-                const User = await ProfileModel.findById(userId);
-                return User.recentClassroom;
-            }
-            catch (error) {
-                throw error;
-            }
-        }
+        // async getRecentClassroom({ userId }) {
+        //     try {
+        //         const User = await ProfileModel.findById(userId);
+        //         return User.recentClassroom;
+        //     }
+        //     catch (error) {
+        //         throw error;
+        //     }
+        // }
 
         async getUserOwnClassroom({ userId }) {
             try {
                 //find where userId is creator.user
-                const Classroom = await ClassroomModel.find().where('creator.user').equals(userId).sort({ createdAt: -1 }).limit(5);
+                const Classroom = await ClassroomModel.find()
+                .where('creator.user').equals(userId)
+                .where('deletedAt').equals(null)
+                .sort({ createdAt: -1 }).limit(5);
                 return Classroom;
             }
             catch (error) {
                 throw error;
             }
         }
+        
 
     //save recent quiz score
 

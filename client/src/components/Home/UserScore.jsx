@@ -139,6 +139,7 @@ function UserScore(props) {
               return (
                 <Grid
                   item
+                  key={index}
                   xs={2}
                   sx={{
                     display: "flex",
@@ -153,11 +154,8 @@ function UserScore(props) {
                       //zoom
                       transform: "scale(1.1)",
                     },
-                  }}
-                >
-                  <Box sx={{
-                    
                   }}>
+                  <Box>
                   <Typography
                     gutterBottom
                     sx={{
@@ -166,10 +164,7 @@ function UserScore(props) {
                       fontWeight: "bold",
                       display: { xs: "none", md: "flex" },
                       //get regex to remove the first letter of the subject _
-                      color: score.subject.replace(/^./, (str) =>
-                        str.toLowerCase()
-                      ),
-
+                      color: score.subject.replace(/^./, (str) => str.toLowerCase()),
                       marginBottom: "15px",
                       fontSize: "0.8rem",
                     }}
@@ -178,6 +173,7 @@ function UserScore(props) {
                     {Math.floor(score.exp / 100)}
                   </Typography>
                   <Box
+                  //use unique key to avoid error
                     keys={index}
                     sx={{ position: "relative", display: "inline-flex" }}
                   >

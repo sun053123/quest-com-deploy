@@ -1,4 +1,4 @@
-const { LessonEntity, ClassroomEntity, QuizGameEntity, DashboardEntity } = require('../database');
+const { LessonEntity, ClassroomEntity, QuizGameEntity, DashboardEntity, ProfileEntity } = require('../database');
 
 const { FormateData } = require('../utils');
 const HTTP_STATUS_CODES = require('../utils/HTTPConstant');
@@ -10,6 +10,7 @@ class QuizGameService {
         this.ClassroomEntity = new ClassroomEntity();
         this.QuizGameEntity = new QuizGameEntity();
         this.DashboardEntity = new DashboardEntity();
+        this.ProfileEntity = new ProfileEntity();
     }
 
     async checkClassroomAndLessonIsExist({ classroomId, lessonId }) {
@@ -22,7 +23,7 @@ class QuizGameService {
             if (!lesson) {
                 return false
             }
-            return true;
+            return classroom;
         }
         catch (error) {
             throw error;
@@ -71,7 +72,6 @@ class QuizGameService {
                 });
             }
 
-            //FIXME: 
             
             //check quiz is Random or not ( Limit is always on and not less than ...)
             let RANDOM = false
@@ -90,20 +90,89 @@ class QuizGameService {
         }
     }
     
-    async GetQuizGameResult({ classroomId, quizId, lessonId, quizIdSelected }) {
+    async GetQuizGameResult({ classroomId, userId, lessonId, quizIdSelected }) {
         try {
             // console.log(quizContext)
+            let isSubmitted = false
+            let AllResult = []
+
+            let UserInQuizDashboard = await this.QuizGameEntity.findUserInQuizGame({ userId, lessonId, classroomId });
+            if (UserInQuizDashboard) {
+                isSubmitted = true
+                AllResult = UserInQuizDashboard
+            }
 
             const QuizResult = await this.QuizGameEntity.getQuizAnswer({ lessonId, quizIdSelected });
             // console.log(QuizResult)
             return FormateData({
-                data: QuizResult,
+                data: {
+                    quizAnswer: QuizResult,
+                    isSummited: isSubmitted,
+                    allResult: AllResult
+                },
                 status: HTTP_STATUS_CODES.OK
             });
         } catch (error) {
             throw error;
         }
     }
+
+    async SaveQuizGameResult({ classroomId, lessonId, result, timeTaken, expgain, attempts, score, userId }) {
+
+        try {
+            const isExistClassroom = await this.checkClassroomAndLessonIsExist({classroomId, lessonId})
+            console.log(isExistClassroom)
+            if (!isExistClassroom){
+                return FormateData({
+                    error: [
+                        {
+                            "msg": "Not found Lesson or Classroom!",
+                            "location": "server",
+                            "type":"error",
+                        }
+                    ],
+                })
+            }
+
+            //check user already complete quiz before
+            let UserInQuizDashboard = await this.QuizGameEntity.findUserInQuizGame({ userId, lessonId, classroomId });
+            if (!UserInQuizDashboard) {
+
+            //if not complete quiz before save and isSubmitted is true
+            const quizResult = {}
+
+            quizResult.user = userId
+            quizResult.lesson = lessonId
+            quizResult.timeTaken = timeTaken
+            quizResult.expgain = expgain
+            quizResult.attempts = attempts
+            quizResult.score = score
+            quizResult.result = result
+
+            UserInQuizDashboard = await this.QuizGameEntity.saveUserQuizResult({quizResult, classroomId})
+
+            //update exp to user
+            let category = isExistClassroom.category
+            await this.ProfileEntity.updateUserExp({ userId, expgain, category });
+
+            }
+            
+            
+
+            return FormateData({
+                data: {
+                    allResult: UserInQuizDashboard,
+                    isSummited: true
+                },
+                status: HTTP_STATUS_CODES.OK
+            });
+            
+            
+        } catch (error) {
+            throw error;
+        }
+            
+        }
 }
 
 module.exports = QuizGameService;

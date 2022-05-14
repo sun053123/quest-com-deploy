@@ -7,6 +7,7 @@ class QuizEntity {
             const Quizzes = await QuizModel.find({ lesson: lessonId })
                 // .populate('creator', ['username', 'email'])
                 // .populate('lesson', ['title','quizCount','quizIsReady','quizIsRandom','quizLimit'])
+                .where('deletedAt').equals(null)
                 .sort({ createdAt: -1 });
 
             // console.log(Quizzes);
@@ -69,7 +70,10 @@ class QuizEntity {
 
     async getQuizById({ quizId }) {
         try {
-            const Quiz = await QuizModel.findById(quizId).populate('creator', ['username', 'email']).populate('lesson', ['title']);
+            const Quiz = await QuizModel.findById(quizId)
+            .where('deletedAt').equals(null)
+            .populate('creator', ['username', 'email'])
+            .populate('lesson', ['title']);
             return Quiz;
         }
         catch (error) {
@@ -79,7 +83,10 @@ class QuizEntity {
 
     async deleteQuiz({ quizId }) {
         try {
-            const DeletedQuiz = await QuizModel.findByIdAndDelete(quizId);
+            const DeletedQuiz = await QuizModel.findByIdAndUpdate(quizId, {
+                deletedAt: Date.now(),
+                updateAt: Date.now(),
+            }, { new: true });
             return DeletedQuiz;
         }
         catch (error) {

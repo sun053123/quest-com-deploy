@@ -19,7 +19,7 @@ router.post('/', [
     check('content').not().isEmpty().withMessage('Please enter a valid content'),
     check('content').isLength({ min: 15, max: 1500 }).withMessage('Content must be between 15 and 200 characters'),
     check('category').isIn(['math', 'science', 'social', 'english', 'computer', 'other']).withMessage('Please enter a valid category'),
-    check('tags').isLength({ min: 1, max: 100 }).withMessage('tags must be between 1 and 100 characters'),
+    check('tags').isLength({ min: 0, max: 100 }).withMessage('tags must be between 1 and 100 characters'),
     check('level').isIn(['beginner', 'intermediate', 'advanced']).withMessage('Please enter a valid level'),],
     ValidateTokenAndTeacher, ValidatorErrorHelper], async (req, res, next) => {
 
@@ -43,15 +43,9 @@ router.post('/', [
 router.get('/', async (req, res, next) => {
     //query params page and limit
     const { page, category } = req.query;
-    console.log(page, category);
-    // console.log(page)
 
     try {
         const { data } = await service.GetClassrooms({page, category});
-        
-        //delay for testing
-        // await new Promise(resolve => setTimeout(resolve, 1500));
-
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
@@ -69,7 +63,6 @@ router.get('/:classroomId', [ValidateToken, ValidateMongooseID], async (req, res
     const { classroomId } = req.params;
     const { id, username, role } = req.user;
 
-    console.log("get single classroom")
     try {
         const { data } = await service.GetSingleClassroom({ classroomId, userId: id, username, role });
         return res.status(data.status).json(data);

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { AuthContext } from "../store/Contexts/AuthContext";
 import useStateQuizContext from "../store/Contexts/QuizContext";
@@ -20,6 +20,7 @@ import {
   ListItemText,
   Divider,
   LinearProgress,
+  Avatar,
 } from "@mui/material";
 
 import quizgame_bg from "../assets/img/quizgame_bg.jpg";
@@ -29,31 +30,41 @@ function QuizGame() {
   const { userinfo } = useContext(AuthContext);
   const { quizcontext, setQuizContext } = useStateQuizContext();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { classroomId, lessonId } = useParams();
 
   const [gamequiz, setGamequiz] = useState([]);
   const [gamequizIndex, setGamequizIndex] = useState(0);
 
+  const [startTimer, setStartTimer] = useState(false);
   const [timeTaken, setTimeTaken] = useState(0);
 
   let timer;
 
-  // const startTimer = () => {
-  //   timer = setInterval(() => {
-  //     setTimeTaken((prev) => prev + 1);
-  //   }, [1000]);
-  // };
-
   //set timer and do not rerender
 
   useEffect(() => {
+    //check if user (student) skip from another lesson //go homepage //this is hard navigate , so we actuall tell user to go to homepage or go to current quizgame before they try to force into :P
+    if(userinfo.role === true){
+      return;
+    }
+
+    if (quizcontext.currentQuizGame === null || quizcontext.currentQuizGame === undefined || quizcontext.currentQuizGame === "") {
+      return;
+    }
+
+    if (quizcontext.currentQuizGame !== location.pathname) {
+        navigate("/home");
+    }
+
+    if (typeof window !== "undefined") { //check if window is defined to avoid error
     const interval = setInterval(() => {
       timer = setTimeTaken((prev) => prev + 1);
     }, 1000);
-
+    
     return () => { clearInterval(interval) };
-  }, [setTimeTaken]);
+  }}, [startTimer]);
 
   const setGameQuizAndShffle = (quizzes) => {
     //shuffle quiz options
@@ -73,13 +84,17 @@ function QuizGame() {
       refetchOnWindowFocus: false,
       //retechOnmount is important to avoid empty render when navigating from another page (always true)
       refetchOnMount: true,
-      //on guest mode, no need to query scores
+      //on guest mode, no need to query quizgame  
       enabled: userinfo ? true : false,
+      //refresh every time when rendering
+      refetchInterval: 0,
       onSuccess: (data) => {
-        // console.log(data);
+        //shuffle options and setstate
         setGameQuizAndShffle(data.data.data);
-     
-        setQuizContext({ attempts: ++quizcontext.attempts, selectedOptions: [], timeTaken: 0 });
+        //trigger time when quiz is successfully fetched
+        setStartTimer(true);
+        //start saving attemp to localstorage and current quiz id and reset timetaken to 0
+        setQuizContext({ attempts: ++quizcontext.attempts, selectedOptions: [], timeTaken: 0, currentQuizGame: location.pathname });
       },
     }
   );
@@ -97,16 +112,21 @@ function QuizGame() {
     const temp = [...quizcontext.selectedOptions];
     temp.push({ selected:option, gamequizId });
 
-   
-
     if (gamequizIndex < gamequiz.length - 1) {
       setQuizContext({ selectedOptions: [...temp] });
       setGamequizIndex(gamequizIndex + 1);
     }else {
+      //last question
       setQuizContext({ selectedOptions: [...temp],
         timeTaken: timeTaken,
        });
+       if(userinfo.role === false){
+         //if user is student, go to result page
        return navigate(`/classroom/${classroomId}/lesson/${lessonId}/quizgame/result`);
+       }else{
+         //if user is teacher, go to lesson
+        return navigate(`/classroom/${classroomId}/lesson/${lessonId}`);
+       }
     }
     
   }
@@ -174,6 +194,26 @@ function QuizGame() {
               {gamequiz[gamequizIndex]?.question}
             </Typography>
           </CardContent>
+          {gamequiz[gamequizIndex]?.questionImg && (
+          <CardContent //img
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Avatar
+              variant="square"
+              src={gamequiz[gamequizIndex]?.questionImg}
+              alt="quizgame"
+              sx={{
+                width: "auto",
+                height: "200px",
+                margin: "1rem",
+              }}
+            />
+          </CardContent>)}
           <Divider />
           <List dense>
             {gamequiz[gamequizIndex]?.options.map((option, index) => (

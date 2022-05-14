@@ -43,24 +43,36 @@ const DashboardSchema = new mongoose.Schema({
                 ref: 'User',
                 required: true
             },
-            name: {
-                type: String,
-                required: true
-            },
-            quiz: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Quiz',
-                required: true
-            },
             lesson: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Lesson',
                 required: true
             },
-            lessonName: {
-                type: String,
-                required: true
-            },
+            result: [
+                {
+                    gamequizId:{
+                        type: mongoose.Schema.Types.ObjectId,
+                        ref:'Quiz',
+                        required: true
+                   },
+                    selected:{
+                        type: String,
+                        required: true
+                    },
+                    isCorrect:{
+                        type: Boolean,
+                        required: true
+                    },
+                    createdAt: {
+                        type: Date,
+                        default: Date.now
+                    },
+                    updatedAt: {
+                        type: Date,
+                        default: Date.now
+                    }
+                }
+            ],
             timeTaken: {
                 type: Number,
                 required: true
@@ -70,6 +82,10 @@ const DashboardSchema = new mongoose.Schema({
                 required: true
             },
             attempts: {
+                type: Number,
+                required: true
+            },
+            expgain: {
                 type: Number,
                 required: true
             },

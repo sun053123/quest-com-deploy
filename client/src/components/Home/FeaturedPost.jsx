@@ -77,7 +77,8 @@ function FeaturedPost(props) {
                 {classroom.description}
               </Typography>
               {/* if time <= 3mins show New! */}
-              {moment(classroom.updatedAt) - new Date().getTime() >=
+              {/* use UpdatedAt for feedback is quite bad , because when new student join a class its gonna update the classroom.updatedAt */}
+              {moment(classroom.createdAt) - new Date().getTime() >=
                 -500000 && (
                 <CardActions
                   sx={{
@@ -123,7 +124,7 @@ function FeaturedPost(props) {
                 }}
               >
                 <Typography variant="body2" fontWeight="bold">
-                  {moment(classroom.updatedAt).fromNow()}
+                  {moment(classroom.createdAt).fromNow()}
                 </Typography>
               </CardActions>
               <CardActions sx={{

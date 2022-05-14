@@ -6,6 +6,7 @@ class LessonEntity {
         try {
             const Lessons = await LessonModel.find({ classroom: classroomId })
                 .select('-comments -__v')
+                .where('deletedAt').equals(null)
                 .populate('creator',['username','email'])
                 .populate('classroom',['title'])
                 .sort({ createdAt: 1 });
@@ -18,7 +19,10 @@ class LessonEntity {
 
     async getLessonById({ lessonId }) {
         try {
-            const Lesson = await LessonModel.findById(lessonId).populate('creator',['username','email','_id']).populate('classroom',['title','content','category']);
+            const Lesson = await LessonModel.findById(lessonId)
+            .where('deletedAt').equals(null)
+            .populate('creator',['username','email','_id'])
+            .populate('classroom',['title','content','category']);
             return Lesson;
         }
         catch (error) {
@@ -30,6 +34,7 @@ class LessonEntity {
         try {
             const Lessons = await LessonModel.find({ classroom: classroomId })
                 .select('-comments -__v -content -lessonImg -lessonFile -likes')
+                .where('deletedAt').equals(null)
                 .sort({ createdAt: 1 });
             return Lessons;
         }
@@ -49,7 +54,7 @@ class LessonEntity {
                 lessonFile,
                 isShowLessonImg,
             });
-            const CreatedLesson = await NewLesson.save();
+            const CreatedLesson = await NewLesson.save()
             return CreatedLesson;
         }
         catch (error) {
@@ -77,7 +82,10 @@ class LessonEntity {
 
     async deleteLesson({ lessonId }) {
         try {
-            const DeletedLesson = await LessonModel.findByIdAndDelete(lessonId);
+            const DeletedLesson = await LessonModel.findByIdAndUpdate(lessonId, {
+                deletedAt: Date.now(),
+            }, { new: true });
+
             return DeletedLesson;
         }
         catch (error) {

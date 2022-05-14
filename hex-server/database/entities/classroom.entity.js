@@ -53,7 +53,12 @@ class ClassroomEntity {
         try {
             //get all classrooms paginated any category sort by timecreated
             if (category === "all" || category === undefined || category === null) {
-                const Classrooms = await ClassroomModel.find({ isComplete: true }).sort({ createdAt: -1 }).skip(SKIP).limit(LIMIT);
+                const Classrooms = await ClassroomModel.find()
+                .where('isComplete').equals(true)
+                .where('deletedAt').equals(null)
+                .select('-__v -classroomImg') //forspeedup query
+                .sort({ createdAt: -1 }).skip(SKIP).limit(LIMIT);
+
                 const Count = await ClassroomModel.countDocuments({ isComplete: true });
                 if (Count === 0) {
                     return { Classrooms, Total: 0 };
@@ -63,7 +68,10 @@ class ClassroomEntity {
                 }
             } else {
                 //get all classrooms paginated by category sort by timecreated
-                const Classrooms = await ClassroomModel.find({ isComplete: true, category }).sort({ createdAt: -1 }).skip(SKIP).limit(LIMIT);
+                const Classrooms = await ClassroomModel.find({ category })
+                .where('isComplete').equals(true)
+                .where('deletedAt').equals(null)
+                .sort({ createdAt: -1 }).skip(SKIP).limit(LIMIT);
                 const Count = await ClassroomModel.countDocuments({ isComplete: true, category });
                 if (Count === 0) {
                     return { Classrooms, Total: 0 };
@@ -80,7 +88,9 @@ class ClassroomEntity {
 
     async getClassroomById({ classroomId }) {
         try {
-            const Classroom = await ClassroomModel.findById(classroomId).sort({ createdAt: -1 });
+            const Classroom = await ClassroomModel.findById(classroomId)
+            .where('deletedAt').equals(null)
+            .sort({ createdAt: -1 });
             return Classroom;
         }
         catch (error) {
@@ -90,7 +100,9 @@ class ClassroomEntity {
 
     async getClassroomByUserId({ userId }) {
         try {
-            const Classroom = await ClassroomModel.find({ creator: { user: userId }, isComplete : true }).sort({ createdAt: -1 });
+            const Classroom = await ClassroomModel.find({ creator: { user: userId }, isComplete : true, })
+            .where('deletedAt').equals(null)
+            .sort({ createdAt: -1 });
             return Classroom;
         }
         catch (error) {
@@ -100,7 +112,9 @@ class ClassroomEntity {
 
     async getOwnClassroom({ userId }) {
         try {
-            const Classroom = await ClassroomModel.find({ creator: { user: userId }}).sort({ createdAt: -1 });
+            const Classroom = await ClassroomModel.find({ creator: { user: userId }})
+            .where('deletedAt').equals(null)
+            .sort({ createdAt: -1 });
             return Classroom;
         }
         catch (error) {
@@ -110,7 +124,10 @@ class ClassroomEntity {
 
     async getClassroomByLevel({ level }) {
         try {
-            const Classroom = await ClassroomModel.find({ level }, { isComplete : true });
+            const Classroom = await ClassroomModel.find({ level }, { isComplete : true })
+            .where('deletedAt').equals(null)
+            .sort({ createdAt: -1 });
+
             return Classroom;
         }
         catch (error) {
@@ -120,7 +137,10 @@ class ClassroomEntity {
 
     async getClassroomByCategory({ category }) {
         try {
-            const Classroom = await ClassroomModel.find({ category });
+            const Classroom = await ClassroomModel.find({ category })
+            .where('deletedAt').equals(null)
+            .sort({ createdAt: -1 });
+
             return Classroom;
         }
         catch (error) {
@@ -131,7 +151,10 @@ class ClassroomEntity {
     async deleteClassroom({ classroomId }) {
         try {
             //remove classroom
-            const DeletedClassroom = await ClassroomModel.findByIdAndDelete(classroomId);
+            const DeletedClassroom = await ClassroomModel.findByIdAndUpdate(classroomId, {
+                deletedAt: Date.now()
+            }, { new: true });
+
             return DeletedClassroom;
         }
         catch (error) {

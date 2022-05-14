@@ -32,7 +32,6 @@
 //         </QuizContext.Provider>
 //     );
 // }
-import { linearProgressClasses } from '@mui/material';
 import React, { createContext, useContext, useState, useEffect } from 'react'
 
 
@@ -41,6 +40,7 @@ export const stateContext = createContext();
 const getFreshContext = () => {
     if (localStorage.getItem('quiz') === null)
         localStorage.setItem('quiz', JSON.stringify({
+            currentQuizGame: null,
             attempts: 0,
             timeTaken: 0,
             selectedOptions: []

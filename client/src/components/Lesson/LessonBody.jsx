@@ -30,9 +30,10 @@ function LessonBody(props) {
     const [liked, setLiked] = useState(false);
     const [likes, setLikes] = useState([]);
 
-    const [openmodal, setOpenmodal] = React.useState(false);
-  const handleOpen = () => setOpenmodal(true);
-  const handleClose = () => setOpenmodal(false);
+    const [deleteModalopen, setDeleteModalopen] = useState(false);
+    const handleDeleteOpen = () => setDeleteModalopen(true);
+    const handleDeleteClose = () => setDeleteModalopen(false);
+
 
     useEffect(() => {
         //every expanded bring user to top
@@ -47,8 +48,6 @@ function LessonBody(props) {
           behavior: "smooth"
         });
       };
-
-    console.log(lesson)
 
     const handleChange = (panel) => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
@@ -89,10 +88,10 @@ function LessonBody(props) {
 
     return (
         <>
-            {/* ////////////////////////////// LESSON HEADER ////////////////////////////// */}
+            {/* ////////////////////////////// LESSON MODAL DELETE LESSON ////////////////////////////// */}
             <Modal
-              open={openmodal}
-              onClose={handleClose}
+              open={deleteModalopen}
+              onClose={handleDeleteClose}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
@@ -124,7 +123,7 @@ function LessonBody(props) {
                   <Button
                     variant="contained"
                     color="secondary"
-                    onClick={handleClose}
+                    onClick={handleDeleteClose}
                   >
                     Cancel
                   </Button>
@@ -138,7 +137,8 @@ function LessonBody(props) {
                 </Box>
               </Box>
             </Modal>
-
+            
+            {/* ////////////////////////////// LESSON HEADER ////////////////////////////// */}
             <Box sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -205,7 +205,7 @@ function LessonBody(props) {
                     {/* add delete icon top right */}
                     {userinfo?.id === lesson?.creator?._id &&
                         <Box
-                            onClick={handleOpen} 
+                            onClick={handleDeleteOpen} 
                             sx={{
                                 position: 'absolute',
                                 top: 0,
