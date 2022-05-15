@@ -14,7 +14,6 @@ const service = new UserService()
 router.get('/scores', ValidateToken, async (req, res, next) => {
     const { id } = req.user;
 
-    console.log("get scores")
     try {
         const { data } = await service.GetUserScores({ userId:id });
         return res.status(data.status).json(data);

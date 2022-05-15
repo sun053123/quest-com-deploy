@@ -68,7 +68,7 @@ function Lesson() {
     return <ErrorPage />
   }
 
-
+  if (isSuccessLesson) {
 
   return (
     <>
@@ -86,6 +86,7 @@ function Lesson() {
       </Grid>
     </>
   )
+  }
 }
 
 export default Lesson

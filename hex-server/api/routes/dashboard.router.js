@@ -1,11 +1,31 @@
 const { Router } = require('express');
-const { check } = require('express-validator');
+
+const { ValidateToken } = require('../middlewares/Auth');
+const { ValidateMongooseID } = require('../middlewares/validateHelper');
+const DashBoardService = require('../../services/dashboard.service');
 
 const router = Router();
+const service = new DashBoardService()
 
-router.get('/1', (req, res) => {
-    return res.send('Hello World 1');
+//@ ROUTE  GET api/classroom/:classroomId/dashboard/maxscoreuser
+//@ DESC   Get max score user of a quizgame
+//@ ACCESS Private (Teacher)
+router.get('/:classroomId/dashboard/maxscoreuser', [ValidateToken, ValidateMongooseID], async (req, res, next) => {
+    const { classroomId } = req.params;
+    const { id, username, role } = req.user;
+
+    try {
+        const { data } = await service.getUserMaxScorequizDashboard({ classroomId, userId: id, username, role });
+        return res.status(data.status).json(data);
+    }
+    catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            error: 'Server error'
+        });
+    }
 });
+
 
 module.exports = router;
 

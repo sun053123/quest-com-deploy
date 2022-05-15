@@ -57,6 +57,7 @@ class ClassroomEntity {
                 .where('isComplete').equals(true)
                 .where('deletedAt').equals(null)
                 .select('-__v -classroomImg') //forspeedup query
+                .lean()
                 .sort({ createdAt: -1 }).skip(SKIP).limit(LIMIT);
 
                 const Count = await ClassroomModel.countDocuments({ isComplete: true });
@@ -71,6 +72,8 @@ class ClassroomEntity {
                 const Classrooms = await ClassroomModel.find({ category })
                 .where('isComplete').equals(true)
                 .where('deletedAt').equals(null)
+                .select('-__v -classroomImg') //forspeedup query
+                .lean()
                 .sort({ createdAt: -1 }).skip(SKIP).limit(LIMIT);
                 const Count = await ClassroomModel.countDocuments({ isComplete: true, category });
                 if (Count === 0) {
@@ -90,6 +93,7 @@ class ClassroomEntity {
         try {
             const Classroom = await ClassroomModel.findById(classroomId)
             .where('deletedAt').equals(null)
+            .lean()
             .sort({ createdAt: -1 });
             return Classroom;
         }
@@ -102,6 +106,7 @@ class ClassroomEntity {
         try {
             const Classroom = await ClassroomModel.find({ creator: { user: userId }, isComplete : true, })
             .where('deletedAt').equals(null)
+            .lean()
             .sort({ createdAt: -1 });
             return Classroom;
         }
@@ -114,6 +119,7 @@ class ClassroomEntity {
         try {
             const Classroom = await ClassroomModel.find({ creator: { user: userId }})
             .where('deletedAt').equals(null)
+            .lean()
             .sort({ createdAt: -1 });
             return Classroom;
         }
@@ -126,6 +132,7 @@ class ClassroomEntity {
         try {
             const Classroom = await ClassroomModel.find({ level }, { isComplete : true })
             .where('deletedAt').equals(null)
+            .lean()
             .sort({ createdAt: -1 });
 
             return Classroom;
@@ -139,6 +146,7 @@ class ClassroomEntity {
         try {
             const Classroom = await ClassroomModel.find({ category })
             .where('deletedAt').equals(null)
+            .lean()
             .sort({ createdAt: -1 });
 
             return Classroom;

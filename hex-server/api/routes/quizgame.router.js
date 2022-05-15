@@ -41,7 +41,6 @@ router.post('/:classroomId/lesson/:lessonId/quizgame/result',[ValidateToken, Val
 
     try {
 
-        //FIXME: จะต้องคืน คำตอบ และ เช็คว่า user เคยทำหรือยัง
         const { data } = await service.GetQuizGameResult({ classroomId, lessonId, userId: id, quizIdSelected });
         return res.status(data.status).json(data);
     } catch (err) {
@@ -67,6 +66,27 @@ router.put('/:classroomId/lesson/:lessonId/quizgame/result',
     // console.log(result, timeTaken, expgain, attempts, score)
     try {
         const { data } = await service.SaveQuizGameResult({ classroomId, lessonId, userId: id, username, result, timeTaken, expgain, attempts, score });
+        return res.status(data.status).json(data);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            error: 'Server error'
+        });
+    };
+});
+
+//@GET api/classroom/:classroomId/lesson/:lessonId/quizgame/result/maxscore
+//@DESC Get a user score of a quizgame
+//@ACCESS Private (Basic)
+router.get('/:classroomId/lesson/:lessonId/quizgame/result/maxscore',
+    [ValidateToken, ValidateMongooseID], async (req, res, next) => {
+
+    const { classroomId, lessonId } = req.params;
+    const { id, username } = req.user;
+
+    //TODO: get top 10 max user score in a single quizgame
+    try {
+        const { data } = await service.GetUserMaxScoreQuizGame({ classroomId, lessonId, userId: id, username });
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);

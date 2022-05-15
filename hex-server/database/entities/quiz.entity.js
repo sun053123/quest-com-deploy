@@ -8,6 +8,7 @@ class QuizEntity {
                 // .populate('creator', ['username', 'email'])
                 // .populate('lesson', ['title','quizCount','quizIsReady','quizIsRandom','quizLimit'])
                 .where('deletedAt').equals(null)
+                .lean()
                 .sort({ createdAt: -1 });
 
             // console.log(Quizzes);
@@ -21,6 +22,7 @@ class QuizEntity {
     async getQuizController({ lessonId }) {
         try {
             const QuizController = await LessonModel.findById(lessonId)
+                .lean()
                 .select('quizCount quizIsReady quizIsRandom quizLimit');
             return QuizController;
         }
@@ -72,6 +74,7 @@ class QuizEntity {
         try {
             const Quiz = await QuizModel.findById(quizId)
             .where('deletedAt').equals(null)
+            .lean()
             .populate('creator', ['username', 'email'])
             .populate('lesson', ['title']);
             return Quiz;

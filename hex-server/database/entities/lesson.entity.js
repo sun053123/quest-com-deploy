@@ -5,11 +5,14 @@ class LessonEntity {
     async getLessons({ classroomId }) {
         try {
             const Lessons = await LessonModel.find({ classroom: classroomId })
-                .select('-comments -__v')
+                .select('-comments -__v' -'content' -'lessonImg' -'lessonFile' -'likes')
                 .where('deletedAt').equals(null)
+                .lean()
                 .populate('creator',['username','email'])
                 .populate('classroom',['title'])
                 .sort({ createdAt: 1 });
+
+            
             return Lessons;
         }
         catch (error) {
@@ -21,6 +24,7 @@ class LessonEntity {
         try {
             const Lesson = await LessonModel.findById(lessonId)
             .where('deletedAt').equals(null)
+            .lean()
             .populate('creator',['username','email','_id'])
             .populate('classroom',['title','content','category']);
             return Lesson;
@@ -34,8 +38,10 @@ class LessonEntity {
         try {
             const Lessons = await LessonModel.find({ classroom: classroomId })
                 .select('-comments -__v -content -lessonImg -lessonFile -likes')
+                .lean()
                 .where('deletedAt').equals(null)
                 .sort({ createdAt: 1 });
+
             return Lessons;
         }
         catch (error) {
@@ -187,7 +193,7 @@ class LessonEntity {
 
     async calculateQuizCountLesson({ lessonId, operation }) {
         try {
-            const Lesson = await LessonModel.findById(lessonId);
+            const Lesson = await LessonModel.findById(lessonId).lean();
             // if(operation === true){
             //     Lesson.quizCount = Lesson.quizCount + 1;
             // }else{
@@ -216,7 +222,7 @@ class LessonEntity {
     async updateLessonQuizCtroller({ LessonId, quizIsReady, quizIsRandom, quizLimit }) {
         try {
 
-            const Lesson = await LessonModel.findById(LessonId);
+            const Lesson = await LessonModel.findById(LessonId).lean();
             if(quizIsReady) Lesson.quizIsReady = quizIsReady;
             if(quizIsRandom) Lesson.quizIsRandom = quizIsRandom;
             if(quizLimit) Lesson.quizLimit = quizLimit;
@@ -233,7 +239,7 @@ class LessonEntity {
     async getCommentsLesson({ lessonId, SKIP, LIMIT }) {
         try {
             
-            const Lesson = await LessonModel.findById(lessonId);
+            const Lesson = await LessonModel.findById(lessonId).lean();
             return  Lesson.comments
         }
         catch (error) {
