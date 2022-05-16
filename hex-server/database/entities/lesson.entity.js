@@ -193,7 +193,7 @@ class LessonEntity {
 
     async calculateQuizCountLesson({ lessonId, operation }) {
         try {
-            const Lesson = await LessonModel.findById(lessonId).lean();
+            const Lesson = await LessonModel.findById(lessonId)
             // if(operation === true){
             //     Lesson.quizCount = Lesson.quizCount + 1;
             // }else{
@@ -268,6 +268,19 @@ class LessonEntity {
                 updateAt: Date.now(),
             }, { new: true });
             return Lesson;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+
+    async checkLessonExist({ lessonId }) {
+        try {
+            const Lesson = await LessonModel.findById(lessonId);
+            if (!Lesson || Lesson === null) {
+               return false;
+            }
+            return true;
         }
         catch (error) {
             throw error;

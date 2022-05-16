@@ -149,7 +149,7 @@ router.put('/:classroomId/lesson/:lessonId/quizcontrol', ValidateMongooseID, Val
     const { id } = req.user;
     const { quizIsRandom, quizLimit } = req.body;
 
-    console.log(quizIsRandom, quizLimit);
+    // console.log(quizIsRandom, quizLimit);
 
     try {
         const { data } = await service.UpdateQuizControl({ classroomId, lessonId, quizIsRandom, quizLimit, userId: id });

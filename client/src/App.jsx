@@ -21,6 +21,7 @@ import QuizGameResult from "./pages/QuizGameResult";
 import Profile from "./pages/Profile";
 
 import { Worker } from '@react-pdf-viewer/core';
+import ErrorPage from "./components/ErrorPage";
 
 
 // const Home = React.lazy(() => import("./pages/Home"));
@@ -47,6 +48,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/loading" element={<LoadingPage />} />
           <Route path="*" element={<NoPage />} />
+          <Route path="/error" element={<ErrorPage />} />
 
           {/* BasicAuth Route />} /> */}
           <Route element={<AuthRoute />} >

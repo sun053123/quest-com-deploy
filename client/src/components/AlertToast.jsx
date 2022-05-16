@@ -10,7 +10,8 @@ function AlertToast() {
     
     // console.log("Alerts :",alerts);
 
-    alerts != null && alerts.map(alert => {
+
+    alerts != null && alerts?.map(alert => {
         console.log("in AlertToast", alert.msg);
         toast(alert.msg, {
                         position: "top-right",

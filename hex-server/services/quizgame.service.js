@@ -1,6 +1,6 @@
 const { LessonEntity, ClassroomEntity, QuizGameEntity, DashboardEntity, ProfileEntity } = require('../database');
 
-const { FormateData } = require('../utils');
+const { FormateData, PackedError } = require('../utils');
 const HTTP_STATUS_CODES = require('../utils/HTTPConstant');
 
 class QuizGameService {
@@ -15,14 +15,16 @@ class QuizGameService {
 
     async checkClassroomAndLessonIsExist({ classroomId, lessonId }) {
         try {
-            const classroom = await this.ClassroomEntity.getClassroomById({ classroomId });
+            const classroom = await this.ClassroomEntity.checkClassroomExist({ classroomId });
             if (!classroom) {
-                return false
+                return FormateData(PackedError("Classroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
+
             }
-            const lesson = await this.LessonEntity.getLessonById({ lessonId });
+            const lesson = await this.LessonEntity.checkLessonExist({ lessonId });
             if (!lesson) {
-                return false
+                return FormateData(PackedError("Lesson or Lesson not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             }
+
             return classroom;
         }
         catch (error) {
@@ -35,41 +37,17 @@ class QuizGameService {
         try {
             const IsExist = await this.checkClassroomAndLessonIsExist({ classroomId, lessonId });
             if(!IsExist){
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Not found Lesson or Classroom!",
-                            "location": "server"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND
-                });
+                return FormateData(PackedError("Quiz not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             }
                 
             const Lesson = await this.LessonEntity.getLessonById({lessonId});
             if (!Lesson) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Not found Lesson!",
-                            "location": "server"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND
-                });
+                return FormateData(PackedError("Lesson not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             }
 
             //check is quizgame are ready to play or not 
             if (Lesson.quizIsReady === false) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Quiz is not Ready!",
-                            "location": "server"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.BAD_REQUEST
-                });
+                return FormateData(PackedError("Quiz is not Ready!", "server", "error", HTTP_STATUS_CODES.BAD_REQUEST)); 
             }
 
             
@@ -99,13 +77,16 @@ class QuizGameService {
             let UserInQuizDashboard = await this.QuizGameEntity.findUserInQuizGame({ userId, lessonId, classroomId });
             if (UserInQuizDashboard) {
                 isSubmitted = true
-                AllResult = UserInQuizDashboard
+                AllResult = UserInQuizDashboard// get all result
             }
 
             const QuizResult = await this.QuizGameEntity.getQuizAnswer({ lessonId, quizIdSelected });
             // console.log(QuizResult)
+            const UserMaxScore = await this.DashboardEntity.findUserHightScoreQuiz({ classroomId, lessonId });
+
             return FormateData({
                 data: {
+                    highScore: UserMaxScore,
                     quizAnswer: QuizResult,
                     isSummited: isSubmitted,
                     allResult: AllResult
@@ -121,58 +102,66 @@ class QuizGameService {
 
         try {
             const isExistClassroom = await this.checkClassroomAndLessonIsExist({classroomId, lessonId})
-            console.log(isExistClassroom)
             if (!isExistClassroom){
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Not found Lesson or Classroom!",
-                            "location": "server",
-                            "type":"error",
-                        }
-                    ],
-                })
+                return FormateData(PackedError("Not found Lesson or Classroom!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
             }
 
             //check user already complete quiz before
             let UserInQuizDashboard = await this.QuizGameEntity.findUserInQuizGame({ userId, lessonId, classroomId });
             if (!UserInQuizDashboard) {
+                //if not complete quiz before save and isSubmitted is true
+                const quizResult = {}
 
-            //if not complete quiz before save and isSubmitted is true
-            const quizResult = {}
+                quizResult.user = userId
+                quizResult.lesson = lessonId
+                quizResult.timeTaken = timeTaken
+                quizResult.expgain = expgain
+                quizResult.attempts = attempts
+                quizResult.score = score
+                quizResult.result = result
 
-            quizResult.user = userId
-            quizResult.lesson = lessonId
-            quizResult.timeTaken = timeTaken
-            quizResult.expgain = expgain
-            quizResult.attempts = attempts
-            quizResult.score = score
-            quizResult.result = result
+                UserInQuizDashboard = await this.QuizGameEntity.saveUserQuizResult({quizResult, classroomId})
 
-            UserInQuizDashboard = await this.QuizGameEntity.saveUserQuizResult({quizResult, classroomId})
+                //update exp to user
+                const ClassroomCategory = await this.ClassroomEntity.getClassroomById({ classroomId });
+                let category = ClassroomCategory.category
 
-            //update exp to user
-            let category = isExistClassroom.category
-            await this.ProfileEntity.updateUserExp({ userId, expgain, category });
-
+                await this.ProfileEntity.updateUserExp({ userId, expgain, category });
             }
             
-            
+            const UserMaxScore = await this.DashboardEntity.findUserHightScoreQuiz({ classroomId, lessonId });
 
             return FormateData({
                 data: {
+                    highScore: UserMaxScore,
                     allResult: UserInQuizDashboard,
                     isSummited: true
                 },
                 status: HTTP_STATUS_CODES.OK
             });
-            
-            
         } catch (error) {
             throw error;
         }
-            
+    }
+
+    async GetUserMaxScoreQuizGame({ classroomId, lessonId, userId }) {
+        try {
+            const isExistClassroom = await this.checkClassroomAndLessonIsExist({classroomId, lessonId})
+            if (!isExistClassroom){
+                return FormateData(PackedError("Not found Lesson or Classroom!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
+            }
+
+            //find max user in single lesson //use in result page
+            const UserMaxScore = await this.DashboardEntity.findUserHightScoreQuiz({ classroomId, lessonId, userId });
+            return FormateData({
+                statistic: UserMaxScore,
+                status: HTTP_STATUS_CODES.OK
+            });
+        } catch (error) {
+            throw error;
         }
+    }
+
 }
 
 module.exports = QuizGameService;

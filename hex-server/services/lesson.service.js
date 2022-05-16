@@ -1,6 +1,6 @@
 const { LessonEntity, ClassroomEntity } = require('../database');
 
-const { FormateData } = require('../utils');
+const { FormateData, PackedError } = require('../utils');
 const HTTP_STATUS_CODES = require('../utils/HTTPConstant');
 
 class LessonService {
@@ -13,13 +13,13 @@ class LessonService {
     //TeacherCreator Operation Only
     async checkClassroomIsExistandIsCreator({ classroomId, userId }) {
         try {
-            const classroom = await this.ClassroomEntity.getClassroomById({ classroomId });
+            const classroom = await this.ClassroomEntity.checkClassroomExist({ classroomId });
 
             if (!classroom) {
-                return false;
+                return FormateData(PackedError("Classroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
             }
             if (classroom.creator.user.toString() !== userId) {
-                return false;
+                return FormateData(PackedError("Not Creator!", "server", "error", HTTP_STATUS_CODES.UNAUTHORIZED));
             }
             return true;
         } catch (error) {
@@ -33,10 +33,10 @@ class LessonService {
         try {
             const classroom = await this.ClassroomEntity.getClassroomById({ classroomId });
             if (!classroom) {
-                return false
+                return FormateData(PackedError("Classroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
             }
             if (classroom.isComplete === false) {
-                return false
+                return FormateData(PackedError("Classroom not Ready!", "server", "error", HTTP_STATUS_CODES.BAD_REQUEST));
             }
             return true
         } catch (error) {
@@ -48,7 +48,7 @@ class LessonService {
         try {
             const classroom = await this.ClassroomEntity.getClassroomById({ classroomId });
             if (!classroom) {
-                return false
+                return FormateData(PackedError("Classroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
             }
             return true
         } catch (error) {
@@ -73,30 +73,12 @@ class LessonService {
         try {
             const isExistClassroom = this.checkClassroomIsExist({ classroomId });
             if (!isExistClassroom) {
-                return FormateData({
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                    error: [
-                        {
-                            "msg": "Classroom not found! or Not Ready!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ]
-                });
+                return FormateData(PackedError("Classroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
             }
 
             const Lesson = await this.LessonEntity.getLessonById({ lessonId });
             if (!Lesson) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Lesson not found",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                })
+                return FormateData(PackedError("Lesson not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
             }
             const LessonNav = await this.LessonEntity.getLessonsNavigation({ classroomId });
 
@@ -117,29 +99,11 @@ class LessonService {
         try {
             const Classroom = await this.ClassroomEntity.getClassroomById({ classroomId });
             if (!Classroom) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Classroom not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Classroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
             };
 
             if (userId != Classroom.creator.user.toString()) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "You are not the creator of this classroom!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.UNAUTHORIZED,
-                });
+                return FormateData(PackedError("You are not the creator of this classroom!", "server", "error", HTTP_STATUS_CODES.UNAUTHORIZED));
             };
 
             const CreatedLesson = await this.LessonEntity.createLesson({
@@ -152,16 +116,7 @@ class LessonService {
                 isShowLessonImg
             });
             if (!CreatedLesson) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Lesson not created!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
-                });
+                throw new Error("Lesson not created!");
             }
             await this.ClassroomEntity.plusLessonCountClassroom({ classroomId, });
 
@@ -179,43 +134,16 @@ class LessonService {
         try {
             const isExistclassroomAndCreator = await this.checkClassroomIsExistandIsCreator({ classroomId, userId });
             if (!isExistclassroomAndCreator) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "You are not the creator of this classroom!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.UNAUTHORIZED,
-                });
+                return FormateData(PackedError("You are not the creator of this classroom!", "server", "error", HTTP_STATUS_CODES.UNAUTHORIZED)); 
             };
 
             const Lesson = await this.LessonEntity.getLessonById({ lessonId });
             if (!Lesson) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Lesson not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Lesson not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             }
 
             if (userId != Lesson.creator._id.toString()) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "You are not the creator of this lesson!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.UNAUTHORIZED,
-                });
+                return FormateData(PackedError("You are not the creator of this lesson!", "server", "error", HTTP_STATUS_CODES.UNAUTHORIZED)); 
             }
 
             const UpdatedLesson = await this.LessonEntity.updateLesson({
@@ -227,16 +155,7 @@ class LessonService {
                 lessonFile
             });
             if (!UpdatedLesson) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Lesson not updated!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
-                });
+                throw new Error("Can't update lesson!");
             }
 
             return FormateData({
@@ -252,58 +171,22 @@ class LessonService {
         try {
             const isExistclassroomAndCreator = await this.checkClassroomIsExistandIsCreator({ classroomId, userId });
             if (!isExistclassroomAndCreator) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "You are not the creator of this classroom!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.UNAUTHORIZED,
-                });
+                return FormateData(PackedError("You are not the creator of this Classroom!", "server", "error", HTTP_STATUS_CODES.UNAUTHORIZED)); 
             };
 
             const Lesson = await this.LessonEntity.getLessonById({ lessonId });
             if (!Lesson) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Lesson not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Lesson not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
             }
 
             if (userId != Lesson.creator._id.toString()) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "You are not the creator of this lesson!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.UNAUTHORIZED,
-                });
+                return FormateData(PackedError("You are not the creator of this lesson!", "server", "error", HTTP_STATUS_CODES.UNAUTHORIZED));
             }
 
 
             const DeletedLesson = await this.LessonEntity.deleteLesson({ lessonId });
             if (!DeletedLesson) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Lesson not deleted!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
-                });
+                throw new Error("Can't delete lesson!");
             }
 
             await this.ClassroomEntity.minusLessonCountClassroom({ classroomId });
@@ -321,32 +204,17 @@ class LessonService {
         try {
             const isExistClassroom = this.checkClassroomIsExist({ classroomId });
             if (!isExistClassroom) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Classroom not found! or Not Ready!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Classroom not found! or Not Ready!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
             };
             const Lesson = await this.LessonEntity.getLessonById({ lessonId });
             if (!Lesson) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Lesson not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Lesson not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
             }
 
             const LikedLesson = await this.LessonEntity.pushLikeLesson({ lessonId, userId });
+            if (!LikedLesson) {
+                throw new Error("Can't like lesson!");
+            }
 
             return FormateData({
                 likes: LikedLesson,
@@ -362,29 +230,11 @@ class LessonService {
         try {
             const isExistClassroom = this.checkClassroomIsExist({ classroomId });
             if (!isExistClassroom) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Classroom not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Classroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
             };
             const Lesson = await this.LessonEntity.getLessonById({ lessonId });
             if (!Lesson) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Lesson not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Lesson not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
             }
 
             const CreatedComment = await this.LessonEntity.pushComment({
@@ -394,16 +244,7 @@ class LessonService {
                 comment,
             });
             if (!CreatedComment) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Comment not created!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
-                });
+                throw new Error("Can't create comment!");
             }
 
             return FormateData({
@@ -419,70 +260,26 @@ class LessonService {
         try {
             const isExistClassroom = this.checkClassroomIsExist({ classroomId });
             if (!isExistClassroom) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Classroom not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Classroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             };
+
             const Lesson = await this.LessonEntity.getLessonById({ lessonId });
             if (!Lesson) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Lesson not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Lesson not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             }
 
             const Comment = await this.LessonEntity.findCommentLessonById({ commentId });
             if (!Comment) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Comment not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Comment not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             }
 
             if (userId != Comment.user.toString()) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "You are not the creator of this comment!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.UNAUTHORIZED,
-                });
+                return FormateData(PackedError("You are not the creator of this comment!", "server", "error", HTTP_STATUS_CODES.UNAUTHORIZED)); 
             }
 
             const DeletedComment = await this.LessonEntity.deleteCommentLesson({ commentId });
             if (!DeletedComment) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Comment not deleted!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
-                });
+                throw new Error("Can't delete comment!");
             }
 
             return FormateData({
@@ -498,47 +295,23 @@ class LessonService {
         try {
             const isExistClassroom = this.checkClassroomIsExist({ classroomId });
             if (!isExistClassroom) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Classroom not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Classroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             }
 
             const Lesson = await this.LessonEntity.getLessonById({ lessonId });
             if (!Lesson) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Lesson not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Lesson not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             };
 
             const Comment = await this.LessonEntity.findCommentLessonById({ lessonId, commentId });
             if (!Comment) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Comment not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Comment not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             };
 
             const LikedComment = await this.LessonEntity.pushLikeCommentLesson({ lessonId, commentId, userId });
+            if (!LikedComment) {
+                throw new Error("Can't like comment!");
+            };
 
             return FormateData({
                 likes: LikedComment,
@@ -554,44 +327,17 @@ class LessonService {
         try {
             const isExistClassroom = this.checkClassroomIsExistandIsCreator({ classroomId, userId });
             if (!isExistClassroom) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Classroom not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
-            }
+                return FormateData(PackedError("Classroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
+            };
 
             const Lesson = await this.LessonEntity.getLessonById({ lessonId });
             if (!Lesson) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Lesson not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Lesson not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             }
 
             const UpdatedQuizController = await this.LessonEntity.updateQuizController({ lessonId, quizIsReady, quizIsRandom, quizLimit });
             if (!UpdatedQuizController) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "QuizController not updated!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
-                });
+                throw new Error("Can't update quiz controller!");
             }
 
             return FormateData({
@@ -604,35 +350,18 @@ class LessonService {
         }
     }
 
-    async GetCommentLesson({ lessonId, classroomId, userId }) {
+    async GetCommentLesson({ lessonId, classroomId, userId, page }) {
         try {
             const isExistClassroom = this.checkClassroomIsExist({ classroomId });
             if (!isExistClassroom) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Classroom not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Classroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             }
             const Lesson = await this.LessonEntity.getLessonById({ lessonId });
             if (!Lesson) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Lesson not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Lesson not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             }
 
+            // pagination comment
             if (page <= 0) {
                 page = 1;
             }
@@ -640,8 +369,10 @@ class LessonService {
             const LIMIT = 10;
             const SKIP = (page - 1) * LIMIT;
 
-
             const Comments = await this.LessonEntity.getCommentsLesson({ lessonId, LIMIT, SKIP });
+            if (!Comments) {
+                throw new Error("Can't get comments!");
+            }
 
             return FormateData({
                 comments: Comments,
@@ -657,30 +388,12 @@ class LessonService {
         try {
             const isExistClassroom = this.checkClassroomIsExistandIsCreator({ classroomId, userId });
             if (!isExistClassroom) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Classroom not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Classroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             }
 
             const Lesson = await this.LessonEntity.getLessonById({ lessonId });
             if (!Lesson) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Lesson not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Lesson not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             }
             const UpdatedLessonPDF = await this.LessonEntity.uploadLessonPDF({ lessonId, pdfFile });
 
@@ -699,33 +412,18 @@ class LessonService {
 
             const isExistClassroom = this.checkClassroomIsExistandIsCreator({ classroomId, userId });
             if (!isExistClassroom) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Classroom not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Calssroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             }
 
             const Lesson = await this.LessonEntity.getLessonById({ lessonId });
             if (!Lesson) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Lesson not found!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Lesson not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             }
 
             const UpdatedLessonPDF = await this.LessonEntity.updateLessonPDF({ lessonId, pdfFile });
+            if (!UpdatedLessonPDF) {
+                throw new Error("Can't update pdf file!");
+            }
 
             return FormateData({
                 pdffile: UpdatedLessonPDF,
@@ -735,7 +433,6 @@ class LessonService {
             throw error;
         }
     }
-
 
 };
 

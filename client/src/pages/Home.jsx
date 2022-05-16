@@ -205,7 +205,7 @@ export default function Blog() {
       };
     }
     // eslint-disable-next-line
-  }, [lastScrollY]);
+  }, [lastScrollY, show]);
 
   //State Loading while Retrieving Data
   if (isLoading || isLoadingOwnClassroom || isLoadingScore) {

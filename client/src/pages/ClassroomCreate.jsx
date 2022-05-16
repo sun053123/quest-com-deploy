@@ -7,19 +7,12 @@ import { AuthContext } from "../store/Contexts/AuthContext";
 import { AlertContext } from "../store/Contexts/AlertContext";
 import { AlertShow } from "../store/Actions/AlertAction";
 
-import { Grow, Box, Grid, Typography, TextField, ListItem,ListItemText,List,Divider, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { CssBaseline,Container, ListItemIcon, Grow, Box, Grid, Typography, TextField, ListItem,ListItemText,List,Divider, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
 import LoadingButton from '@mui/lab/LoadingButton';
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Container from "@mui/material/Container";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
+
+// import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+// import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 
@@ -43,7 +36,7 @@ function ClassroomCreate() {
   const { userinfo } = useContext(AuthContext);
   const { AlertDispatch } = useContext(AlertContext);
 
-  const [progress, setProgress] = useState(0);
+  // const [progress, setProgress] = useState(0);
   const [isvalidateTitle, setIsvalidateTitle] = useState(false);
   const [isvalidateDescription, setIsvalidateDescription] = useState(false);
   const [isvalidateContent, setIsvalidateContent] = useState(false);
@@ -52,8 +45,6 @@ function ClassroomCreate() {
   const [isvalidateClassroomImg, setIsvalidateClassroomImg] = useState(false);
   const [isvalidateTags, setIsvalidateTags] = useState(false);
   const [isPassValidate, setIsPassValidate] = useState(false);
-
-  
 
   const [_id, setId] = useState("");
   

@@ -9,12 +9,19 @@ import { AlertContext } from '../store/Contexts/AlertContext';
 import { AlertShow } from '../store/Actions/AlertAction';
 import useStateQuizContext from '../store/Contexts/QuizContext';
 
-import { CssBaseline,Box,Card,Button, Grid } from '@mui/material';
+import { CssBaseline,Box,Card,Button, Grid, Container, Paper, Typography, Divider } from '@mui/material';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 
 import quizgame_bg from '../assets/img/quizgame_bg.jpg';
 import LoadingPage from '../components/LoadingPage';
+import ExpCard from '../components/QuizResult/ExpCard';
+import ScoreCard from '../components/QuizResult/ScoreCard';
+import AttemptCard from '../components/QuizResult/AttemptCard';
+import TimeCard from '../components/QuizResult/TimeCard';
+import IsSubmitCard from '../components/QuizResult/IsSubmitCard';
+import HighScoreTable from '../components/QuizResult/HighScoreTable';
 
 const BASE_SCORE_PER_LESSON = 50
 
@@ -31,6 +38,7 @@ function QuizGameResult() {
   const [expgain, setExpgain] = useState(0);
   const [timeTaken, setTimeTaken] = useState(0);
   const [isSubmitedScore, setIsSubmitedScore] = useState(false);
+  const [stdHighScore, setStdHighScore] = useState([]);
 
   useEffect(() => {
     
@@ -46,14 +54,24 @@ function QuizGameResult() {
   , [])
 
   const calculateCorrect = async (questionSelectedAnswer) => {
+    let tempSocre = questionSelectedAnswer.reduce((acc, curr) => {
+      return curr.answer === curr.selected ? acc + 1 : acc;
+    }, 0);
+
+    //add isCorrect to questionSelectedAnswer if it is correct
+    questionSelectedAnswer.forEach(question => {
+      if (question.answer === question.selected) {
+        question.isCorrect = true;
+      } else {
+        question.isCorrect = false;
+      }
+    });
+
+    // //check is correct count and make score
     // let tempSocre = questionSelectedAnswer.reduce((acc, curr) => {
-    //   return curr.answer === curr.selected ? acc + 1 : acc;
+    //   return curr.isCorrect === true ? acc + 1 : acc;
     // }, 0);
 
-    //check is correct count and make score
-    let tempSocre = questionSelectedAnswer.reduce((acc, curr) => {
-      return curr.isCorrect === true ? acc + 1 : acc;
-    }, 0);
     setScore(tempSocre);
     console.log("correct = ",tempSocre);
     console.log(questionSelectedAnswer)
@@ -63,7 +81,11 @@ function QuizGameResult() {
   const calculateScore = async (tempSocre, questionSelectedAnswer) => {
     
     let tempExp = 0;
-    const attempts = quizcontext.attempts;
+    let attempts = quizcontext.attempts;
+
+    if (attempts > 6) {
+      attempts = 6; //manimum ceil for is greater than 50%
+    }
 
     //calculate ceiling exp
     let ceilingExp = ((attempts -1) / 10) * 50;
@@ -111,8 +133,7 @@ function QuizGameResult() {
     })
   }
 
-
-  const { isLoading, isError, isSuccess, mutate } = useMutation(
+  const { error, isLoading, isError, isSuccess, mutate } = useMutation(
     async (packSelected) => {
       return await axios.post(`http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/quizgame/result`, packSelected )
     }
@@ -126,31 +147,25 @@ function QuizGameResult() {
             ...option,
             //join user answer and quiz answer
             ...(data.data.data.quizAnswer.find(answer => answer._id === option.gamequizId)),
-            //add isCorrect
-            ...(data.data.data.quizAnswer.find(answer => answer.answer === option.selected) ? {isCorrect: true} : {isCorrect: false})
         }))
         // console.log("questionSelectedAnswer", questionSelectedAnswer)
         setQuizAnswer(questionSelectedAnswer)
         calculateCorrect(questionSelectedAnswer)
         setTimeTaken(quizcontext.timeTaken)
+        setStdHighScore(data.data.data.highScore)
+        console.log("highscore = ",data.data.data.highScore)
         // ถ้าเคยทำแล้ว ก็มาเล่นได้ปกติแล้ว ไม่ต้องนับ attempts เลย
          // return quizanswer and isSubmitedScore
          if(data.data.data.isSummited === true){
           setQuizContext({
             ...quizcontext,
-            selectedOptions: [],
             attempts: 0,
             currentQuizGame: null,
-            timeTaken: 0,
           })
           //clear quiz context currentQuizGame
           setIsSubmitedScore(true);
         }
-        
       },
-      onError: (err) => {
-        AlertDispatch(AlertShow(err.response.data.error, "danger"))
-      }
     }
   );
 
@@ -159,128 +174,123 @@ function QuizGameResult() {
     return <LoadingPage />
   }
 
+  if(isError){
+    AlertDispatch(AlertShow(error.response.data.error, "danger"))
+    return navigate("/loading");
+  }
+
    if(isSuccess){
   return (
     <>
     <CssBaseline />
     <ToastContainer />
     <Box sx={{
-      width: "100%",
-      height: "100%",
+      // width: "100%",
+      height: "90vh",
       display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
+      // flexDirection: "column",
+      // alignItems: "center",
+      // justifyContent: "center",
+      backgroundColor: "#fafafa",
       backgroundImage: `url(${quizgame_bg})`,
+      padding: "2rem",
     }}>
-      <Card sx={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "white",
-        borderRadius: "10px",
-        boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
-        padding: "20px",
-        margin: "20px",
-        overflow: "auto",
-        minHeight: "680px",
-      }}>
-        {/* make 4 grids square */}
-        <Grid container spacing={3}>
-          <Grid item xs={6} sx={{backgroundColor:"red"}}>
-          <h3>attempts {quizcontext.attempts}</h3>
-        <h3>time taken {timeTaken} secs</h3>
-        <h2>Score: {score}</h2>
-        <h2>Total Question: {quizAnswer.length}</h2>
-        <h2>
-          {quizAnswer.filter(answer => answer.selected === answer.answer).length > 0 ?
-            <>
-              {/* <h2>Correct Answer:</h2>
-              {quizAnswer.filter(answer => answer.selected === answer.answer).map(answer => (
-                <p>{answer.question}</p>
-              ))} */}
-            </>
-            :
-            <>
-              <h2>Wrong Answer:</h2>
-              {quizAnswer.filter(answer => answer.selected !== answer.answer).map(answer => (
-                <p>{answer.question}</p>
-              ))}
-            </>
-          }
-        </h2>
-        <h2>Unanswered:</h2>
-        {quizAnswer.filter(answer => answer.selected === undefined).map(answer => (
-          <p>{answer.question}</p>
-        ))}
-          </Grid>
-          <Grid item xs={6} sx={{backgroundColor:"green"}}>
-            <Button variant="contained" color="primary" onClick={handleSubmitScore} disabled={isSubmitedScore}>
-              Submit Score
-            </Button>
-            <Button variant="contained" color="primary" onClick={
-  () => navigate(`/classroom/${classroomId}/lesson/${lessonId}/quizgame`)
-            } >
-              Restart Quiz
-              </Button>
-          </Grid>
-          <Grid item xs={6} sx={{backgroundColor:"blue"}}>
-          </Grid>
-          <Grid item xs={6} sx={{backgroundColor:"wheat"}}>
-          </Grid>
-        </Grid>
-        
-      </Card>
-    
+      <Container>
+        <Paper elevation={3}>
+          <Box sx={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(255,255,255,0.5)",
+          }}>
+            <Grid container spacing={3} justify="center" >
+              <Grid item xs={4} sm={4} sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                
+              }}>
+                {/* set 2 button , retry and back to lesson */}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => 
+                    navigate(`/classroom/${classroomId}/lesson/${lessonId}`)
+                  }
+                  sx={{
+                    padding: "1rem",
+                    height: "50px",
+                    width: "120px",
+                  }}
+                >
+                  Back to Lesson
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() =>
+                    navigate(`/classroom/${classroomId}/lesson/${lessonId}/quizgame`)
+                  }
+                  sx={{
+                    height: "50px",
+                    width: "120px",
+                  }}
+                >
+                  Retry
+                </Button>
+              </Grid>
+              <Grid item xs={4} sm={4} sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}>
+            <Typography variant="h4" component="h1" gutterBottom mt={4} fontWeight="bold">
+              Quiz Summary
+            </Typography>
+            <AppRegistrationIcon fontSize="large" />
+            </Grid>
+            <Grid item xs={4} sm={4}>
+              </Grid>
+            </Grid>
+            <Grid container spacing={3} justify="center" padding={2}>
+              <Grid item xs={12} sm={4}>
+                <AttemptCard attempts={quizcontext.attempts+1} isSubmitted={isSubmitedScore} />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <TimeCard TimeTaken={timeTaken} quizLength={quizAnswer.length}  />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <IsSubmitCard isSubmitted={isSubmitedScore} />
+              </Grid>
+            </Grid>
+            <Grid container spacing={3} justify="center" padding={2}>
+            <Grid item sm={2} />
+            
+              <Grid item xs={12} sm={4}>
+                <ExpCard expgain={expgain} />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <ScoreCard score={score} quizLength={quizAnswer.length} />
+              </Grid>
+              <Grid item sm={2} />
+            </Grid>
 
+            <Grid container spacing={3} justify="center" padding={2}>
+              <Grid item xs={12} sm={12}>
+                <HighScoreTable highScore={stdHighScore} />
+              </Grid>
+            </Grid>
+
+          </Box>
+        </Paper>
+      </Container>
     </Box>
     </>
-  )
-    }
+    )
+  }
 }
 
 export default QuizGameResult
-
-
-
-{/* <h1>Quiz Game Result</h1>
-        <h3>attempts {quizcontext.attempts}</h3>
-        <h3>time taken {quizcontext.timeTaken} secs</h3>
-        <h2>Score: {score}</h2>
-        <h2>Total Question: {quizcontext.selectedOptions.length}</h2>
-        <h2>Correct Answer: {quizAnswer.filter(answer => answer.answer === answer.selected).length}</h2>
-        <h2>Wrong Answer: {quizAnswer.filter(answer => answer.answer !== answer.selected).length}</h2>
-        <h2>Unanswered: {quizAnswer.filter(answer => answer.selected === undefined).length}</h2>
-        <h2>
-          {quizAnswer.filter(answer => answer.selected === answer.answer).length > 0 ?
-            <>
-              <h2>Correct Answer:</h2>
-              {quizAnswer.filter(answer => answer.selected === answer.answer).map(answer => (
-                <p>{answer.question}</p>
-              ))}
-            </>
-            :
-            <>
-              <h2>Wrong Answer:</h2>
-              {quizAnswer.filter(answer => answer.selected !== answer.answer).map(answer => (
-                <p>{answer.question}</p>
-              ))}
-            </>
-          }
-        </h2>
-        <h2>Unanswered:</h2>
-        {quizAnswer.filter(answer => answer.selected === undefined).map(answer => (
-          <p>{answer.question}</p>
-        ))}
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            navigate(`/classroom/${classroomId}/lesson/${lessonId}/quizgame`)
-          }
-          }
-        >
-          Back
-        </Button> */}

@@ -124,7 +124,8 @@ function QuizGame() {
          //if user is student, go to result page
        return navigate(`/classroom/${classroomId}/lesson/${lessonId}/quizgame/result`);
        }else{
-         //if user is teacher, go to lesson
+         //if user is teacher, go to lesson //but clear quizcontext first
+         setQuizContext({ selectedOptions: [], timeTaken: 0, currentQuizGame: null, attempts: 0 });
         return navigate(`/classroom/${classroomId}/lesson/${lessonId}`);
        }
     }

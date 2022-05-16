@@ -128,14 +128,18 @@ class ClassroomEntity {
         }
     }
 
-    async getClassroomByLevel({ level }) {
+    async getClassroomByKeyWords({ keywords }) {
         try {
-            const Classroom = await ClassroomModel.find({ level }, { isComplete : true })
+            //search by keywords
+            const Classrooms = await ClassroomModel.find({
+                $text: { $search: keywords }
+            })
             .where('deletedAt').equals(null)
+            .select('-__v -classroomImg') //forspeedup query
             .lean()
             .sort({ createdAt: -1 });
 
-            return Classroom;
+            return Classrooms;
         }
         catch (error) {
             throw error;
@@ -211,6 +215,19 @@ class ClassroomEntity {
             
             const UpdatedClassroom = await Classroom.save();
             return UpdatedClassroom;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+
+    async checkClassroomExist({ classroomId }) {
+        try {
+            const Classroom = await ClassroomModel.findById(classroomId);
+            if (Classroom === null) {
+                return false;
+            }
+            return true;
         }
         catch (error) {
             throw error;

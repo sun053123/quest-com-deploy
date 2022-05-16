@@ -63,6 +63,9 @@ class UserEntity {
         async updateScoreToUser({ userId, score, category }) {
             try {
                 const UserScore = await ProfileModel.findOne({ user: userId });
+
+                // console.log("category",category);
+
                 if(category === "science"){
                     UserScore.science_score++;
                 }else if(category === "math"){

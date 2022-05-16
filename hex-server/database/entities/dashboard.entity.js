@@ -146,7 +146,38 @@ class DashboardEntity {
     //         , { timeTaken: 0 });
     //         // console.log(DashBoard);
            
+    async findUserHightScoreQuiz({ classroomId, lessonId }) {
+        try {
+            const DashBoard = await DashboardModel.findOne({ classroom: classroomId })
+            //find where DashBoard.studentCompleteQuiz.lesson = lessonId
+            .lean()
+            .select('-studentCompleteQuiz.result -studentCompleteQuiz.deletedAt -studentCompleteQuiz.createdAt -studentCompleteQuiz.updatedAt')
+            .populate('classroom',['title','lessonCount','studentCount','level','category'])
+            .populate('studentCompleteQuiz.lesson',['title'])
+            .populate('studentCompleteQuiz.user',['username','email']);
+            // console.log(DashBoard);
 
+            //find the highest score
+            //find student that have max expgain in studentCompleteQuiz and lesson._id = lessonId
+            // const Student = DashBoard.studentCompleteQuiz.find(student => student.lesson._id.toString() === lessonId && student.expgain === DashBoard.studentCompleteQuiz.reduce((max, student) => {
+            //     return student.expgain > max ? student.expgain : max;
+            // }
+            // , 0));
+
+            //find max 10 student with high expgain in studentCompleteQuiz and lesson._id = lessonId
+            const Student = DashBoard.studentCompleteQuiz.filter(student => student.lesson._id.toString() === lessonId).sort((a, b) => {
+                return b.expgain - a.expgain;
+            }
+            , { expgain: 0 }).slice(0, 10);
+            
+            // console.log("hihg score " ,Student);
+
+            return Student;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
 
 
 

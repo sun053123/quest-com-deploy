@@ -27,6 +27,7 @@ import LoadingPage from "../components/LoadingPage";
 import ErrorPage from "../components/ErrorPage";
 import ClassroomBody from "../components/Classroom/ClassroomBody";
 import ClassroomContent from "../components/Classroom/ClassroomContent";
+import NoPage from "./NoPage";
 
 function Classroom() {
   const { userinfo } = useContext(AuthContext);
@@ -79,7 +80,7 @@ function Classroom() {
   }
 
   if (isError) {
-    return <ErrorPage />;
+    return navigate('/loading');
   }
 
   // delete classroom
@@ -92,7 +93,6 @@ function Classroom() {
         window.location.href = "/";
       }, 1000);
     } catch (error) {
-      console.log(error);
       AlertDispatch(AlertShow(error.response.data.error));
     }
   };

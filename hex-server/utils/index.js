@@ -40,6 +40,15 @@ module.exports.ValidateSignature = (req) => {
     };
 };
 
-
-
-
+module.exports.PackedError = (msg, location, type, status) => {
+    return {
+        error: [
+        {
+            "msg": msg,
+            "location": location,
+            "type": type,
+        }
+        ],
+        status: status
+    }
+}

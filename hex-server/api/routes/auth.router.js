@@ -47,7 +47,6 @@ router.post('/', [[
 ], ValidatorErrorHelper], async (req, res, next) => {
 
     const { email, password } = req.body;
-    console.log("do login")
 
     try {
         const { data } = await service.LoginUser({ email, password });
@@ -74,7 +73,6 @@ router.get('/', ValidateToken, async (req, res, next) => {
 });
 
 router.post('/google-login', async (req, res, next) => {
-    console.log("google login")
 
     const { tokenId } = req.body;
     try{

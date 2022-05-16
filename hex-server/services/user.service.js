@@ -1,6 +1,6 @@
 const { UserEntity, ProfileEntity, DashboardEntity } = require('../database');
 
-const { FormateData } = require('../utils');
+const { FormateData, PackedError } = require('../utils');
 const HTTP_STATUS_CODES = require('../utils/HTTPConstant'); 
 
 class UserService{
@@ -15,30 +15,12 @@ class UserService{
 
         const Users = await this.UserEntity.getUserById({ userId });
         if (!Users) {
-            return FormateData({
-                error: [
-                    {
-                        "msg": "Not found User!",
-                        "location": "server",
-                        "type": "error"
-                    }
-                ],
-                status: HTTP_STATUS_CODES.NOT_FOUND
-            });
+           return FormateData(PackedError("Not found User!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
         }
 
         const UserScores = await this.UserEntity.getUserScores({ userId });
         if (!UserScores) {
-            return FormateData({
-                error: [
-                    {
-                        "msg": "Not found User Scores!",
-                        "location": "server",
-                        "type": "error"
-                    }
-                ],
-                status: HTTP_STATUS_CODES.NOT_FOUND
-            });
+            return FormateData(PackedError("Not found UserScores!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
         }
 
         return FormateData({
@@ -52,16 +34,7 @@ class UserService{
             
             const Users = await this.UserEntity.getUserById({ userId });
             if (!Users) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Not found User!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND
-                });
+                return FormateData(PackedError("Not found User!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
             }
 
             const UserOwnClassroom = await this.UserEntity.getUserOwnClassroom({ userId });

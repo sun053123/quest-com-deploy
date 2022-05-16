@@ -97,4 +97,3 @@ router.get('/:classroomId/lesson/:lessonId/quizgame/result/maxscore',
 });
 
 module.exports = router;
-

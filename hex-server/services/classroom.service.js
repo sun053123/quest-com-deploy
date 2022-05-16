@@ -1,6 +1,6 @@
 const { ClassroomEntity, DashboardEntity, LessonEntity } = require('../database');
 
-const { FormateData } = require('../utils');
+const { FormateData, PackedError } = require('../utils');
 const HTTP_STATUS_CODES = require('../utils/HTTPConstant');
 
 class ClassroomService {
@@ -36,15 +36,7 @@ class ClassroomService {
             });
 
             if (!CreatedClassroom && !CreatedDashboard) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Classroom not created!",
-                            "location": "server"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
-                })
+                return FormateData(PackedError("Classroom not created!", "server", "error", HTTP_STATUS_CODES.SERVICE_UNAVAILABLE));
             }
 
             return FormateData({
@@ -55,7 +47,6 @@ class ClassroomService {
                 status: HTTP_STATUS_CODES.CREATED
             });
         } catch (error) {
-            console.log(error);
             throw error;
         }
     }
@@ -91,15 +82,7 @@ class ClassroomService {
 
             //check classroom is exist
             if (!Classroom) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Classroom not found!",
-                            "location": "server"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Classroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
             }
 
             //check classroom iscomplete = not (return for who not creator)
@@ -109,15 +92,7 @@ class ClassroomService {
 
                 //if not creator return unauthorized
                 if (userId !== Classroom.creator.user.toString()) {
-                    return FormateData({
-                        error: [
-                            {
-                                "msg": "You are not creator of this classroom!",
-                                "location": "server"
-                            }
-                        ],
-                        status: HTTP_STATUS_CODES.UNAUTHORIZED
-                    });
+                    return FormateData(PackedError("You are not creator of this classroom!", "server", "error", HTTP_STATUS_CODES.UNAUTHORIZED));
                 }
             }
 
@@ -187,38 +162,14 @@ class ClassroomService {
         }
 
         try {
-            
             const Classroom = await this.ClassroomEntity.getClassroomById({ classroomId });
             if (!Classroom) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Classroom not found!",
-                            "location": "server"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Classroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
             }
 
             if (userId !== Classroom.creator.user.toString()) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "You are not creator of this classroom!",
-                            "location": "server"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.UNAUTHORIZED
-                });
+                return FormateData(PackedError("You are not creator of this classroom!", "server", "error", HTTP_STATUS_CODES.UNAUTHORIZED));
             }
-
-            // if (title) Classroom.title = title;
-            // if (description) Classroom.description = description;
-            // if (classroomImg) Classroom.classroomImg = classroomImg;
-            // if (category) Classroom.category = category;
-            // if (level) Classroom.level = level;
-            // if (tags) Classroom.tags = tags;
 
             let ClassroomUpdateFields = {};
 
@@ -233,15 +184,7 @@ class ClassroomService {
             const UpdatedClassroom = await this.ClassroomEntity.updateClassroom({ classroomId, ClassroomUpdateFields });
 
             if (!UpdatedClassroom) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Classroom not updated!",
-                            "location": "server"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
-                });
+                return FormateData(PackedError("Classroom not updated!", "server", "error", HTTP_STATUS_CODES.SERVICE_UNAVAILABLE));
             }
 
             return FormateData({
@@ -257,42 +200,17 @@ class ClassroomService {
         try {
             const Classroom = await this.ClassroomEntity.getClassroomById({ classroomId });
             if (!Classroom) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Classroom not found!",
-                            "location": "server"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                });
+                return FormateData(PackedError("Classroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
             }
 
             if (userId !== Classroom.creator.user.toString()) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "You are not creator of this classroom!",
-                            "location": "server"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.UNAUTHORIZED
-                });
-
+                return FormateData(PackedError("You are not creator of this classroom!", "server", "error", HTTP_STATUS_CODES.UNAUTHORIZED));
             }
 
             const DeletedClassroom = await this.ClassroomEntity.deleteClassroom({ classroomId });
             if (!DeletedClassroom) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Classroom not deleted!",
-                            "location": "server"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
-                });
-            }
+                
+            }return FormateData(PackedError("Classroom not deleted!", "server", "error", HTTP_STATUS_CODES.SERVICE_UNAVAILABLE));
 
             return FormateData({
                 message: "Classroom deleted successfully!",
@@ -302,7 +220,6 @@ class ClassroomService {
             throw error;
         }
     }
-
 }
 
 module.exports = ClassroomService;

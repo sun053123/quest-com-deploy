@@ -1,6 +1,6 @@
 const { DashboardEntity } = require('../database');
 
-const { FormateData } = require('../utils');
+const { FormateData, PackedError } = require('../utils');
 const HTTP_STATUS_CODES  = require('../utils/HTTPConstant');
 
 class DashBoardService {
@@ -12,28 +12,12 @@ class DashBoardService {
         try {
             const Dashboard = await this.DashboardEntity.findMaxScoreQuizStudentInClassroom({ classroomId });
             if (!Dashboard) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Not found Dashboard!",
-                            "location": "server",
-                            "status": HTTP_STATUS_CODES.NOT_FOUND
-                        }
-                    ]
-                });
+                return FormateData(PackedError("Not found Dashboard!", "server", "error", HTTP_STATUS_CODES.SERVICE_UNAVAILABLE));
             }
 
-            // if(Dashboard.user._id.toString() === userId){
-            //     return FormateData({
-            //         error: [
-            //             {
-            //                 "msg": "Not a Creator!",
-            //                 "location": "server",
-            //                 "status": HTTP_STATUS_CODES.FORBIDDEN
-            //             }
-            //         ]
-            //     });
-            // }
+            if(Dashboard.user._id.toString() === userId){
+                return FormateData(PackedError("Not a Creator!", "server", "error", HTTP_STATUS_CODES.UNAUTHORIZED));
+            }
 
             return FormateData({
                 data: Dashboard,

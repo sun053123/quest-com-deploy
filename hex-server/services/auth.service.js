@@ -6,7 +6,7 @@ const { OAuth2 } = google.auth;
 const dotenv = require('dotenv');
 dotenv.config();
 
-const { FormateData, GenerateToken } = require('../utils');
+const { FormateData, GenerateToken, PackedError } = require('../utils');
 const HTTP_STATUS_CODES = require('../utils/HTTPConstant');
 
 class AuthService {
@@ -119,30 +119,14 @@ class AuthService {
 
             //user not found
             if (!user) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Wrong Credentials!",
-                            "location": "server"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.BAD_REQUEST,
-                })
+                return FormateData(PackedError("Wrong Credentials!","server","warning",HTTP_STATUS_CODES.BAD_REQUEST));
             }
 
             //check password
             const isMatch = await bcrypt.compare(password, user.password);
 
             if (!isMatch) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Wrong Credentials!",
-                            "location": "server"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.BAD_REQUEST,
-                })
+                return FormateData(PackedError("Wrong Credentials!","server","warning",HTTP_STATUS_CODES.BAD_REQUEST));
             }
 
             //make payload
@@ -167,15 +151,7 @@ class AuthService {
 
             //user not found
             if (!user) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "User not found!",
-                            "location": "server"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.NOT_FOUND,
-                })
+                return FormateData(PackedError("User not found!","server","error",HTTP_STATUS_CODES.NOT_FOUND));
             }
 
             return FormateData({user, status: HTTP_STATUS_CODES.OK});
@@ -201,18 +177,8 @@ class AuthService {
             const { email_verified, email, name, picture } = verifyIdToken.payload
 
             if (!email_verified) {
-                return FormateData({
-                    error: [
-                        {
-                            "msg": "Google token not valid!",
-                            "location": "server",
-                            "type": "error"
-                        }
-                    ],
-                    status: HTTP_STATUS_CODES.BAD_REQUEST,
-                });
+                return FormateData(PackedError("Google token not valid!","server","error",HTTP_STATUS_CODES.BAD_REQUEST));
             }
-
 
             //check if user exists
             const User = await this.AuthEntity.getUserByEmail({ email });
@@ -262,16 +228,7 @@ class AuthService {
 
                 //if failed to create user
                 if (!createdProfile || !createdUser) {
-                    return FormateData({
-                        error: [
-                            {
-                                "msg": "Failed to create user profile!",
-                                "location": "server",
-                                "type": "error"
-                            }
-                        ],
-                        status: HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
-                    })
+                    return FormateData(PackedError("Failed to create user profile!","server","error",HTTP_STATUS_CODES.SERVICE_UNAVAILABLE));
                 }
 
                 //make payload

@@ -1,15 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery } from 'react-query';
-import DOMPurify from 'dompurify';
-
-import { Viewer, ProgressBar } from '@react-pdf-viewer/core';
 
 
-import { Box, Button, Grid, Typography, CssBaseline } from '@mui/material';
 
-import { AuthContext } from '../store/Contexts/AuthContext'
-import { AlertContext } from '../store/Contexts/AlertContext';
+import { Grid, CssBaseline } from '@mui/material';
+
+import { AlertContext, AlertDispatch } from '../store/Contexts/AlertContext';
 import { AlertShow } from "../store/Actions/AlertAction";
 
 import LessonBody from '../components/Lesson/LessonBody'
@@ -18,14 +15,13 @@ import LessonQuizModal from '../components/Lesson/LessonQuizModal';
 import axios from 'axios';
 import ClassroomSidebar from '../components/Classroom/ClassroomSidebar';
 import LoadingPage from '../components/LoadingPage';
-import ErrorPage from '../components/ErrorPage';
+
 import { ToastContainer } from 'react-toastify';
 
 function Lesson() {
-  const { AlertDispatch } = useContext(AuthContext)
-  const { userinfo } = useContext(AuthContext)
+  const { AlertDispatch } = useContext(AlertContext)
   const { classroomId, lessonId } = useParams()
-
+  const navigate = useNavigate()
   const [lesson, setLesson] = useState({})
   const [lessons, setLessons] = useState([])
 
@@ -51,21 +47,16 @@ function Lesson() {
       onSuccess: (data) => {
         setLesson(data.data.data.lesson)
         setLessons(data.data.data.lessons)
-      },
-      onError: (err) => {
-        AlertDispatch(AlertShow(err.data.error, "error"))
-    }
-  }
-
-  );
+      }
+  });
 
   if (isLoadingLesson) {
     return <LoadingPage />
   }
 
   if (isErrorLesson) {
-    AlertDispatch(AlertShow(errorLesson))
-    return <ErrorPage />
+    AlertDispatch(AlertShow(errorLesson.response.data.error, "error"))
+    return navigate('/loading');
   }
 
   if (isSuccessLesson) {
