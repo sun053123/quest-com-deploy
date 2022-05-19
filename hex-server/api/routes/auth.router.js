@@ -32,9 +32,7 @@ router.post('/register', [[
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -53,7 +51,7 @@ router.post('/', [[
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ error: 'Server error' });
+        next(err);
     }
 });
 
@@ -68,7 +66,7 @@ router.get('/', ValidateToken, async (req, res, next) => {
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ error: 'Server error' });
+        next(err);
     }
 });
 
@@ -80,7 +78,7 @@ router.post('/google-login', async (req, res, next) => {
         return res.status(data.status).json(data);
     } catch(err){
         console.error(err);
-        return res.status(500).json({ error: 'Server error' });
+        next(err);
     }
 });
     

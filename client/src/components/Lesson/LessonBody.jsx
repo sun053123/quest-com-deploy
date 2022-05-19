@@ -302,15 +302,15 @@ function LessonBody(props) {
                             height: "20vh",
                             alignItems: "center",
                             alignContent: "center",
-                            backgroundColor: 'rgba(0,0,0,.6)',
+                            backgroundColor: 'white',
                             m: 3,
                         }} >
-                            <Typography variant="h5" component="h5" fontWeight={"bold"} ml={2} color={"white"} m={2}>
+                            <Typography variant="h5" component="h5" fontWeight={"bold"} ml={2} color={"text"} m={2}>
                                 Do you like this lesson ?
                             </Typography>
                             {!liked ? (
                             <><ThumbUpAltOutlinedIcon sx={{
-                                    color: "white",
+                                    color: "gray",
                                     height: "5vh",
                                     width: "5vh",
                                     mt: "2vh",
@@ -320,11 +320,11 @@ function LessonBody(props) {
                                         color: '#ffc107',
                                     }
                                 }}
-                                    onClick={handleLikeLesson} /><Typography variant="h5" component="h5" fontWeight={"bold"} ml={2} color={"white"} m={2}>
+                                    onClick={handleLikeLesson} /><Typography variant="h5" component="h5" fontWeight={"bold"} ml={2} color={"text"} m={2}>
                                         like it!
                                     </Typography></>) : (
                             <><ThumbUpIcon sx={{
-                                        color: "white",
+                                        color: "primary",
                                         height: "5vh",
                                         width: "5vh",
                                         mt: "2vh",
@@ -335,7 +335,7 @@ function LessonBody(props) {
                                         }
                                     }}
                                         onClick={handleLikeLesson} />
-                                        <Typography variant="h5" component="h5" fontWeight={"bold"} ml={2} color={"white"} m={2}>
+                                        <Typography variant="h5" component="h5" fontWeight={"bold"} ml={2} color={"text"} m={2}>
                                             you and { lesson?.likeCount } others like it!
                                         </Typography></>
                             )}
@@ -349,10 +349,10 @@ function LessonBody(props) {
                             height: "20vh",
                             alignItems: "center",
                             alignContent: "center",
-                            backgroundColor: 'rgba(0,0,0,.6)',
+                            backgroundColor: 'white',
                             m: 3,
                         }} >
-                            <Typography variant="h5" component="h5" fontWeight={"bold"} ml={2} color={"white"} m={2}>
+                            <Typography variant="h5" component="h5" fontWeight={"bold"} ml={2} color={"text"} m={2}>
                                 {lesson.quizIsReady ? `There are ${lesson.quizCount} in this lesson`  : "Quiz is not ready"}
                             </Typography>
                             <Button variant="contained" color="primary" disabled= {!lesson.quizIsReady} sx={{
@@ -390,7 +390,7 @@ function LessonBody(props) {
                             height: "20vh",
                             alignItems: "center",
                             alignContent: "center",
-                            backgroundColor: 'rgba(0,0,0,.6)',
+                            backgroundColor: 'white',
                         }} />
                     </Grid>
                 </Grid>

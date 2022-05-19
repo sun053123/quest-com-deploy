@@ -22,9 +22,7 @@ router.get('/:classroomId/lesson/:lessonId/quizgame',
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
     
@@ -45,9 +43,7 @@ router.post('/:classroomId/lesson/:lessonId/quizgame/result',[ValidateToken, Val
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -69,9 +65,7 @@ router.put('/:classroomId/lesson/:lessonId/quizgame/result',
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -90,9 +84,7 @@ router.get('/:classroomId/lesson/:lessonId/quizgame/result/maxscore',
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 

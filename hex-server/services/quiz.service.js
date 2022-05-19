@@ -19,7 +19,7 @@ class QuizService {
             if (!classroom) {
                 return FormateData(PackedError("Classroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             }
-            const lesson = await this.LessonEntity.checkLessonExist({ lessonId });
+            const lesson = await this.LessonEntity.getLessonById({ lessonId });
             if (!lesson) {
                 return FormateData(PackedError("Lesson not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND)); 
             }

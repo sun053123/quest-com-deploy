@@ -20,6 +20,7 @@ import LessonChecker from '../components/LessonCreate/LessonChecker'
 
 import { AlertContext } from '../store/Contexts/AlertContext'
 import { AlertShow } from '../store/Actions/AlertAction'
+import CreateLessonPathbar from '../components/LessonCreate/CreateLessonPathbar'
 
 function LessonCreate() {
 
@@ -173,14 +174,8 @@ function LessonCreate() {
   return (
     <>
     <ToastContainer />
-      <Grid container spacing={0} sx={{ backgroundColor: "wheat" }}>
-        <Typography variant="p" component="p" fontWeight={"regular"} color={"white"} ml={5}>
-          Home
-        </Typography>
-        <Typography variant="p" component="p" fontWeight={"regular"} color={"white"} ml={5}>
-          classroom
-        </Typography>
-      </Grid>
+    <CreateLessonPathbar />
+      
       <Grid container spacing={0} >
         {/* //////////////////// sidebar //////////////////// */}
         <Grid item xs={0.5} sx={{ backgroundColor: "#f7f9fc", display: "auto" }}>

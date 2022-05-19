@@ -25,9 +25,7 @@ router.post('/:classroomId/lesson', [
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -43,9 +41,7 @@ router.get('/:classroomId/lesson', [ValidateToken, ValidateMongooseID], async (r
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -61,9 +57,7 @@ router.get('/:classroomId/lesson/:lessonId', [ValidateToken, ValidateMongooseID]
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -85,9 +79,7 @@ router.put('/:classroomId/lesson/:lessonId', [
             return res.status(data.status).json(data);
         } catch (err) {
             console.error(err);
-            return res.status(500).json({
-                error: 'Server error'
-            });
+            next(err);
         };
 });
 
@@ -105,9 +97,7 @@ router.put('/:classroomId/lesson/:lessonId/quizcontroller/panel', [
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -124,9 +114,7 @@ router.delete('/:classroomId/lesson/:lessonId', [ValidateTokenAndTeacher, Valida
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -143,9 +131,7 @@ router.put('/:classroomId/lesson/:lessonId/like', [ValidateToken, ValidateMongoo
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -166,9 +152,7 @@ router.post('/:classroomId/lesson/:lessonId/comment', [
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -185,9 +169,7 @@ router.delete('/:classroomId/lesson/:lessonId/comment/:commentId', [ValidateToke
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -204,9 +186,7 @@ router.put('/:classroomId/lesson/:lessonId/comment/:commentId/like', [ValidateTo
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -223,9 +203,7 @@ router.get('/:classroomId/lesson/:lessonId/comment', [ValidateToken, ValidateMon
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -243,9 +221,7 @@ router.patch('/:classroomId/lesson/:lessonId/pdffile', [ValidateTokenAndTeacher,
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -263,9 +239,7 @@ router.put('/:classroomId/lesson/:lessonId/pdffile', [ValidateTokenAndTeacher, V
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 

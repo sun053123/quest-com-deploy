@@ -28,6 +28,7 @@ import ErrorPage from "../components/ErrorPage";
 import ClassroomBody from "../components/Classroom/ClassroomBody";
 import ClassroomContent from "../components/Classroom/ClassroomContent";
 import NoPage from "./NoPage";
+import ClassroomPathbar from "../components/Classroom/ClassroomPathbar";
 
 function Classroom() {
   const { userinfo } = useContext(AuthContext);
@@ -112,55 +113,8 @@ function Classroom() {
             justifyContent: "center",
           }}
         >
-          <Grid container spacing={0}>
-            <Grid
-              item
-              xs
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <Typography
-                variant="h8"
-                sx={{
-                  color: "orange",
-                  fontWeight: "regular",
-                }}
-                component={Link}
-                to={"/"}
-              >
-                back to Home
-              </Typography>
-            </Grid>
-            <Grid
-              item
-              xs={8}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              {classroom?.isComplete === true ? (
-                <Typography
-                  variant="h7"
-                  sx={{ color: "green", fontWeight: "bold" }}
-                >
-                  Status : Public
-                </Typography>
-              ) : (
-                <Typography
-                  variant="h7"
-                  sx={{ color: "red", fontWeight: "bold" }}
-                >
-                  Status : Private
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={2}>
-              {/* NULL */}
-            </Grid>
-          </Grid>
+          <ClassroomPathbar classroomStatus={classroom?.isComplete} />
+            
         </Box>
 
         {/* CLASSROOM BODY */}

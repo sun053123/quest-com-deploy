@@ -19,6 +19,7 @@ import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
+import CreateClassroomPathbar from "../components/CreateClassroom/CreateClassroomPathbar";
 
 const style = {
   width: '100%',
@@ -231,6 +232,7 @@ function ClassroomCreate() {
     <Box sx={{ flexGrow: 1 }}>
       <CssBaseline />
       <ToastContainer />
+      <CreateClassroomPathbar />
       <Grid container spacing={0}>
         {/* classroom title */}
         <Grid item xs={2} > 

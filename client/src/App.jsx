@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -22,14 +22,22 @@ import Profile from "./pages/Profile";
 
 import { Worker } from '@react-pdf-viewer/core';
 import ErrorPage from "./components/ErrorPage";
+import Dashboard from "./pages/Dashboard";
 
 
 // const Home = React.lazy(() => import("./pages/Home"));
 // const Lesson = React.lazy(() => import("./pages/Lesson"));
 // const Classroom = React.lazy(() => import("./pages/Classroom"));
-
+function useScrollToTop() {
+  const { pathname } = useLocation();
+  // set always scroll to top when route changes
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+}
 
 function App() {
+  useScrollToTop()
   return (
     <>
       <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.13.216/build/pdf.worker.min.js">
@@ -63,6 +71,7 @@ function App() {
           <Route element={<TeacherRoute />} >
             <Route path="/classroom/create" element={<ClassroomCreate />} />
             <Route path="/classroom/edit/:classroomId" element={<ClassroomCreate />} />
+            <Route path="/classroom/:classroomId/dashboard" element={<Dashboard />} />
             <Route path="/classroom/:classroomId/lesson/create" element={<LessonCreate />} />
             <Route path="/classroom/:classroomId/lesson/edit/:lessonId" element={<LessonCreate />} />
             <Route path="/classroom/:classroomId/lesson/:lessonId/quizcontroller" element={<QuizCreate />} />

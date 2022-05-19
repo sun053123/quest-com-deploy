@@ -19,9 +19,7 @@ router.get('/scores', ValidateToken, async (req, res, next) => {
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     }
 });
 
@@ -35,9 +33,7 @@ router.get('/ownclassroom', ValidateTokenAndTeacher, async (req, res, next) => {
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     }
 });
 

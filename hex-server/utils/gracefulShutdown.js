@@ -21,7 +21,7 @@ module.exports = (app) => {
 
     function onError(err) {
         //get logger to log file
-        console.error(err);
+        //throw err;
         if (err instanceof HealthCheckError) {
             process.exit(0);
         } else {

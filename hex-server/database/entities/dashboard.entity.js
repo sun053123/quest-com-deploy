@@ -91,60 +91,10 @@ class DashboardEntity {
                 { $limit: 100 }
             ]);
 
-            // //format object array to object
-            // const aa = await DashboardModel.aggregate([
-            //     { $unwind: '$studentCompleteQuiz' },
-            //     { $lookup: {
-            //         from: 'users',
-            //         localField: 'studentCompleteQuiz.user',
-            //         foreignField: '_id',
-            //         as: 'user',
-            //         //no password
-            //     } },
-            //     { $lookup: {
-            //         from: 'lessons',
-            //         localField: 'studentCompleteQuiz.lesson',
-            //         foreignField: '_id',
-            //         as: 'lesson',
-            //         //only title delete rest of data
-            //     } },
-            //     { $group: {
-            //         _id: '$user._id',
-            //         //not array user
-            //         //to string user
-            //         user: {  $first:'$user.username' },
-            //         lesson: { $first: '$lesson.title' },
-            //         correctAnswer: { $max: '$studentCompleteQuiz.score' },
-            //         expgain: { $first: '$studentCompleteQuiz.expgain' },
-            //         attempt: { $first: '$studentCompleteQuiz.attempts' },
-            //         timeTaken: { $first: '$studentCompleteQuiz.timeTaken' },
-            //     } }, //group by user , max score of user
-            //     //devide by lesson
-            //     { $sort: { timeTaken: -1 } },
-            //     { $limit: 100 }
-            // ]);
-            
-            
-           
-
-            return DashBoards;
-        }
-        catch (error) {
+        } catch (error) {
             throw error;
         }
     }
-
-    // async findFastestStudentInlesson({ classroomId }) {
-    //     try {
-    //         const DashBoard = await DashboardModel.findOne({ classroom: classroomId })
-    //         .lean()
-    //         .populate('user',['username','email']);
-
-    //         DashBoard.studentCompleteQuiz.sort((a, b) => {
-    //             return a.timeTaken - b.timeTaken;
-    //         }
-    //         , { timeTaken: 0 });
-    //         // console.log(DashBoard);
            
     async findUserHightScoreQuiz({ classroomId, lessonId }) {
         try {
@@ -180,7 +130,25 @@ class DashboardEntity {
     }
 
 
+    async getCheckedInStudent({ classroomId }) {
+        try {
+            //quer loop studentcheckin to populate user in classroomId
+            const DashBoard = await DashboardModel.findOne({ classroom: classroomId })
+            .lean()
+            //get student in studentCheckin and populate user
+            .populate('studentsCheckin.user',['username','email'])
+            .populate('classroom',['title','lessonCount','studentCount','level','category','isComplete'])
+            .populate('studentCompleteQuiz.user',['username','email'])
+            .populate('studentCompleteQuiz.lesson',['title']);
 
+
+            return DashBoard;
+                
+        }
+        catch (error) {
+            throw error;
+        }
+    }
 
     
 }

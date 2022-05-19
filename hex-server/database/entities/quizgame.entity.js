@@ -46,7 +46,7 @@ class QuizGameEntity {
         try {
             // select only answer id and question            
             const QuizGamesAnswer = await QuizModel.find({ lesson: lessonId, _id: { $in: quizIdSelected } })
-                .select('answer question _id')
+                .select('answer question _id questionImg explanation')
                 .sort({ createdAt: -1 });
 
             return QuizGamesAnswer;

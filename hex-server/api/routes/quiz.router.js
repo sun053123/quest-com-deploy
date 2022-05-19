@@ -22,15 +22,6 @@ router.post('/:classroomId/lesson/:lessonId/quizcontrol', [
     check('answer').not().isEmpty().withMessage('Please enter a valid answer'),
     //isnotin options
     check('answer').not().isIn(this.options).withMessage('Please enter a valid answer'),
-    //custom
-//    check('options').custom((value, { req }) => {
-//     const checkArray = optionsArray.filter((item, index) => optionsArray.indexOf(item) !== index);
-//         if (checkArray.length > 0) {
-//             throw new Error('Please enter a valid options');
-//         }
-//         return true;
-//     }
-//     ).withMessage('Cannot have duplicate options'),
 ],
     ValidateTokenAndTeacher,ValidateMongooseID, ValidatorErrorHelper], async (req, res, next) => {
 
@@ -48,9 +39,7 @@ router.post('/:classroomId/lesson/:lessonId/quizcontrol', [
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -69,9 +58,7 @@ ValidateTokenAndTeacher ,ValidateMongooseID, async (req, res, next) => {
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -89,9 +76,7 @@ ValidateTokenAndTeacher ,ValidateMongooseID, async (req, res, next) => {
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -114,9 +99,7 @@ router.put('/:classroomId/lesson/:lessonId/quizcontrol/:quizId', [
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -134,9 +117,7 @@ router.delete('/:classroomId/lesson/:lessonId/quizcontrol/:quizId',
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -156,9 +137,7 @@ router.put('/:classroomId/lesson/:lessonId/quizcontrol', ValidateMongooseID, Val
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 

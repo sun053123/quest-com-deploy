@@ -31,9 +31,7 @@ router.post('/', [
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -49,9 +47,7 @@ router.get('/', async (req, res, next) => {
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 
@@ -69,9 +65,7 @@ router.get('/:classroomId', [ValidateToken, ValidateMongooseID], async (req, res
     }
     catch (err) {
         console.error(err);
-        return res.status(500).json({
-            error: 'Server error'
-        });
+        next(err);
     };
 });
 

@@ -60,7 +60,10 @@ function ClassroomBody(props) {
               p: { xs: 3, md: 6 },
               pl: { md: 0 },
             }}>
-            <Typography variant="h5" color="inherit" gutterBottom >              
+            <Typography variant="h5" color="inherit" gutterBottom sx={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+            }}>              
               {classroom?.content}
             </Typography>
           </Box>

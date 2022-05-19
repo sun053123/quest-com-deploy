@@ -22,6 +22,7 @@ import AttemptCard from '../components/QuizResult/AttemptCard';
 import TimeCard from '../components/QuizResult/TimeCard';
 import IsSubmitCard from '../components/QuizResult/IsSubmitCard';
 import HighScoreTable from '../components/QuizResult/HighScoreTable';
+import AnswerCard from '../components/QuizResult/AnswerCard';
 
 const BASE_SCORE_PER_LESSON = 50
 
@@ -41,6 +42,11 @@ function QuizGameResult() {
   const [stdHighScore, setStdHighScore] = useState([]);
 
   useEffect(() => {
+
+    //if already clear the quizcontext but user refresh the page then redirect to lesson page
+    if(quizcontext.currentQuizGame === null) {
+      navigate(`/classroom/${classroomId}/lesson/${lessonId}`);
+    }
     
       const selectedArray = quizcontext.selectedOptions.map(option => option.gamequizId)
       const quizIdSelected = {
@@ -115,12 +121,11 @@ function QuizGameResult() {
       attempts: quizcontext.attempts,
   }
     ).then(res => {
-      console.log("res = ",res)
       setIsSubmitedScore(true);
+      setStdHighScore(res.data.data.highScore);
       toast.success("Score Submitted")
     })
     .catch(err => {
-      console.log("err = ",err)
       AlertDispatch(AlertShow(err.response.data.error, "error"))
     })
     //after submit score, clear quizcontext
@@ -211,12 +216,11 @@ function QuizGameResult() {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
-                
               }}>
                 {/* set 2 button , retry and back to lesson */}
                 <Button
                   variant="contained"
-                  color="primary"
+                  color="secondary"
                   onClick={() => 
                     navigate(`/classroom/${classroomId}/lesson/${lessonId}`)
                   }
@@ -237,6 +241,7 @@ function QuizGameResult() {
                   sx={{
                     height: "50px",
                     width: "120px",
+                    ml: "2rem",
                   }}
                 >
                   Retry
@@ -252,7 +257,26 @@ function QuizGameResult() {
             </Typography>
             <AppRegistrationIcon fontSize="large" />
             </Grid>
-            <Grid item xs={4} sm={4}>
+            <Grid item xs={4} sm={4}sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+              }}>
+              <Button
+                  variant="contained"
+                  onClick={handleSubmitScore}
+                  sx={{
+                    height: "50px",
+                    width: "160 px",
+                    marginLeft: "2rem",
+                    backgroundColor: "#00bfa5",
+                    color: "white",
+                  }}
+                  disabled={isSubmitedScore}
+                >
+                  {isSubmitedScore ? "Submitted" : "Submit Score"}
+                </Button>
               </Grid>
             </Grid>
             <Grid container spacing={3} justify="center" padding={2}>
@@ -280,8 +304,20 @@ function QuizGameResult() {
 
             <Grid container spacing={3} justify="center" padding={2}>
               <Grid item xs={12} sm={12}>
+                <Typography variant="h5" component="h2" gutterBottom mt={4} fontWeight="bold">
+                  Higest Score
+                </Typography>
                 <HighScoreTable highScore={stdHighScore} />
               </Grid>
+              <Grid item xs={12} sm={12}>
+                <Typography variant="h5" component="h2" gutterBottom mt={4} fontWeight="bold">
+                  Quiz Answer
+                </Typography>
+
+                { isSubmitedScore && (
+                <AnswerCard quizAnswer={quizAnswer} />
+                )}
+                </Grid>
             </Grid>
 
           </Box>

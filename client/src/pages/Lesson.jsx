@@ -17,6 +17,7 @@ import ClassroomSidebar from '../components/Classroom/ClassroomSidebar';
 import LoadingPage from '../components/LoadingPage';
 
 import { ToastContainer } from 'react-toastify';
+import LessonPathbar from '../components/Lesson/LessonPathbar';
 
 function Lesson() {
   const { AlertDispatch } = useContext(AlertContext)
@@ -65,6 +66,7 @@ function Lesson() {
     <>
     <CssBaseline />
     <ToastContainer />
+    <LessonPathbar lesson={lesson} />
       {/* ////////////////////////////// LESSON MODAL SKIP QUIZGAME ////////////////////////////// */}
       <LessonQuizModal quizModalopen={quizModalopen} handleQuizClose={handleQuizClose} />
       <Grid container spacing={0} >

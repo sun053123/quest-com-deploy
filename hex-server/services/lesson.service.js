@@ -13,7 +13,7 @@ class LessonService {
     //TeacherCreator Operation Only
     async checkClassroomIsExistandIsCreator({ classroomId, userId }) {
         try {
-            const classroom = await this.ClassroomEntity.checkClassroomExist({ classroomId });
+            const classroom = await this.ClassroomEntity.getClassroomById({ classroomId });
 
             if (!classroom) {
                 return FormateData(PackedError("Classroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));

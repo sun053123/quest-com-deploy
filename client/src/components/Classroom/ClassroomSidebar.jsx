@@ -70,7 +70,7 @@ function ClassroomSidebar(props) {
     }
 
     //check lessonId and quizcontext.currentQuizGame./4 (lssonId in quizcontext)
-    if (quizcontext.currentQuizGame?.split("/")[4] != lessonId) {
+    if (quizcontext.currentQuizGame?.split("/")[4] !== lessonId) {
       handleQuizOpen(true)
     }
   }
@@ -111,7 +111,9 @@ function ClassroomSidebar(props) {
             </ListItem>
             <Divider />
             
-            <ListItem button sx={{
+            <ListItem button 
+            onClick={() => navigate(`/classroom/${classroomId}/dashboard`)}
+            sx={{
               backgroundColor: "white" ,
               height: "4.5rem"
             }}>

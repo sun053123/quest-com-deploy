@@ -14,7 +14,8 @@ function ClassroomContent(props) {
             <Typography component="h1" variant="h3" color="inherit" gutterBottom>
                 {classroom?.title}
             </Typography>
-            <Typography variant="h5" color="inherit" paragraph>
+            <Typography variant="h5" color="inherit" paragraph sx={{
+            }}>
                 {classroom?.description}
             </Typography>
 
