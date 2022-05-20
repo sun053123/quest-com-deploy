@@ -1,4 +1,4 @@
-const { LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, SET_USERINFO } = require("../TypeConstants");
+const { LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, UPDATE_USER } = require("../TypeConstants");
 
 
 export const LoginStart = () => ({
@@ -11,8 +11,8 @@ export const LoginSuccess = (user) => ({
     payload: user
 });
 
-export const SetUserInfo = (userinfo) => ({
-    type: SET_USERINFO,
+export const UpdateUser = (userinfo) => ({
+    type: UPDATE_USER,
     payload: userinfo
 });
 
@@ -23,4 +23,3 @@ export const LoginFailure = () => ({
 export const Logout = () => ({
     type: LOGOUT,
 });
-

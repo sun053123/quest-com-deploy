@@ -17,6 +17,7 @@ import JoinTodayClass from '../components/Dasboard/JoinTodayClass'
 import LessonCount from '../components/Dasboard/LessonCount'
 import StudentsTable from '../components/Dasboard/StudentsTable'
 import DashboardPathbar from '../components/Dasboard/DashboardPathbar'
+import ErrorPage from '../components/ErrorPage'
 
 function Dashboard() {
   const { classroomId } = useParams()
@@ -72,7 +73,7 @@ function Dashboard() {
   }
 
   if(isError){
-    return <div>Error</div>
+    return <ErrorPage />
   }
 
   if (isSuccess && dashboardData) {

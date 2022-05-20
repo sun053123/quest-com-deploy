@@ -60,7 +60,7 @@ class ClassroomEntity {
                 .lean()
                 .sort({ createdAt: -1 }).skip(SKIP).limit(LIMIT);
 
-                const Count = await ClassroomModel.countDocuments({ isComplete: true });
+                const Count = await ClassroomModel.countDocuments({ isComplete: true, deletedAt: null });
                 if (Count === 0) {
                     return { Classrooms, Total: 0 };
                 } else {
@@ -75,7 +75,7 @@ class ClassroomEntity {
                 .select('-__v -classroomImg') //forspeedup query
                 .lean()
                 .sort({ createdAt: -1 }).skip(SKIP).limit(LIMIT);
-                const Count = await ClassroomModel.countDocuments({ isComplete: true, category });
+                const Count = await ClassroomModel.countDocuments({ isComplete: true, category, deletedAt: null });
                 if (Count === 0) {
                     return { Classrooms, Total: 0 };
                 } else {

@@ -13,7 +13,9 @@ class DashBoardService {
     async DashBoardClassroom({ classroomId, userId }) {
         try {
             const Classroom = await this.ClassroomEntity.getClassroomById({ classroomId });
-
+            if (!Classroom) {
+                return FormateData(PackedError("Classroom not found!", "server", "error", HTTP_STATUS_CODES.NOT_FOUND));
+            }
 
             if(Classroom.creator.user.toString() !== userId){
                 return FormateData(PackedError("Not a Creator!", "server", "error", HTTP_STATUS_CODES.UNAUTHORIZED));

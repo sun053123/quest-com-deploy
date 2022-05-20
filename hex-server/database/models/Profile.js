@@ -26,12 +26,16 @@ const ProfilleSchema = new mongoose.Schema({
     ],
     quizHistory: [
         {
-            quizOfLesson: {
+            lesson: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Lesson',
                 required: true
             },
-            scores: {
+            expgain:{
+                type: Number,
+                required: true
+            },
+            score: {
                 type: Number,
                 required: true
             },

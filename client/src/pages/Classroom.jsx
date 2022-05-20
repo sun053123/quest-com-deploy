@@ -88,11 +88,8 @@ function Classroom() {
   const handleDeleteClassroom = async () => {
     try {
       await axios.delete(`http://localhost:8000/api/classroom/${classroomId}`);
-      AlertDispatch(AlertShow("Classroom Deleted"));
       handleClose();
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 1000);
+      navigate("/");
     } catch (error) {
       AlertDispatch(AlertShow(error.response.data.error));
     }

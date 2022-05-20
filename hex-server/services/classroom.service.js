@@ -209,8 +209,8 @@ class ClassroomService {
 
             const DeletedClassroom = await this.ClassroomEntity.deleteClassroom({ classroomId });
             if (!DeletedClassroom) {
-                
-            }return FormateData(PackedError("Classroom not deleted!", "server", "error", HTTP_STATUS_CODES.SERVICE_UNAVAILABLE));
+                return FormateData(PackedError("Classroom not deleted!", "server", "error", HTTP_STATUS_CODES.SERVICE_UNAVAILABLE));
+            }
 
             return FormateData({
                 message: "Classroom deleted successfully!",

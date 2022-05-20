@@ -4,7 +4,8 @@ const ProfileModel = require('../models/Profile');
 const ClassroomModel = require('../models/Classroom');
 const { $where } = require('../models/User');
 
-//FIXME: there is something wrong ( favorite push to profile )
+//FIXME: there is something wrong ( favorite push to profile ) 
+//TODO: move to profile entity
 
 class UserEntity {
 //get user score
@@ -88,51 +89,15 @@ class UserEntity {
             }
         }
 
-    //save fav classroom
-        async saveFavClassroom({ userId, classroomId }) {
+        async updateUser({ userId, username, role, avatar }) {
             try {
-                const User = await ProfileModel.findById(userId);
-                User.favClassroom.push(classroomId);
-                const UserUpdate = await User.save();
+                const UserUpdate = await UserModel.findByIdAndUpdate(userId, { username, role, avatar });
                 return UserUpdate;
             }
             catch (error) {
                 throw error;
             }
         }
-
-        async getFavClassroom({ userId }) {
-            try {
-                const User = await ProfileModel.findById(userId);
-                return User.favClassroom;
-            }
-            catch (error) {
-                throw error;
-            }
-        }
-
-    //save recent classroom
-        async saveRecentClassroom({ userId, classroomId }) {
-            try {
-                const User = await ProfileModel.findById(userId);
-                User.recentClassroom.push(classroomId);
-                const UserUpdate = await User.save();
-                return UserUpdate;
-            }
-            catch (error) {
-                throw error;
-            }
-        }
-
-        // async getRecentClassroom({ userId }) {
-        //     try {
-        //         const User = await ProfileModel.findById(userId);
-        //         return User.recentClassroom;
-        //     }
-        //     catch (error) {
-        //         throw error;
-        //     }
-        // }
 
         async getUserOwnClassroom({ userId }) {
             try {
@@ -148,9 +113,6 @@ class UserEntity {
             }
         }
         
-
-    //save recent quiz score
-
 
     }
 

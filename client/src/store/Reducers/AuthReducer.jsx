@@ -1,6 +1,6 @@
 /* eslint-disable no-lone-blocks */
 import jwt_decode from 'jwt-decode';
-const { LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, SET_USERINFO } = require("../TypeConstants");
+const { LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, UPDATE_USER } = require("../TypeConstants");
 
 const AuthReducer = (state, action) => {
 
@@ -15,6 +15,14 @@ const AuthReducer = (state, action) => {
                 error: null
             };
         };
+        case UPDATE_USER:{
+            return {
+                userinfo: payload,
+                isAuthenticated: true,
+                isLoading: false,
+                error: null
+            }
+        }
         case LOGIN_SUCCESS: {
             return {
                 user: payload,
