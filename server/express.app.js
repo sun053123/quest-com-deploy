@@ -23,7 +23,7 @@ module.exports = async (app) => {
   app.use(bodyParser.urlencoded({extended: true},{ limit: "50mb" }));
 
   if(process.env.NODE_ENV === 'production'){
-    app.use(express.static(__dirname + '/../client/build'));
+    app.use(express.static(__dirname + '/../client/build/index.html'));
   }
 
   app.use(routes);
