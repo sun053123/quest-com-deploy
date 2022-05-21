@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-// import Home from "./pages/Home";
+import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NoPage from "./pages/NoPage";
@@ -25,7 +25,7 @@ import ErrorPage from "./components/ErrorPage";
 import Dashboard from "./pages/Dashboard";
 
 
-const Home = React.lazy(() => import("./pages/Home"));
+// const Home = React.lazy(() => import("./pages/Home"));
 // const Lesson = React.lazy(() => import("./pages/Lesson"));
 // const Classroom = React.lazy(() => import("./pages/Classroom"));
 function useScrollToTop() {
@@ -52,7 +52,7 @@ function App() {
         {/* PUBLIC ROUTE */}
         <Route path="/" element={<Navbar />} >
           <Route path="/" exact element={<Navigate to="/home" />} />
-          <Route path="/home" element={<React.Suspense fallback={<LoadingPage />}> <Home /> </React.Suspense>} />
+          {/* <Route path="/home" element={<React.Suspense fallback={<LoadingPage />}> <Home /> </React.Suspense>} /> */}
           <Route path="/home" element={<Home />} />
           <Route path="/loading" element={<LoadingPage />} />
           <Route path="*" element={<NoPage />} />
