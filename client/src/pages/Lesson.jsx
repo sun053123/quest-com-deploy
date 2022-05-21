@@ -38,7 +38,7 @@ function Lesson() {
     error: errorLesson,
   } = useQuery(
     ["lesson", classroomId, lessonId],
-    () => axios.get(`http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}`),
+    () => axios.get(`/classroom/${classroomId}/lesson/${lessonId}`),
     {
       retry: false,
       enabled: true,

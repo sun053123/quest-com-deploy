@@ -92,7 +92,7 @@ function ClassroomCreate() {
 
   const getClassroom = async (classroomId) => {
     try {
-      const res = await axios.get(`http://localhost:8000/api/classroom/${classroomId}`);
+      const res = await axios.get(`/classroom/${classroomId}`);
       const { classroom } = res.data.data;
       setClassroomForm({
         title: classroom.title,
@@ -132,7 +132,7 @@ function ClassroomCreate() {
   const updateClassroom = async () => {
     setLoading(true);
     try {
-      const res = await axios.put(`http://localhost:8000/api/classroom/${_id}`, classroomForm);
+      const res = await axios.put(`/classroom/${_id}`, classroomForm);
       navigate(`/classroom/${res.data.classroom._id}`);
     } catch (error) {
       AlertDispatch(AlertShow(error.response.data.error, "error"));
@@ -143,7 +143,7 @@ function ClassroomCreate() {
   const createClassroom = async () => {
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:8000/api/classroom", classroomForm);
+      const res = await axios.post("/classroom", classroomForm);
       navigate(`/classroom/${res.data.data.classroom._id}`);
       setLoading(false);
     } catch (error) {

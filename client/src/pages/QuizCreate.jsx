@@ -132,7 +132,7 @@ function QuizCreate() {
   const mutation = useMutation((questionForm) => {
     axios
       .post(
-        `http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/quizcontrol`,
+        `/classroom/${classroomId}/lesson/${lessonId}/quizcontrol`,
         questionForm
       )
       .then((res) => {
@@ -161,7 +161,7 @@ function QuizCreate() {
     "quizzes",
     async () =>
       await axios.get(
-        `http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/quizcontrol`
+        `/classroom/${classroomId}/lesson/${lessonId}/quizcontrol`
       ),
     {
       retry: false,
@@ -186,7 +186,7 @@ function QuizCreate() {
     ["singleQuiz", quizId],
     () =>
       axios.get(
-        `http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/quizcontrol/${quizId}`
+        `/classroom/${classroomId}/lesson/${lessonId}/quizcontrol/${quizId}`
       ),
     {
       retry: false,
@@ -215,7 +215,7 @@ function QuizCreate() {
 
     axios
       .put(
-        `http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/quizcontrol`,
+        `/classroom/${classroomId}/lesson/${lessonId}/quizcontrol`,
         quizcontroller
       )
       .then((res) => {
@@ -285,7 +285,7 @@ function QuizCreate() {
                 {/* //////////////////////////// QUIZ CARD //////////////////////////// */}
                 <Grid container spacing={2}>
                   {quizzes.map((quiz) => (
-                    <QuizCard quiz={quiz} setQuizId={setQuizId} />
+                    <QuizCard key={quiz._id} quiz={quiz} setQuizId={setQuizId} />
                   ))}
                 </Grid>
               </Box>
@@ -356,7 +356,7 @@ function QuizCreate() {
                     />
                     {/* //////////////////////////// QUIZ OPTIONS //////////////////////////// */}
                     {questionOptions.map((option, index) => (
-                      <Box key={index}>
+                      <Box key={option.id}>
                         <TextField
                           margin="normal"
                           multiline

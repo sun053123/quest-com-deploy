@@ -78,7 +78,7 @@ function QuizGame() {
 
   const { isLoading, isError, isSuccess, data } = useQuery(
     "quizgame",
-    () => axios.get(`http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/quizgame`),
+    () => axios.get(`/classroom/${classroomId}/lesson/${lessonId}/quizgame`),
     {
       retry: false,
       refetchOnWindowFocus: false,

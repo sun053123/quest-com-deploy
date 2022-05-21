@@ -75,7 +75,7 @@ export default function Blog() {
   } = useQuery(
     ["classrooms", page, category],
     () =>
-      axios.get("http://localhost:8000/api/classroom", {
+      axios.get("/classroom", {
         params: { page: page, category: category },
       }),
     {
@@ -114,7 +114,7 @@ export default function Blog() {
       isError: isErrorScore,
     } = useQuery(
       "score",
-      async() => await axios.get("http://localhost:8000/api/user/scores"),
+      async() => await axios.get("/user/scores"),
       {
         retry: false,
         refetchOnWindowFocus: false,
@@ -133,7 +133,7 @@ export default function Blog() {
       isError: isErrorOwnClassrooom,
     } = useQuery(
       "ownclassroom",
-      () => axios.get("http://localhost:8000/api/user/ownclassroom"),
+      () => axios.get("/user/ownclassroom"),
       {
         retry: false,
         refetchOnWindowFocus: false,

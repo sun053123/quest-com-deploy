@@ -77,7 +77,7 @@ function Register() {
       } else {
         setIsMatchedPassword(true);
         const res = await axios.post(
-          "http://localhost:8000/api/auth/register",
+          "/auth/register",
           { email, password, username, firstname, lastname, role, dob, school }
         );
         AuthDispatch(LoginSuccess(res.data.token));

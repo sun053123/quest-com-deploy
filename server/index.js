@@ -1,29 +1,45 @@
 const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
-const cors = require('cors');
+const expressApp = require('./express.app');
+const { DatabaseConnect } = require('./database');
+const gracefulShutdown = require('./utils/gracefulShutdown');
 const dotenv = require('dotenv');
-const connectDB = require('./config/connectDB');
 
 dotenv.config();
 
-connectDB();
+const StartServer = async() => {
 
-app.use(cors());
-app.use(bodyParser.json());
+    const app = express();
 
-app.get('/', (req, res) => {
-    res.send('Hello World');
-});
+    await DatabaseConnect()
 
-app.use('/api/auth', require('./routes/api/auth'));
-app.use('/api/classroom', require('./routes/api/classroom'));
-app.use('/api/classroom', require('./routes/api/lesson'));
-app.use('/api/classroom', require('./routes/api/quiz'));
-app.use('/api/classroom', require('./routes/api/quiz.game'));
+    await expressApp(app);
 
-const PORT = process.env.PORT || 5000;
+    const server = gracefulShutdown(app);
 
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+    server.listen(process.env.PORT || 8000, () => {
+        console.log(`Server listening on http://localhost:${process.env.PORT}`);
+    }).on('error', (err) => {
+        console.log(err);
+        process.exit();
+    }).on('listening', () => {
+        console.log(`Sever is Running ...`);
+    }).on('close', () => {
+        console.log('Server closed');
+    });
+
+    process.on('SIGINT', () => {
+        server.close(() => {
+            console.log('Server closed on app interruption!');
+            process.exit(0);
+        });
+    }, 'SIGTERM', () => {
+        server.close(() => {
+            console.log('Server closed on app termination!');
+            process.exit(0);
+        });
+    });
+}
 
 
+
+StartServer();

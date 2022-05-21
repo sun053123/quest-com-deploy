@@ -113,7 +113,7 @@ function QuizGameResult() {
     //clear quizcontext
     
     //axios call to submit score
-    axios.put(`http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/quizgame/result`, {
+    axios.put(`/classroom/${classroomId}/lesson/${lessonId}/quizgame/result`, {
       score: score,
       expgain: expgain,
       result: quizAnswer,
@@ -140,7 +140,7 @@ function QuizGameResult() {
 
   const { error, isLoading, isError, isSuccess, mutate } = useMutation(
     async (packSelected) => {
-      return await axios.post(`http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/quizgame/result`, packSelected )
+      return await axios.post(`/classroom/${classroomId}/lesson/${lessonId}/quizgame/result`, packSelected )
     }
     , {
       onSuccess: (data) => {

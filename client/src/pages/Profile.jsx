@@ -25,7 +25,7 @@ function Profile() {
   const [ownClassroom, setOwnClassroom] = useState();
 
   const { isLoading: isLoadingScore,  isError: isErrorScore, isSuccess: isSuccessScore } = useQuery("score",
-    async() => await axios.get("http://localhost:8000/api/user/scores"),
+    async() => await axios.get("/user/scores"),
     {
       retry: false,
       refetchOnWindowFocus: false,
@@ -40,7 +40,7 @@ function Profile() {
   );
 
   const { isLoading: isLoadingProfile,  isError: isErrorProfile, isSuccess: isSuccessProfile } = useQuery("profile",
-    async() => await axios.get("http://localhost:8000/api/profile"),
+    async() => await axios.get("/profile"),
     {
       retry: false,
       refetchOnWindowFocus: false,
@@ -55,7 +55,7 @@ function Profile() {
   );
 
   const { isLoadingFavorite,  isError: isErrorFavorite, isSuccess: isSuccessFavorite } = useQuery("favorite",
-    async() => await axios.get("http://localhost:8000/api/profile/favorite"),
+    async() => await axios.get("/profile/favorite"),
     {
       retry: false,
       refetchOnWindowFocus: false,
@@ -70,7 +70,7 @@ function Profile() {
   );
 
   const { isLoading: isLoadingQuiz,  isError: isErrorQuiz, isSuccess: isSuccessQuiz } = useQuery("quizhistory",
-    async() => await axios.get("http://localhost:8000/api/profile/quizhistory"),
+    async() => await axios.get("/profile/quizhistory"),
     {
       retry: false,
       refetchOnWindowFocus: false,
@@ -86,7 +86,7 @@ function Profile() {
   );
 
   const { isLoading: isLoadingOwnClassroom,  isError: isErrorOwnClassroom, isSuccess: isSuccessOwnClassroom } = useQuery("ownclassroom",
-    async() => await axios.get("http://localhost:8000/api/profile/ownclassroom"),
+    async() => await axios.get("/profile/ownclassroom"),
     {
       retry: false,
       refetchOnWindowFocus: false,

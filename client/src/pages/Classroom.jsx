@@ -90,7 +90,7 @@ function Classroom() {
   // delete classroom
   const handleDeleteClassroom = async () => {
     try {
-      await axios.delete(`http://localhost:8000/api/classroom/${classroomId}`);
+      await axios.delete(`/classroom/${classroomId}`);
       handleClose();
       navigate("/");
     } catch (error) {
@@ -100,7 +100,7 @@ function Classroom() {
 
   const handleFavortieClassroom = async () => {
     try {
-      await axios.put(`http://localhost:8000/api/profile/favorite/${classroomId}`);
+      await axios.put(`/profile/favorite/${classroomId}`);
       AlertDispatch(AlertShow([{ msg: "Classroom added to favorite", type: "success" }]));
     } catch (error) {
       AlertDispatch(AlertShow(error.response.data.error));

@@ -29,7 +29,7 @@ function Dashboard() {
 
   //react query axios fetch dashboard data
   const { isLoading, isSuccess, isError } = useQuery(['dashboard', classroomId], async () => {
-    const res = await axios.get(`http://localhost:8000/api/classroom/${classroomId}/dashboard`)
+    const res = await axios.get(`/classroom/${classroomId}/dashboard`)
     return res.data
   }
   , {

@@ -64,7 +64,7 @@ function LessonCreate() {
 
   const getLessonData = async () => {
     try {
-      const res = await axios.get(`http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}`)
+      const res = await axios.get(`/classroom/${classroomId}/lesson/${lessonId}`)
     const { data } = res
       //convert html to draftjs
     const contentBlock = htmlToDraft(data.data.lesson.content);
@@ -90,7 +90,7 @@ function LessonCreate() {
   const handleUpdateLesson = async () => {
     setIsLoading(true)
     try {
-      const res = await axios.put(`http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}`, 
+      const res = await axios.put(`/classroom/${classroomId}/lesson/${lessonId}`, 
       {
         title: lessonForm.title,
         content: lessonForm.content,
@@ -110,7 +110,7 @@ function LessonCreate() {
   const handleCreateLesson = async () => {
     setIsLoading(true)
     try {
-      const res = await axios.post(`http://localhost:8000/api/classroom/${classroomId}/lesson`, lessonForm)
+      const res = await axios.post(`/classroom/${classroomId}/lesson`, lessonForm)
       const { data } = res
       console.log(data.lesson)
       toast.success("Created successfully")

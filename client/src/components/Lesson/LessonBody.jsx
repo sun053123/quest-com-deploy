@@ -65,7 +65,7 @@ function LessonBody(props) {
     const handleLikeLesson = async () => {
         setLiked(!liked)
         
-        const { data } = await axios.put(`http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}/like`, {
+        const { data } = await axios.put(`/classroom/${classroomId}/lesson/${lessonId}/like`, {
             userId: userinfo.id
         })
         setLikes(data.likes)
@@ -88,7 +88,7 @@ function LessonBody(props) {
     );
 
     const handleDeleteLesson = async () => {
-        await axios.delete(`http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}`)
+        await axios.delete(`/classroom/${classroomId}/lesson/${lessonId}`)
         navigate(`/classroom/${classroomId}`)
     }
 

@@ -63,7 +63,7 @@ function Login() {
     AuthDispatch(LoginStart());
 
     try {
-      const res = await axios.post("http://localhost:8000/api/auth", {
+      const res = await axios.post("/auth", {
         email,
         password,
       });
@@ -86,7 +86,7 @@ function Login() {
     const token = res?.tokenId;
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/auth/google-login",
+        "/auth/google-login",
         { tokenId: token },
         { headers: { "Content-Type": "application/json" } }
       );
