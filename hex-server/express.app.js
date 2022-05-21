@@ -21,9 +21,11 @@ module.exports = async (app) => {
 
   app.use(bodyParser.json({ limit: "50mb" }));
   app.use(bodyParser.urlencoded({extended: true},{ limit: "50mb" }));
-  app.use(express.static(__dirname + "/public"));
+
+  if(process.env.NODE_ENV === 'production'){
+    app.use(express.static(__dirname + '/../client/build'));
+  }
 
   app.use(routes);
-
   app.use(HandleErrors);
 };

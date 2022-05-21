@@ -80,10 +80,6 @@ const LessonSchema = new mongoose.Schema({
                 type: String,
                 required: true
             },
-            username: {
-                type: String,
-                required: true
-            },
             user: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'User',
@@ -97,19 +93,9 @@ const LessonSchema = new mongoose.Schema({
                 type: Date,
                 default: Date.now
             },
-            likes: [
-                {
-                    user: {
-                        type: mongoose.Schema.Types.ObjectId,
-                        ref: 'User',
-                        required: true
-                    }
-                }
-            ],
-            likeCount: {
-                type: Number,
-                required: true,
-                default: 0
+            deletedAt: {
+                type: Date,
+                default: null
             }
         }
     ],

@@ -127,6 +127,9 @@ class QuizGameService {
                 let category = ClassroomCategory.category
 
                 await this.ProfileEntity.updateUserExp({ userId, expgain, category });
+
+                //update quizhistory on profile
+                await this.ProfileEntity.updateUserQuizHistory({ userId, lessonId, classroomId, expgain, score, timeTaken, attempts });
             }
             
             const UserMaxScore = await this.DashboardEntity.findUserHightScoreQuiz({ classroomId, lessonId });

@@ -3,6 +3,9 @@ import React, {useState, useEffect, useContext} from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import { useQuery } from 'react-query'
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import LoadingPage from '../components/LoadingPage'
 
 import { AlertContext } from '../store/Contexts/AlertContext'
@@ -10,7 +13,6 @@ import { AlertShow } from '../store/Actions/AlertAction'
 
 import { Box, Button, Container, Divider, Grid, Paper, Typography } from '@mui/material'
 import StudentCountCard from '../components/Dasboard/StudentCountCard'
-import {ToastContainer} from 'react-toastify'
 import AlertToast from '../components/AlertToast'
 import LessonScore from '../components/Dasboard/LessonScore'
 import JoinTodayClass from '../components/Dasboard/JoinTodayClass'
@@ -82,7 +84,7 @@ function Dashboard() {
 
   return (
     <>
-      <AlertToast />
+      <ToastContainer />
       <Box sx={{ width: '100%', height: '100%' }}>
               <DashboardPathbar classroomStatus={dashboardData?.classroom?.isComplete} />
           <Box sx={{ backgroundColor: '#fafafa' }}>

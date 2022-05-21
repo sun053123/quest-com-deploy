@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
 import {
@@ -31,21 +31,25 @@ import { AlertShow } from "../store/Actions/AlertAction";
 // import { API_PATH } from '../utils/APIConstant';
 
 function Register() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const redirectPath = location.state ? location.state.from.pathname : "/";
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     passwordConfirm: "",
+    school: "",
     username: "",
     firstname: "",
     lastname: "",
-    gender: "",
-    age: "",
+    role: "",
     dob: "",
   });
   const [date, setDate] = useState(null);
   const [isMatchedPassword, setIsMatchedPassword] = useState(true);
 
-  const { dispatch, isLoading } = useContext(AuthContext);
+  const { AuthDispatch, isLoading } = useContext(AuthContext);
   const { AlertDispatch } = useContext(AlertContext);
 
   const {
@@ -55,9 +59,9 @@ function Register() {
     username,
     firstname,
     lastname,
-    gender,
-    age,
+    role,
     dob,
+    school,
   } = formData;
 
   const onChange = (e) => {
@@ -74,19 +78,14 @@ function Register() {
         setIsMatchedPassword(true);
         const res = await axios.post(
           "http://localhost:8000/api/auth/register",
-          { email, password, username, firstname, lastname, gender, age, dob }
+          { email, password, username, firstname, lastname, role, dob, school }
         );
-        dispatch(LoginSuccess(res.data.token));
-        return <Navigate to="/" />;
+        AuthDispatch(LoginSuccess(res.data.token));
+        navigate(redirectPath, { replace: true });
       }
     } catch (err) {
-      dispatch(LoginFailure());
-
       AlertDispatch(AlertShow(err.response.data.error));
-      
     }
-    console.log("date", date);
-    console.log("formData", formData);
   };
 
   return (
@@ -183,6 +182,17 @@ function Register() {
                 </FormHelperText>
               )}
             </FormControl>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="school"
+              label="School name"
+              type="school"
+              id="school"
+              value={school}
+              onChange={onChange}
+            />
             <Grid
               container
               rowSpacing={1}
@@ -217,18 +227,6 @@ function Register() {
                 />
               </Grid>
             </Grid>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="age"
-              label="Age"
-              type="Number"
-              id="age"
-              autoComplete="age"
-              value={age}
-              onChange={onChange}
-            />
             <Grid
               container
               rowSpacing={1}
@@ -260,20 +258,19 @@ function Register() {
               </Grid>
               <Grid item xs={6}>
                 <FormControl fullWidth margin="normal">
-                  <InputLabel id="gender" sx={{ bgcolor: "white" }}>
-                    Gender
+                  <InputLabel id="role" sx={{ bgcolor: "white" }}>
+                    Role
                   </InputLabel>
                   <Select
                     required
-                    labelId="gender"
-                    id="gender"
-                    value={gender}
+                    labelId="role"
+                    id="role"
+                    value={role}
                     onChange={(e) => onChange(e)}
-                    name="gender"
+                    name="role"
                   >
-                    <MenuItem value="Male">Male</MenuItem>
-                    <MenuItem value="Female">Female</MenuItem>
-                    <MenuItem value="Other">Other</MenuItem>
+                    <MenuItem value="student">Student</MenuItem>
+                    <MenuItem value="teacher">Teacher</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>

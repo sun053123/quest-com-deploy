@@ -34,6 +34,7 @@ class ProfileService {
         }
     }
 
+    //not use
     async UpdateUserProfile({ userId, username, role, firstname, lastname, dob, avatar }) {
         
         try {
@@ -79,7 +80,7 @@ class ProfileService {
         try{
             const AddedFavoriteClassroom = await this.ProfileEntity.addFavoriteClassroom({ userId, classroomId });
             if(!AddedFavoriteClassroom){
-                return FormateData(PackedError("Can't Added!", "server", "warning", HTTP_STATUS_CODES.NOT_FOUND));
+                return FormateData(PackedError("Added!", "server", "warning", HTTP_STATUS_CODES.NOT_FOUND));
             }
 
             return FormateData({
@@ -103,6 +104,32 @@ class ProfileService {
             });
 
         }catch(error){
+            throw error;
+        }
+    }
+
+    async GetUserQuizHistory({ userId }) {
+        try {
+            const QuizHistory = await this.ProfileEntity.getQuizHistory({ userId });
+            return FormateData({
+                quiz: QuizHistory,
+                status: HTTP_STATUS_CODES.OK
+            });
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+
+    async GetUserOwnClassrooms({ userId }) {
+        try {
+            const OwnClassrooms = await this.ProfileEntity.getOwnClassrooms({ userId });
+            return FormateData({
+                ownclassroom: OwnClassrooms,
+                status: HTTP_STATUS_CODES.OK
+            });
+        }
+        catch (error) {
             throw error;
         }
     }

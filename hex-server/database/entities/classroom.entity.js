@@ -4,10 +4,6 @@ class ClassroomEntity {
 
     async createClassroom({ title, description, content, classroomImg, userId, username, level, tags, isComplete, category }) {
         try {
-            // let creator = {}
-            // creator.user = userId
-            // creator.name = username
-            
             const NewClassroom = new ClassroomModel({
                 title,
                 description,

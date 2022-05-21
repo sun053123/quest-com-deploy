@@ -199,6 +199,7 @@ function QuizGameResult() {
       backgroundColor: "#fafafa",
       backgroundImage: `url(${quizgame_bg})`,
       padding: "2rem",
+      minHeight: "130vh",
     }}>
       <Container>
         <Paper elevation={3}>

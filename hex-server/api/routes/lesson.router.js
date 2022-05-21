@@ -144,11 +144,11 @@ router.post('/:classroomId/lesson/:lessonId/comment', [
     ,ValidateToken, ValidateMongooseID, ValidatorErrorHelper], async (req, res, next) => {
 
     const { lessonId, classroomId } = req.params;
-    const { id, username } = req.user;
+    const { id } = req.user;
     const { comment } = req.body;
 
     try {
-        const { data } = await service.CreateCommentLesson({ userId: id, lessonId, classroomId, comment, username });
+        const { data } = await service.CreateCommentLesson({ userId: id, lessonId, classroomId, comment });
         return res.status(data.status).json(data);
     } catch (err) {
         console.error(err);

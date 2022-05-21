@@ -14,7 +14,10 @@ import {
   Button,
   Modal,
 } from "@mui/material";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import DeleteIcon from "@mui/icons-material/Delete";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 
@@ -95,9 +98,19 @@ function Classroom() {
     }
   };
 
+  const handleFavortieClassroom = async () => {
+    try {
+      await axios.put(`http://localhost:8000/api/profile/favorite/${classroomId}`);
+      AlertDispatch(AlertShow([{ msg: "Classroom added to favorite", type: "success" }]));
+    } catch (error) {
+      AlertDispatch(AlertShow(error.response.data.error));
+    }
+  };
+
   if (isSuccess && lessons && classroom) {
     return (
-      <div className="classroom">
+      <>
+      <ToastContainer />
         <CssBaseline />
 
         {/* CLASSROOM HEADER */}
@@ -111,7 +124,6 @@ function Classroom() {
           }}
         >
           <ClassroomPathbar classroomStatus={classroom?.isComplete} />
-            
         </Box>
 
         {/* CLASSROOM BODY */}
@@ -253,6 +265,29 @@ function Classroom() {
                 </Paper>
               </Box>
             )}
+            {/* END ADMIN TOOL CREATOR ONLY */}
+            {/* STUDENT FAVORITE ICON */}
+            {classroom?.creator?.user !== userinfo.id && (
+              <Box marginTop={2}>
+                <Typography variant="h6" gutterBottom>
+                  Favorite
+                </Typography>
+                <Paper elevation={0} sx={{ p: 2, bgcolor: "wheat", mr: 2 }}>
+                  
+                    <Box sx={{ display: "flex", justifyContent: "center" }}>
+                      <Button
+                        variant="contained"
+                        sx={{ backgroundColor: "pink", color: "text", }}
+
+                        onClick={handleFavortieClassroom}
+                      >
+                        <FavoriteIcon />
+                      </Button>
+                    </Box>
+                    
+                </Paper>
+              </Box>
+            )}
             <Grow in={true}>
               <div>
                 <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
@@ -300,7 +335,7 @@ function Classroom() {
             </Grow>
           </Grid>
         </Grid>
-      </div>
+      </>
     );
   }
 }

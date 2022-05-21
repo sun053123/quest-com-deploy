@@ -1,4 +1,5 @@
 const ProfileModel = require('../models/Profile');
+const ClassroomModel = require('../models/Classroom');
 
 //CRUD USER PROFILE
 class ProfileEntity{
@@ -18,6 +19,16 @@ class ProfileEntity{
         try{
             const UpdatedExp = await ProfileModel.findOneAndUpdate({ user: userId }, { $inc: { [`${category}_score`]: expgain } });
             return UpdatedExp;
+        }
+        catch{
+            throw error;
+        }
+    }
+
+    async updateUserQuizHistory({ userId, classroomId, lessonId, expgain, score, timeTaken, attempts }) {
+        try{
+            const UpdatedQuizHistory = await ProfileModel.findOneAndUpdate({ user: userId }, { $push: { quizHistory: { classroom: classroomId, lesson: lessonId, expgain, score, timeTaken, attempts } } });
+            return UpdatedQuizHistory;
         }
         catch{
             throw error;
@@ -70,7 +81,7 @@ class ProfileEntity{
         try {
             const Profile = await ProfileModel.findOne({ user: userId })
             .lean()
-            .populate('favoriteClassroom', '_id title classroomImg createdAt updatedAt');
+            .populate('favoriteClassroom', '_id title description classroomImg createdAt updatedAt');
             return Profile.favoriteClassroom;
         }
         catch (error) {
@@ -78,20 +89,35 @@ class ProfileEntity{
         }
     }
 
-//save recent classroom
-    async saveRecentClassroom({ userId, classroomId }) {
+    async getQuizHistory ({ userId }) {
         try {
-            const User = await ProfileModel.findById(userId);
-            User.recentClassroom.push(classroomId);
-            const UserUpdate = await User.save();
-            return UserUpdate;
+            const Profile = await ProfileModel.findOne({ user: userId })
+            .lean()
+            .populate('quizHistory.classroom', '_id title createdAt updatedAt')
+            .populate('quizHistory.lesson', '_id title createdAt updatedAt')
+            .select('quizHistory -_id');
+
+            return Profile.quizHistory;
         }
         catch (error) {
             throw error;
         }
     }
 
+    async getOwnClassrooms ({ userId }) {
+        try {
+            const Classroom = await ClassroomModel.find()
+                .where('creator.user').equals(userId)
+                .where('deletedAt').equals(null)
+                .lean()
+                .sort({ createdAt: -1 });
 
+            return Classroom;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = ProfileEntity;

@@ -240,7 +240,6 @@ class LessonService {
             const CreatedComment = await this.LessonEntity.pushComment({
                 lessonId,
                 userId,
-                username,
                 comment,
             });
             if (!CreatedComment) {

@@ -18,6 +18,7 @@ function NoPage() {
     }
 
     return (
+        <>
         <Container
             style={{
                 display: 'flex',
@@ -31,7 +32,7 @@ function NoPage() {
                 Page not found
             </Typography>
         </Container>
-
+    </>
     )
 }
 

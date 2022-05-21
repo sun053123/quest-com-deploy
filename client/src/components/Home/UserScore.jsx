@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useLocation } from "react-router-dom";
 import {
   Grow,
   Avatar,
@@ -12,31 +13,10 @@ import UserDefaultProfile from "../../assets/img/user-default-profile.png";
 
 import { AuthContext } from "../../store/Contexts/AuthContext";
 
-// const userscores = [
-//   {
-//     subject: "math",
-//     exp: 456,
-//   },
-//   {
-//     subject: "science",
-//     exp: 23,
-//   },
-//   {
-//     subject: "english",
-//     exp: 462,
-//   },
-//   {
-//     subject: "social",
-//     exp: 112,
-//   },
-//   {
-//     subject: "computer",
-//     exp: 89,
-//   },
-// ];
-
 function UserScore(props) {
   const { userscores } = props;
+  const location = useLocation();
+
 
   //useContext auth
   const { userinfo } = useContext(AuthContext);
@@ -55,11 +35,12 @@ function UserScore(props) {
         }}
       >
         <Grid container spacing={2}>
-          <Grid item xs={2}>
-            {userinfo?.avatar ? (
+          { location.pathname !== "/profile" &&(
+          <Grid item xs={2}>   
+
               <Avatar
                 alt="avatar"
-                src={userinfo.avatar}
+                src={userinfo?.avatar ? userinfo?.avatar : UserDefaultProfile}
                 variant={"square"}
                 sx={{
                   marginTop: "20px",
@@ -73,24 +54,6 @@ function UserScore(props) {
                   boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.2)",
                 }}
               />
-            ) : (
-              <Avatar
-                alt="avatar"
-                src={UserDefaultProfile}
-                variant={"square"}
-                sx={{
-                  marginTop: "20px",
-                  marginBottom: "20px",
-                  width: "100%",
-                  height: "auto",
-                  //fit content
-                  objectFit: "cover",
-                  objectPosition: "center",
-                  borderRadius: "8px",
-                  boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.2)",
-                }}
-              />
-            )}
 
             {userinfo?.username ? (
               <Typography
@@ -124,6 +87,7 @@ function UserScore(props) {
               </Typography>
             )}
           </Grid>
+          )}
           <Grid
             item
             container

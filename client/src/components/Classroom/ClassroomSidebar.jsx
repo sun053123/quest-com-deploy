@@ -76,7 +76,6 @@ function ClassroomSidebar(props) {
   }
   
   return (
-    <Grow in={true}>
       <Box
         sx={{
           overflowY: "auto",
@@ -221,7 +220,6 @@ function ClassroomSidebar(props) {
           ))}
         </List>
       </Box>
-    </Grow>
   );
 }
 

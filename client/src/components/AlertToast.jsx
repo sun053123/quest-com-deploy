@@ -3,7 +3,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { AlertContext } from '../store/Contexts/AlertContext';
-import { AlertShow } from "../store/Actions/AlertAction";
+import { AlertHide, AlertShow } from "../store/Actions/AlertAction";
 
 function AlertToast() {
 
@@ -11,7 +11,9 @@ function AlertToast() {
     
 
     //after alert show, remove alert from store
-    alerts != null && alerts?.forEach(alert => {
+    alerts != null && alerts?.map(alert => {
+        let i = alerts.indexOf(alert);
+        console.log("alert index", i);
         toast(alert.msg, {
             position: "top-right",
             autoClose: 5000,
@@ -25,14 +27,10 @@ function AlertToast() {
         });
 
         //remove alert from store
-        setTimeout(() => {
-            AlertDispatch(AlertShow(null, 'success'))
-        }, 1000);
+        AlertDispatch(AlertHide());
         
     })
-    return (
-        <ToastContainer />
-    )
+    
 
     // alerts != null && alerts?.map(alert => {
     //     console.log("in AlertToast", alert.msg);

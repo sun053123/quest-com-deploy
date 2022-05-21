@@ -363,3 +363,67 @@
           </Grid>
         </Grid>
       </Card>
+
+
+      //////////////////////////////// profile
+      <Box component="form" noValidate onAbort={onSubmit} sx={{ mt: 1 }}>
+                <TextField label="Name" variant="outlined" size="small" fullWidth />
+                <TextField label="Email" variant="outlined" size="small" fullWidth />
+                <TextField label="Phone" variant="outlined" size="small" fullWidth />
+                <TextField label="Address" variant="outlined" size="small" fullWidth />
+                <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, color: "white", backgroundColor: "primary.main"}} fontWeight="bold">
+                Sign In
+                </Button>
+              </Box>
+
+      ////comment lesson
+      <Grid item md={12}>
+
+                        {/* /////////////////////////// Create cooment box /////////////////////////// */}
+                        <Box sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            minHeight: "20vh",
+                            backgroundColor: 'white',
+                            m: 3,
+                        }} >
+                            <Typography variant="h5" component="h5" fontWeight={"bold"} ml={2} color={"text"} m={2}>
+                                Create a comment
+                            </Typography>
+                            <Grid container spacing={0}>
+                            <Grid item xs={11} md={11} sm={11} lg={11}>
+                            <TextField
+                                id="outlined-multiline-static"
+                                label="Comment"
+                                multiline
+                                rows={2}
+                                defaultValue=""
+                                variant="outlined"
+                                sx={{
+                                    width: "100%",
+                                    borderRadius: "8px",
+                                    color: "white",
+                                    fontWeight: "bold",
+                                    fontSize: "1.5rem",
+                                    textTransform: "none",
+                                    padding: "0.5rem",
+                                }}
+                                onChange={handleCommentChange}
+                            />
+                                </Grid>
+                                <Grid item xs={1} md={1} sm={1} lg={1}>
+                            <Button variant="contained" color="primary" type="submit" sx={{
+                                //bottom
+                                borderRadius: "8px",
+                                m: 2,
+                                color: "white",
+                                fontWeight: "bold",
+                            }} onClick={handleComment}>
+                                submit comment
+                                
+                            </Button>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                        <LessonComment />
+                    </Grid>

@@ -30,7 +30,8 @@ module.exports.ValidateSignature = (req) => {
         };
         return false;
     } catch (error) {
-        throw error;
+        //not crash the server
+        return false;
     };
 };
 

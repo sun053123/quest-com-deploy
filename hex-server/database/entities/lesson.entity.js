@@ -137,10 +137,10 @@ class LessonEntity {
         }
     }
 
-    async pushComment ({ lessonId, userId, username, comment }) {
+    async pushComment ({ lessonId, userId, comment }) {
         try {
             const Lesson = await LessonModel.findById(lessonId);
-            Lesson.comments.push({ user: userId, username, body:comment });
+            Lesson.comments.push({ user: userId, body:comment });
 
             const UpdatedLesson = await Lesson.save();
             return UpdatedLesson.comments;

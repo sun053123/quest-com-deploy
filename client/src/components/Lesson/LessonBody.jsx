@@ -4,7 +4,7 @@ import moment from 'moment';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { Box, Typography, Paper, Grid, Button, Modal } from '@mui/material'
+import { Box, Typography, Paper, Grid, Button, Modal, TextField } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete';
 import { styled } from '@mui/material/styles';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
@@ -21,6 +21,8 @@ import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 import { AuthContext } from '../../store/Contexts/AuthContext'
 
+import LessonComment from './LessonComment';
+
 function LessonBody(props) {
     const { userinfo } = useContext(AuthContext);
     const [expanded, setExpanded] = React.useState('panel1');
@@ -29,6 +31,7 @@ function LessonBody(props) {
     const { lesson } = props;
     const [liked, setLiked] = useState(false);
     const [likes, setLikes] = useState([]);
+    const [comment, setComment] = useState('');
 
     const [deleteModalopen, setDeleteModalopen] = useState(false);
     const handleDeleteOpen = () => setDeleteModalopen(true);
@@ -51,6 +54,10 @@ function LessonBody(props) {
 
     const handleChange = (panel) => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
+    };
+
+    const handleCommentChange = (event) => {
+        setComment(event.target.value);
     };
 
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
@@ -84,6 +91,7 @@ function LessonBody(props) {
         await axios.delete(`http://localhost:8000/api/classroom/${classroomId}/lesson/${lessonId}`)
         navigate(`/classroom/${classroomId}`)
     }
+
 
 
     return (
@@ -356,8 +364,7 @@ function LessonBody(props) {
                                 {lesson.quizIsReady ? `There are ${lesson.quizCount} in this lesson`  : "Quiz is not ready"}
                             </Typography>
                             <Button variant="contained" color="primary" disabled= {!lesson.quizIsReady} sx={{
-                                width: "20vh",
-                                height: "20vh%",
+    
                                 borderRadius: "8px",
                                 m: 2,
                                 color: "white",
@@ -383,16 +390,7 @@ function LessonBody(props) {
                             </Box>
                     </Grid>
                     {/* /////////////////////////// Comment Section /////////////////////////// */}
-                    <Grid item md={12}>
-                        <Box sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            height: "20vh",
-                            alignItems: "center",
-                            alignContent: "center",
-                            backgroundColor: 'white',
-                        }} />
-                    </Grid>
+                    
                 </Grid>
             </Box>
         </>
